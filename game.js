@@ -445,7 +445,7 @@ function deskView() {
       headline && deskStage !== 'support' && deskStage !== 'headline' ? '二条：本期暂空' : '',
       rows + (!support ? '<div class="step-actions"><button type="button" class="soft" data-action="skip-support">本期只排头条</button></div>' : ''),
       Boolean(headline)) +
-    (!game.newsLibrary ? briefsPanel() : '') + (draft ? paperPanel(draft, false) : '') +
+    deskAdvertising() + (!game.newsLibrary ? briefsPanel() : '') + (draft ? paperPanel(draft, false) : '') +
     deskStep('print', '印量与签发', printSummary,
       deskStage === 'print' ? printPanel() : '', Boolean(headline)) + '</div>' +
     bottom('签发后存入合订本，可下载头版', '<span>发行日　' + dotted(dates.saturday) + ' 星期六</span>');
@@ -470,6 +470,14 @@ function disclosure(id, title, copy, classes, initiallyOpen = false) {
   const open = disclosures.get(id) ?? initiallyOpen;
   return '<details class="' + classes + '" data-disclosure="' + id + '"' + (open ? ' open' : '') +
     '><summary>' + h(title) + '</summary>' + copy + '</details>';
+}
+
+function deskAdvertising() {
+  const selection = game.ad;
+  const offer = selection && adById(selection.id);
+  const title = offer ? '广告：' + local(offer.name) + ' · ' + (selection.placement === 'front' ? '头版' : '内页') +
+    ' · ' + money(adValue(offer, selection.placement, game)) + ' 元' : '选广告';
+  return disclosure('desk-advertising', title, advertisingView(), 'panel desk-disclosure');
 }
 
 function deskOptions() {
@@ -806,10 +814,14 @@ function channelsView() {
     '</section></div>';
 }
 
-function advertisingView() {
+function advertisingView(extra = '') {
   if (game.phase !== 'desk') return '<div class="management"><p>本期广告已经结算，下一期会收到新的报价。</p></div>';
+  const terms = '<div class="management"><p>每期可接一单。头版广告报价更高。' +
+    (game.newsLibrary ? '' : '头版广告会挤掉一条街巷消息。查刊登文件用时 ' + DESK_UNIT + ' 分钟。') +
+    extra + '</p></div>' +
+    (game.pressure?.adUntil >= game.week + 1 ? '<p class="manager-note">广告撤单后，本期报价已下调。</p>' : '');
   const list = issueAdOffers(game.week).map(adById);
-  return list.map(offer => {
+  return terms + list.map(offer => {
     const chosen = game.ad?.id === offer.id;
     const clear = offer.clearance === 'ready' ? '材料齐备' :
       chosen && game.ad.checked ? offer.clearance === 'missing' ? '查到缺少刊登文件' : '文件已经核对' : '刊登文件待查';
@@ -824,9 +836,9 @@ function advertisingView() {
         (active ? '已选 ' : '') + label + ' ' + money(adValue(offer, position, game)) + ' 元</button>';
     };
     return '<article class="management ad-offer' + (chosen ? ' chosen' : '') + '"><div class="manage-row"><div><h3>' +
-      h(offer.name) + '</h3><p>' + h(offer.category + ' · ' + clear) + '</p></div>' +
+      h(local(offer.name)) + '</h3><p>' + h(offer.category + ' · ' + clear) + '</p></div>' +
       (chosen ? '<button type="button" class="soft" data-action="drop-ad">撤掉广告</button>' : '') + '</div>' +
-      '<p>' + h(offer.lines[0]) + '</p>' +
+      '<p>' + h(local(offer.lines[0])) + '</p>' +
         '<div class="report-buttons ad-buttons">' + button('inside','内页') + button('front','头版') + check + '</div></article>';
   }).join('');
 }
@@ -843,11 +855,7 @@ function financeView() {
     '<table class="ledger"><thead><tr><th scope="col">期数</th><th scope="col">项目</th><th scope="col">收支</th></tr></thead><tbody>' +
     rows + '</tbody></table></section><section class="panel"><header class="panel-heading"><h2>广告簿</h2>' +
     (game.phase === 'desk' && !game.newsLibrary ? '<p>编辑台 ' + clockText(game.clock) + '</p>' : '') + '</header>' +
-    (game.phase === 'desk' ? '<div class="management"><p>每期接一单。头版广告报价更高。' +
-      (game.newsLibrary ? '' : '头版广告会挤掉一条街巷消息。查刊登文件用时 ' + DESK_UNIT + ' 分钟。') +
-      '本期出刊预计支出 ' + money(quote.total) + ' 元。</p></div>' : '') +
-    (game.phase === 'desk' && game.pressure?.adUntil >= game.week + 1 ? '<p class="manager-note">广告撤单后，本期报价已下调。</p>' : '') +
-    advertisingView() + '</section></div>';
+    advertisingView('本期出刊预计支出 ' + money(quote.total) + ' 元。') + '</section></div>';
 }
 
 const VIEWS = {
