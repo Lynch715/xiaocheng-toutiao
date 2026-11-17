@@ -63,12 +63,12 @@ const ORIGINAL_TOPICS = {
 };
 
 const REPORTERS = [
-  {id: 'zhou', specialties:['街巷', '民生'], name: '周向东', style: '熟街熟巷', reach: 4, verify: 3, write: 3, salary: 8200, hire: 14500},
-  {id: 'lin', specialties:['消费', '民生', '科技'], name: '林晚晴', style: '把账查到底', reach: 2, verify: 5, write: 4, salary: 9600, hire: 17500},
-  {id: 'he', specialties:['奇闻', '文娱'], name: '何小满', style: '专跑怪事', reach: 5, verify: 2, write: 4, salary: 10500, hire: 18500},
-  {id: 'song', specialties:['交通', '教育'], name: '宋明远', style: '守得住电话线', reach: 2, verify: 5, write: 2, salary: 7500, hire: 12500},
-  {id: 'xu', specialties:['街巷', '跨年', '文娱'], name: '徐岚', style: '能写人物', reach: 3, verify: 3, write: 5, salary: 11200, hire: 20000},
-  {id: 'tan', specialties:['体育', '节庆'], name: '谭青', style: '肯蹲现场', reach: 4, verify: 2, write: 2, salary: 6500, hire: 10500}
+  {id: 'zhou', specialties:['街巷', '民生'], name: '周建军', style: '熟街熟巷', reach: 4, verify: 3, write: 3, salary: 8200, hire: 14500},
+  {id: 'lin', specialties:['消费', '民生', '科技'], name: '林丽华', style: '把账查到底', reach: 2, verify: 5, write: 4, salary: 9600, hire: 17500},
+  {id: 'he', specialties:['奇闻', '文娱'], name: '何小军', style: '专跑怪事', reach: 5, verify: 2, write: 4, salary: 10500, hire: 18500},
+  {id: 'song', specialties:['交通', '教育'], name: '刘卫东', style: '守得住电话线', reach: 2, verify: 5, write: 2, salary: 7500, hire: 12500},
+  {id: 'xu', specialties:['街巷', '跨年', '文娱'], name: '徐静', style: '能写人物', reach: 3, verify: 3, write: 5, salary: 11200, hire: 20000},
+  {id: 'tan', specialties:['体育', '节庆'], name: '吴磊', style: '肯蹲现场', reach: 4, verify: 2, write: 2, salary: 6500, hire: 10500}
 ];
 
 const CHANNELS = [

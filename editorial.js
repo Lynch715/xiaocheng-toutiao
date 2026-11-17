@@ -289,12 +289,12 @@ const STAND_PHONE_REASONS = {
       () => '摊子开了好一会儿报才送到，少卖了一拨']
   },
   support: {
-    positive:[r => '副稿的' + (r.supportSection || '这类') + '消息又添了一拨读者',
-      r => '读者看完头条，还肯为' + (r.supportSection || '这类') + '副稿买一份',
-      r => (r.supportSection || '这类') + '副稿给这边的销量帮了忙'],
-    negative:[r => (r.supportSection || '这类') + '副稿在这里拖了些销路',
-      r => '这边读者对' + (r.supportSection || '这类') + '副稿没买账',
-      r => '副稿的' + (r.supportSection || '这类') + '材料在这里反倒减了吸引力']
+    positive:[r => '二条的' + (r.supportSection || '这类') + '消息又添了一拨读者',
+      r => '读者看完头条，还肯为' + (r.supportSection || '这类') + '二条买一份',
+      r => (r.supportSection || '这类') + '二条给这边的销量帮了忙'],
+    negative:[r => (r.supportSection || '这类') + '二条在这里拖了些销路',
+      r => '这边读者对' + (r.supportSection || '这类') + '二条没买账',
+      r => '二条的' + (r.supportSection || '这类') + '材料在这里反倒减了吸引力']
   },
   briefs: {
     positive:[() => '城中简讯也有人专门看，给销量添了一点',
@@ -382,11 +382,11 @@ function insolventCopy(issue, remaining, minimum, printed, returned, reprintIssu
 }
 
 const FIRST_ISSUE_GUIDE = {
-  opening:['值班交接', (now, deadline) => '我是隔桌的沈编辑。现在 ' + now + '，印厂等到 ' + deadline +
+  opening:['值班交接', (now, deadline) => '我是隔桌的吴编辑。现在 ' + now + '，印厂等到 ' + deadline +
     ' 截稿。今晚派人、收稿、排头版，定好印量再签字。几个记者能分头跑，谁先回来谁打电话。'],
   dispatch:['出勤条', (reporter, time) => reporter + '大约 ' + time +
     ' 回电。「等下一通电话」会把钟往前拨到下一件事，先响的也可能是别的电话。'],
-  returned:['回稿条', () => '扑空是跑了没带回多少，常规是拿到了能用的材料，猛料是有新东西。稿件下面可以定头条，也可以把另一篇排成副稿。'],
+  returned:['回稿条', () => '扑空是跑了没带回多少，常规是拿到了能用的材料，猛料是有新东西。稿件下面可以定头条，也可以把另一篇排成二条。'],
   verify:['核实的工夫', () => '碰上几种说法，打电话、找原件都得占钟上的时间。没核先发，有时卖得俏，有时得补更正。'],
   print:['印厂交接', deadline => '首印量写好，签字就交印厂。过了 ' + deadline + ' 再签，早班摊位会晚收到，能卖出去的也会少。'],
   reprint:['报摊电话', () => '电话里只说个大概，没人替你数排队的。补多少、要不要补，都由你开单。退回来的也得照付印费。'],

@@ -12,6 +12,10 @@ const reprintDialog = document.getElementById('reprint-dialog');
 const mastheadName = document.getElementById('masthead-name');
 const mastheadIssue = document.getElementById('masthead-issue');
 const deskShortcuts = document.getElementById('desk-shortcuts');
+const deskPrimary = document.getElementById('desk-primary');
+const phoneLayout = matchMedia('(max-width: 720px)');
+const visualViewport = window.visualViewport;
+const editableField = 'input:not([type="file"]), textarea, select';
 const GUIDE_KEY = 'lintown-weekly-guide';
 const intFormat = new Intl.NumberFormat('zh-CN');
 const moneyFormat = new Intl.NumberFormat('zh-CN', {maximumFractionDigits:2});
@@ -72,7 +76,10 @@ let pendingReprint = null;
 let originalEditor = null;
 let pendingCover = null;
 let coverError = '';
-let collapsedStory = null;
+let expandedStory = null;
+let deskStage = 'headline';
+let deskIssueKey;
+const disclosures = new Map();
 const editionPngs = new Map();
 const animated = new Set();
 
@@ -113,7 +120,7 @@ function guideCue() {
       return ['opening', clockText(DESK_START), clockText(deskDeadline(game.week))];
     }
     if (pending('dispatch') && trip && !returned) return ['dispatch', reporterById(trip.reporter).name, clockText(trip.at)];
-    const story = collapsedStory === game.focus ? null : getStory(game, game.focus);
+    const story = expandedStory === game.focus ? getStory(game, game.focus) : null;
     const report = story && game.reports[story.id];
     const publicCopy = story && !story.original && [story.tip, storyCopy(story, report).brief, ...fieldReport(story, report)].join('');
     if (pending('verify') && !report?.verified && /说法不一|各有各的说法|看不清|没对过|只抄了|说不准|没能对上|还没.*核对|找不到.*原件/.test(publicCopy || '')) {
@@ -136,9 +143,9 @@ function renderGuide() {
   }
   const [id, ...args] = cue;
   const [subject, copy] = FIRST_ISSUE_GUIDE[id];
-  note.innerHTML = '<strong>沈编辑 · ' + h(subject) + '</strong><p>' + h(copy(...args)) +
+  note.innerHTML = '<strong>吴编辑 · ' + h(subject) + '</strong><p>' + h(copy(...args)) +
     '</p><div class="report-buttons"><button class="soft" type="button" data-action="guide-close" data-id="' +
-    id + '">收起这条</button><button class="soft" type="button" data-action="guide-skip">跳过引导</button></div>';
+    id + '">收起这条</button><button class="soft" type="button" data-action="guide-skip">收起交接便条</button></div>';
 }
 
 saveGuide();
@@ -156,6 +163,40 @@ function announce(message, tone = 'ok') {
   }, 3800);
 }
 
+function updateVisibleArea() {
+  if (!phoneLayout.matches || !visualViewport) return;
+  const style = document.documentElement.style;
+  style.setProperty('--visible-top', visualViewport.offsetTop + 'px');
+  style.setProperty('--visible-height', visualViewport.height + 'px');
+}
+
+let fieldFrame;
+function revealFocusedField() {
+  cancelAnimationFrame(fieldFrame);
+  if (!phoneLayout.matches) return;
+  fieldFrame = requestAnimationFrame(() => {
+    const field = document.activeElement;
+    if (!field?.matches(editableField)) return;
+    const scroller = field.closest('.original-fields, dialog');
+    const clip = scroller?.getBoundingClientRect();
+    const areaTop = visualViewport?.offsetTop ?? 0;
+    const areaBottom = areaTop + (visualViewport?.height ?? window.innerHeight);
+    const top = Math.max(areaTop, clip?.top ?? 0) + 10;
+    const bottom = Math.min(areaBottom, clip?.bottom ?? areaBottom) - 10;
+    const box = field.getBoundingClientRect();
+    const distance = box.top < top ? box.top - top : Math.max(0, Math.min(box.bottom, box.top + bottom - top) - bottom);
+    if (bottom > top && Math.abs(distance) >= 1) {
+      const behavior = matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth';
+      (scroller || window).scrollBy({top:distance, behavior});
+    }
+  });
+}
+
+function viewportResized() {
+  updateVisibleArea();
+  revealFocusedField();
+}
+
 function highlight(selector, focus = false) {
   const element = app.querySelector(selector);
   element?.classList.add('updated');
@@ -167,11 +208,11 @@ function syncFromStorage() {
   if (!stored || (stored.seed === game.seed && stored.revision <= game.revision)) return false;
   game = stored;
   guide = readGuide();
-  collapsedStory = null;
+  expandedStory = null;
   view = defaultView(game);
   archiveIssue = game.editions.at(-1)?.issue || 0;
   render();
-  announce('已同步另一标签页的试玩进度。');
+  announce('已接上这份报纸的最新一期。');
   return true;
 }
 
@@ -205,48 +246,43 @@ function navigate(destination) {
 function pageHeader(title, kicker, dates = '', note = '') {
   return '<div class="page-title"><div><p class="edition-line">' + h(kicker) + '</p><h1 tabindex="-1">' +
     h(title) + '</h1>' + (note ? '<p class="week-note">' + h(note) + '</p>' : '') + '</div>' + dates +
-    '</div><aside id="guide-note" class="guide-note" aria-label="沈编辑的引导" aria-live="polite" hidden></aside>';
+    '</div><aside id="guide-note" class="guide-note" aria-label="吴编辑的交接便条" aria-live="polite" hidden></aside>';
 }
 
 function bottom(text, extra = '') {
-  return '<footer class="game-footer"><span>' + h(saving ? text : '本机存档暂不可用，请在关闭前下载要保留的头版。') +
+  return '<footer class="game-footer"><span>' + h(saving ? text : '本期进度未能留存，关掉网页前可先下载头版。') +
     '</span>' + extra + '</footer>';
 }
 
 function paperPanel(draft, signed) {
-  const scene = editionPhoto(draft);
-  const busy = coverLoading();
-  const supportPending = !signed && draft.storyId === game.headline && !draft.supportId;
+  const supportPending = !signed && draft.storyId === game.headline && !draft.supportId &&
+    (deskStage === 'headline' || deskStage === 'support');
   activeProof = {draft:supportPending ? {...draft, supportPending} : draft, signed};
-  const controls = signed ? '' : '<div class="cover-controls"><div class="report-buttons">' +
-    '<button type="button" class="soft" data-action="choose-cover"' + (busy ? ' disabled' : '') + '>' +
-    (busy ? '正在读取照片…' : draft.cover ? '更换头版照片' : '上传头版照片') + '</button>' +
-    (draft.cover ? '<button type="button" class="soft" data-action="remove-cover"' + (busy ? ' disabled' : '') +
-      '>恢复自动配图</button>' : '') +
-    '</div><p class="field-hint">' + (coverError ? '<span class="form-status">' + h(coverError) + '</span>' :
-      (scene ? '' : '本稿无资料图，可上传照片。') + 'JPG、PNG 或 WebP，20 MB 以内，照片会居中裁切。') + '</p></div>';
-  return '<section class="panel proof" aria-label="头版清样"><header class="panel-heading">' +
-    '<h2>' + (signed ? '本期头版' : '头版清样') + '</h2>' +
-    '<button type="button" class="proof-link" data-action="open-proof">查看大样 ↗</button></header>' +
-    controls +
-    '<div class="proof-well"><div class="proof-preview" style="aspect-ratio:800/' + (1040 + paperFlashHeight(draft)) + '"><canvas id="proof" role="img" aria-label="' +
+  const preview = '<div class="proof-preview" style="aspect-ratio:800/' + (1040 + paperFlashHeight(draft)) +
+    '"><canvas id="proof" role="img" aria-label="' +
     h(newspaperName(draft) + '头版：' + draft.title + '。' + draft.body[0] +
-      (draft.supportId ? ' 副稿：' + draft.secondary[0].title : supportPending ? ' 副稿待定' : '') +
+      (draft.supportId ? ' 二条：' + draft.secondary[0].title : supportPending ? ' 二条待定' : '') +
       (draft.flashes?.length ? ' 简讯：' + draft.flashes.map(item => item.text).join('') : '')) + '"></canvas>' +
-    '<span class="proof-loading">清样排版中…</span></div></div>' +
-    '<footer class="proof-footer"><span>' + h(draft.cover ? '自选头版照片' : scene ?
-      '自动配图 · ' + cityText(scene.name, draft.city) + (scene.location ? '（地点空镜）' : '') : '无图版式') +
-    '</span><span>总第 ' + ordinal(draft.issue) + ' 期</span></footer></section>';
+    '<span class="proof-loading">清样排版中…</span></div>';
+  const proofButton = '<button type="button" class="proof-link" data-action="open-proof">查看大样</button>';
+  if (!signed) {
+    return '<section class="panel desk-proof" aria-labelledby="desk-proof-title">' +
+      '<div class="desk-proof-thumb">' + preview + '</div><div class="desk-proof-copy">' +
+      '<h2 id="desk-proof-title" tabindex="-1">头版清样</h2><p>' +
+      h(game.headline ? draft.title : '待定头条') + '</p></div>' + proofButton + '</section>';
+  }
+  return '<section class="panel proof" aria-label="本期头版"><header class="panel-heading">' +
+    '<h2>本期头版</h2>' + proofButton + '</header><div class="proof-well">' + preview +
+    '</div><footer class="proof-footer"><span>总第 ' + ordinal(draft.issue) + ' 期</span></footer></section>';
 }
 
 function placementControls(story) {
-  const chosen = game.headline === story.id;
-  const supported = game.support === story.id;
-  return '<div class="angle-bar"><span>头版位置</span><div class="report-buttons">' +
-    '<button type="button" class="soft accent" data-action="headline"' + (chosen ? ' disabled' : '') + '>' +
-    (chosen ? '已定为头条' : '定为头条') + '</button>' +
-    '<button type="button" class="soft" data-action="support"' + (canRunSupport(game, story) ? '' : ' disabled') + '>' +
-    (supported ? '撤下副稿' : '排为副稿') + '</button></div></div>';
+  const headline = deskStage === 'headline';
+  const placed = game[deskStage] === story.id;
+  const allowed = headline ? !placed : canRunSupport(game, story);
+  const label = headline ? placed ? '已定为头条' : '定为头条' : placed ? '撤下二条' : '排为二条';
+  return '<div class="report-buttons"><button type="button" class="soft accent" data-action="' +
+    deskStage + '"' + (allowed ? '' : ' disabled') + '>' + label + '</button></div>';
 }
 
 function assignmentControls(story, report) {
@@ -268,18 +304,21 @@ function assignmentControls(story, report) {
 }
 
 function reportPanel(story) {
+  const brief = storyText(story, story.tip, game.city);
+  const risk = story.library ? '<p class="field-hint">见报风险 ' + h(story.publicationRisk) + '</p>' : '';
+
   if (story.original) {
     return '<div class="report original-copy"><div class="edit-controls"><div class="report-buttons">' +
       '<button type="button" class="soft" data-action="edit-original">编辑原创稿</button></div>' +
       placementControls(story) + '</div>' +
-      (!originalFitsSupport(story) ? '<p class="warn-copy">头版左下的副稿最多 ' + ORIGINAL_SUPPORT_LIMIT + ' 字。</p>' : '') +
+      (!originalFitsSupport(story) ? '<p class="warn-copy">头版左下的二条最多 ' + ORIGINAL_SUPPORT_LIMIT + ' 字。</p>' : '') +
       '<div class="report-text">' + story.body.map(paragraph => '<p>' + h(paragraph) + '</p>').join('') + '</div></div>';
   }
   if (story.library) {
-    return '<div class="report library-copy">' + placementControls(story) +
+    return '<div class="report library-copy"><p>' + h(brief) + '</p>' + risk + placementControls(story) +
       '<details class="report-text"><summary>阅读全文</summary>' +
       story.body.map(paragraph => '<p>' + h(local(paragraph)) + '</p>').join('') +
-      '<h3>副稿短版</h3><p>' + h(local(story.short)) + '</p></details></div>';
+      '<h3>二条短稿</h3><p>' + h(local(story.short)) + '</p></details></div>';
   }
   const report = game.reports[story.id];
   const copy = storyCopy(story, report);
@@ -292,9 +331,10 @@ function reportPanel(story) {
   const latest = work === 'follow' ? note.follow : work === 'verify' ? checked.join('') : report?.rumor && !report.verified ? rumorFieldNote(story) : report?.tier === 'scoop' ? story.scoop.report[0] : field[0];
   const status = work === 'follow' ? '补访回稿' : work === 'verify' ? '查证回稿' : '现场回稿';
   const tierLabel = report?.visited ? {miss:'扑空', regular:'常规', scoop:'猛料'}[report.tier] : '';
+  const reporterName = reporterById(report?.id)?.name || report?.name;
   const slip = returned ? '<div class="report-slip' + (report?.tier === 'scoop' ? ' scoop-slip' : '') + '" tabindex="-1"><strong>' +
     (tierLabel ? '<span class="tier-mark">' + tierLabel + '</span> · ' : '') + status +
-    (report.name ? ' · ' + h(report.name) : '') + (report.returnedAt ? ' · ' + clockText(report.returnedAt) : '') + '</strong><p>' + h(local(latest)) + '</p></div>' : '';
+    (reporterName ? ' · ' + h(reporterName) : '') + (report.returnedAt ? ' · ' + clockText(report.returnedAt) : '') + '</strong><p>' + h(local(latest)) + '</p></div>' : '';
   const verify = !report?.verified ? '<button type="button" class="soft" data-action="verify-story"' +
     (!canSpendDeskTime(game, verifyCost(report)) ? ' disabled' : '') + '>' +
     (report?.visited ? '查证原件' : '先打电话核实') + ' · ' + verifyCost(report) + ' 分钟</button>' : '';
@@ -323,7 +363,7 @@ function briefsPanel() {
   const chosen = game.briefs || [];
   const limit = briefLimit(game);
   return '<section class="panel"><header class="panel-heading"><h2>简讯栏与存稿箱</h2><p>' + chosen.length + ' / ' + limit +
-    ' 条</p></header><div class="management"><p>本期跑过、未排头条或副稿的材料可进简讯。未见报的回稿留到下期，存稿只进简讯、效果减半。</p>' +
+    ' 条</p></header><div class="management"><p>本期跑过、未排头条或二条的材料可进简讯。未见报的回稿留到下期，上期回稿只能排简讯，吸引的读者少一些。</p>' +
     (game.ad?.placement === 'front' ? '<p>头版广告占一条简讯位，本期最多两条。</p>' : '') + '</div>' +
     (candidates.length ? candidates.map(item => '<article class="management"><div class="manage-row"><div><h3>' +
       h(local(item.title)) + '</h3><p>' + h(item.section + ' · ' + (item.stored ? '上期存稿 · 本期后过期' : '本期回稿')) +
@@ -352,7 +392,7 @@ function deskClockPanel() {
 function deskView() {
   if (game.phase !== 'desk') {
     return pageHeader('周五编辑台', newspaperName(game)) +
-      '<section class="panel blank"><p>' + (game.phase === 'complete' ? '本局已经结算。' : '本期已经付印，周六的发行回单到了。') +
+      '<section class="panel blank"><p>' + (game.phase === 'complete' ? '本年已经结账。' : '本期已经付印，周六的发行回单到了。') +
       '</p><button type="button" class="soft accent" data-view="sales">查看发行</button></section>';
   }
   const week = issueWeek(game.week, game.year);
@@ -370,54 +410,85 @@ function deskView() {
   const candidateCount = slate.filter(story => story.library).length;
   const tight = game.year && (candidateCount < CANDIDATES_PER_ISSUE || !canUseTwoEvergreens(game));
   const clash = game.year && game.headline && rival?.storyId === game.headline;
-  const rows = slate.map(story => {
-    const focus = story.id === game.focus && collapsedStory !== story.id;
-    const chosen = story.id === game.headline;
-    const supported = story.id === game.support;
-    const report = game.reports[story.id];
-    const summary = story.risk && report?.verified ? story.risk.brief : story.tip;
-    const follow = READER_LEADS.get(story.id);
-    const flag = chosen ? '拟作头条' : supported ? '拟作副稿' : game.briefs.includes(story.id) ? '拟作简讯' : report?.verified ? '已核实' :
-      story.original ? '原创' : story.library ? (story.date ? '时令稿' : '常备稿') :
-      report?.visited ? '已回稿' : game.trips.some(trip => trip.story === story.id) ? '采访中' : '待采编';
-    const labels = story.library ? '<span class="library-labels"><span>新闻分量 ' + h(story.weight) +
-      '</span><span>刊发风险 ' + h(story.publicationRisk) + '</span></span>' : '';
-    return '<button type="button" class="lead' + (focus ? ' selected' : '') + '" data-action="focus-story" data-id="' +
-      h(story.id) + '" aria-expanded="' + focus + '"><span class="desk">' + h(follow ? '追踪' : story.section) +
-      '</span><div><h3>' + h(storyText(story, storyCopy(story, report).title, game.city)) + '</h3><p>' +
-      h(storyText(story, summary, game.city)) +
-      '</p>' + labels + '</div><span class="flag' + (chosen || supported ? ' red' : '') + '">' + flag + '</span></button>' +
-      (focus ? reportPanel(story) : '');
-  }).join('');
-
   const provisional = game.focus === game.support ? slate.find(story => story.id !== game.support)?.id : game.focus;
-  const draftStory = getStory(game, game.headline || provisional);
+  const draftStory = getStory(game, game.headline || provisional) || slate[0];
   const draft = draftStory && editionDraft(game, draftStory);
-  const shortfall = pressQuote(game, MIN_PRINT).total > cashOf(game);
+  const rows = deskStage === 'headline' || deskStage === 'support' ? slate.map(story => {
+    const focus = story.id === expandedStory;
+    const follow = READER_LEADS.get(story.id);
+    const section = follow ? '追踪' : story.section;
+    return '<button type="button" class="lead' + (focus ? ' selected' : '') + '" data-action="focus-story" data-id="' +
+      h(story.id) + '" aria-expanded="' + focus + '"><span class="desk">' + h(section) + '</span><strong>' +
+      h(deskStoryTitle(story)) + '</strong>' +
+      (story.library ? '<span class="flag">要闻级别 ' + h(story.weight) + '</span>' : '') +
+      '</button>' + (focus ? reportPanel(story) : '');
+  }).join('') : '';
+
+  const wires = (game.newsLibrary ? pressurePanel() + rivalCaptureNotice() : deskClockPanel()) +
+    (tight ? '<div class="desk-wire source-warning"><strong>稿源吃紧</strong><p>' +
+      (candidateCount < CANDIDATES_PER_ISSUE ? '本期有 ' + candidateCount + ' 篇备选稿。' : '') +
+      (!canUseTwoEvergreens(game) ? '常备稿要留给往后的刊期。选了常备头条，二条可用时令稿或原创。' : '') + '</p></div>' : '') +
+    (rival ? disclosure('rival-desk', '《' + rival.name + '》动向' + (clash ? ' · 撞稿' : ''),
+      '<p>' + (rival.tip ? h(rival.tip) + '<br>' : '') + '头条：《' + h(rival.title) +
+      '》<br>铺货点：' + h(rival.outlets.map(id => channelById(id).name).join('、')) + '</p>', 'panel desk-disclosure') : '') +
+    (lateStory ? disclosure('late', clockText(late.at) + ' 来电 · 新线索', '<p>《' +
+      h(storyText(lateStory, lateStory.headline, game.city)) + '》</p>', 'panel desk-disclosure') : '');
+  const headline = getStory(game, game.headline);
+  const support = getStory(game, game.support);
+  const printSummary = number(game.copies) + ' 份';
   return pageHeader(game.newsLibrary ? '编辑台' : '周五编辑台',
     newspaperName(game) + ' · ' + week.name + ' · 第 ' + (game.week + 1) + ' 期', weekday,
     game.newsLibrary ? '' : local(week.note)) +
-    '<div class="workspace"><div class="column">' + (game.newsLibrary ? pressurePanel() + rivalCaptureNotice() : deskClockPanel()) +
-    '<section class="panel"><header class="panel-heading"><h2>本期稿件</h2><p>' +
-    slate.length + ' 条稿件</p></header>' +
-    '<div class="desk-tools report-buttons"><button type="button" class="soft accent" data-action="new-original"' +
-    ((game.originals?.length || 0) >= ORIGINAL_LIMIT ? ' disabled' : '') + '>写原创稿</button>' +
+    '<div class="desk-flow">' + wires + deskOptions() +
+    deskStep('headline', '选头条', headline ? '头条：' + deskStoryTitle(headline) : '', rows) +
+    deskStep('support', '选二条', support ? '二条：' + deskStoryTitle(support) :
+      headline && deskStage !== 'support' && deskStage !== 'headline' ? '二条：本期暂空' : '',
+      rows + (!support ? '<div class="step-actions"><button type="button" class="soft" data-action="skip-support">本期只排头条</button></div>' : ''),
+      Boolean(headline)) +
+    (!game.newsLibrary ? briefsPanel() : '') + (draft ? paperPanel(draft, false) : '') +
+    deskStep('print', '印量与签发', printSummary,
+      deskStage === 'print' ? printPanel() : '', Boolean(headline)) + '</div>' +
+    bottom('签发后存入合订本，可下载头版', '<span>发行日　' + dotted(dates.saturday) + ' 星期六</span>');
+}
+
+function deskStoryTitle(story) {
+  return storyText(story, storyCopy(story, game.reports[story.id]).title, game.city);
+}
+
+function deskStep(id, title, summary, copy, enabled = true) {
+  const open = deskStage === id;
+  return '<section class="panel desk-step' + (open ? ' current-step' : '') + '">' +
+    '<h2 class="step-heading"><button type="button" data-action="desk-step" data-id="' + id +
+    '" aria-expanded="' + open + '" aria-controls="desk-step-' + id + '"' + (enabled ? '' : ' disabled') + '>' +
+    '<span>' + h(open || !summary || id === 'print' ? title : summary) + '</span>' +
+    (id === 'print' ? '<small>' + h(open ? '账上 ' + money(cashOf(game)) + ' 元' : summary) + '</small>' : '') +
+    '</button></h2><div id="desk-step-' + id + '"' + (open ? '' : ' hidden') + '>' +
+    (open ? copy : '') + '</div></section>';
+}
+
+function disclosure(id, title, copy, classes, initiallyOpen = false) {
+  const open = disclosures.get(id) ?? initiallyOpen;
+  return '<details class="' + classes + '" data-disclosure="' + id + '"' + (open ? ' open' : '') +
+    '><summary>' + h(title) + '</summary>' + copy + '</details>';
+}
+
+function deskOptions() {
+  const busy = coverLoading();
+  const full = (game.originals?.length || 0) >= ORIGINAL_LIMIT;
+  return disclosure('desk-options', '更多', '<div class="report-buttons desk-options">' +
+    '<button type="button" class="soft" data-action="new-original"' + (full ? ' disabled' : '') + '>写原创稿</button>' +
+    '<button type="button" class="soft" data-action="choose-cover"' + (busy ? ' disabled' : '') + '>' +
+    (busy ? '正在换照片…' : '换一张照片') + '</button>' +
+    (game.cover ? '<button type="button" class="soft" data-action="remove-cover"' + (busy ? ' disabled' : '') + '>恢复本报资料图</button>' : '') +
     '<button type="button" class="soft" data-action="city">城市与报纸</button>' +
-    '<button type="button" class="soft" data-action="restart">重开一局</button>' +
-    ((game.originals?.length || 0) >= ORIGINAL_LIMIT ? '<small class="field-hint">本期已有 ' + ORIGINAL_LIMIT + ' 篇原创草稿</small>' : '') +
-    '</div>' +
-    (tight ? '<div class="desk-wire source-warning"><strong>稿源吃紧</strong><p>' +
-      (candidateCount < CANDIDATES_PER_ISSUE ? '本期有 ' + candidateCount + ' 条库稿。' : '') +
-      (!canUseTwoEvergreens(game) ? '余下刊期需留常备稿。选了常备头条，副稿可用时令稿或原创。' : '') + '</p></div>' : '') +
-    (rival ? '<div class="desk-wire"><strong>' + (game.newsLibrary ? '' : clockText(rivalCallTime(game)) + ' 来电 · ') +
-      '《' + h(rival.name) + '》动向' + (clash ? ' <span class="flag red">撞稿</span>' : '') +
-      '</strong><p>' + (rival.tip ? h(rival.tip) + '<br>' : '') +
-      '头条：《' + h(rival.title) + '》<br>铺货点：' + h(rival.outlets.map(id => channelById(id).name).join('、')) + '</p></div>' : '') +
-    (lateStory ? '<div class="desk-wire"><strong>' + clockText(late.at) + ' 来电 · 新线索</strong><p>《' +
-      h(storyText(lateStory, lateStory.headline, game.city)) + '》</p></div>' : '') + rows + '</section>' +
-    (game.newsLibrary ? '' : briefsPanel()) +
-    '<section class="panel plan"><header class="panel-heading"><h2 id="print-heading" tabindex="-1">印刷安排</h2><p>账上 ' + money(cashOf(game)) + ' 元</p></header>' +
-    '<div class="plan-body"><label class="plan-metric"><small>首印量</small>' +
+    '<button type="button" class="soft" data-action="restart">重新创刊</button></div>' +
+    (coverError ? '<p class="form-status">' + h(coverError) + '</p>' : '') +
+    (full ? '<p class="field-hint">本期已有 ' + ORIGINAL_LIMIT + ' 篇原创草稿。</p>' : ''), 'panel desk-disclosure');
+}
+
+function printPanel() {
+  const shortfall = pressQuote(game, MIN_PRINT).total > cashOf(game);
+  return '<div class="plan-body"><label class="plan-metric"><small>首印量</small>' +
     '<input id="copies" type="number" min="' + MIN_PRINT + '" max="' + printLimit(game) + '" step="1" inputmode="numeric" value="' +
     game.copies + '" aria-describedby="print-hint"><span>份</span></label>' +
     '<div class="plan-metric"><small>本期出刊支出</small><strong id="print-cost" class="money"></strong><span>元</span></div>' +
@@ -425,9 +496,7 @@ function deskView() {
     '<p class="plan-hint" id="print-hint"></p>' +
     (overtimeSteps(game) ? '<p class="plan-hint warn-copy">现在签发，早班报摊会晚到 ' + overtimeSteps(game) * DESK_STEP + ' 分钟，销量受影响。</p>' : '') +
     (shortfall ? '<div class="management"><p>按现有人手和渠道，最低出刊要 ' + money(pressQuote(game, MIN_PRINT).total) +
-      ' 元。可在记者或发行页缩减下期支出。</p></div>' : '') +
-    '</section></div>' + (draft ? paperPanel(draft, false) : '') + '</div>' +
-    bottom('签发后存入合订本，可下载头版', '<span>发行日　' + dotted(dates.saturday) + ' 星期六</span>');
+      ' 元。可在记者或发行页缩减下期支出。</p></div>' : '');
 }
 
 function pressurePanel() {
@@ -441,7 +510,7 @@ function pressurePanel() {
     confirmed:'复核人员对过原始材料，确认报道所列事实。',
     unresolved:'复核结束，现有材料仍不足以证实争议部分。'
   };
-  return '<section class="panel pressure-inbox"><header class="panel-heading"><h2>刊后来电与回单</h2></header>' +
+  return disclosure('press-calls', '刊后来电与回单' + (pendingPressure(game) ? ' · 待回复' : ''),
     events.map(event => {
       const target = local(event.target);
       const title = '《' + local(event.title) + '》';
@@ -465,15 +534,15 @@ function pressurePanel() {
         '<button type="button" class="soft accent" data-action="pressure-response" data-id="stand">坚持报道</button>' +
         '<button type="button" class="soft" data-action="pressure-response" data-id="reply">登对方回应</button></div>' : '';
       return '<article class="management"><h3>' + h(heading) + '</h3><p>' + h(copy) + '</p>' + controls + '</article>';
-    }).join('') + '</section>';
+    }).join(''), 'panel desk-disclosure pressure-inbox', Boolean(pendingPressure(game)));
 }
 
 function rivalCaptureNotice() {
   const change = game.market.lastCapture;
   if (change?.issue !== game.week + 1) return '';
-  return '<section class="desk-wire source-warning"><strong>发行回单 · 铺货点变更</strong><p>' +
-    h('连续 ' + change.wins + ' 期头条分量落后后，' + channelById(change.id).name +
-      '改由《' + rivalPaperName(game) + '》铺货。') + '</p></section>';
+  return disclosure('rival-capture', '发行回单 · 铺货点变更', '<p>' +
+    h('对手头条连续 ' + change.wins + ' 期占先，' + channelById(change.id).name +
+      '改由《' + rivalPaperName(game) + '》铺货。') + '</p>', 'panel desk-disclosure source-warning');
 }
 
 function salesNote(edition) {
@@ -495,9 +564,9 @@ function rivalReceipt(edition) {
     !clash ? '两家头条说的是不同的事，共用的报摊仍要争读者。' :
       distinct ? '两家撞了题。报摊回话，有人翻过' + paper + '，又回来买了你家多跑一趟写出来的那版。' :
         '两家撞了题。报摊回话，好些读者觉得消息看过一遍就够了。';
-  return '<section class="receipt-detail"><h3>' + h(name) + '</h3><p class="other-headline">' + h(title) + '</p>' +
+  return disclosure('rival-receipt', '《' + name + '》发行回单', '<p class="other-headline">' + h(title) + '</p>' +
     '<ul>' + stands.map(stand => '<li><span>' + h(stand.name) + (stand.competing ? ' · 同摊' : '') + '</span><span>' +
-      number(stand.sold) + ' 份</span></li>').join('') + '</ul><p>' + h(outcome + effect) + '</p></section>';
+      number(stand.sold) + ' 份</span></li>').join('') + '</ul><p>' + h(outcome + effect) + '</p>', 'receipt-detail');
 }
 
 function readerReceipt(edition) {
@@ -505,8 +574,8 @@ function readerReceipt(edition) {
   const briefs = edition.flashes?.length ? '<p>本期简讯 ' + edition.flashes.length + ' 条' +
     (edition.flashes.some(item => item.stored) ? '，其中有上期存稿' : '') + '。</p>' : '';
   if (!lead && !briefs) return '';
-  return '<section class="receipt-detail reader-letter"><h3>' + (lead ? '读者来信 · 下期可追' : '读者回音') + '</h3>' +
-    (lead ? '<p>' + h(cityText(lead.message, edition.city)) + '</p>' : '') + briefs + '</section>';
+  return disclosure('reader-receipt', lead ? '读者来信 · 下期可追' : '读者回音',
+    (lead ? '<p>' + h(cityText(lead.message, edition.city)) + '</p>' : '') + briefs, 'receipt-detail reader-letter');
 }
 
 function reprintPanel(edition) {
@@ -518,13 +587,13 @@ function reprintPanel(edition) {
       '共补送 ' + number(printed) + ' 份，卖出 ' + number(sold) + ' 份，退回 ' + number(printed - sold) +
       ' 份，补印与配送共 ' + money(cost) + ' 元。' : '本期来电均未补送。') + '</p></section>';
   }
-  return '<section class="receipt-detail reprint-panel"><h3>报摊来电 · 要货</h3>' + calls.map(call =>
+  return disclosure('reprint-calls', '报摊来电 · 要货', calls.map(call =>
     '<div class="reprint-call"><div><strong>' + h(call.name) + ' · ' + h(call.time) + ' 售罄</strong><p>“' +
     h(REPRINT_CALL_COPY[call.tier]) + '”</p></div><label>补送给' + h(call.name) + '<select data-reprint="' + h(call.id) + '">' +
     call.options.map(copies => '<option value="' + copies + '">' + (copies ? number(copies) + ' 份 · ' +
     money(reprintCost(copies)) + ' 元' : '不补送') + '</option>').join('') + '</select></label></div>').join('') +
     '<div class="sales-actions"><button type="button" class="issue" data-action="reprint">确认补印安排</button>' +
-    '<span id="reprint-quote" role="status">补印与配送共 0 元</span></div></section>';
+    '<span id="reprint-quote" role="status">补印与配送共 0 元</span></div>', 'receipt-detail reprint-panel', true);
 }
 
 function readReprintOrders() {
@@ -582,7 +651,7 @@ function salesView() {
     '<span class="plus-one" id="plus-one" aria-hidden="true">+1</span>' + delta + '</div>' +
     '<div class="cash-live"><span>发行回款<strong id="live-revenue">' + money(edition.revenue) + '</strong> 元</span>' +
     '<span>账上现金<strong id="live-cash">' + money(cashOf(game)) + '</strong> 元</span>' +
-    '<button type="button" class="soft" id="skip-animation" data-action="skip-animation" hidden>跳过动画</button></div>' +
+    '<button type="button" class="soft" id="skip-animation" data-action="skip-animation" hidden>直接看回单</button></div>' +
     '<div class="receipt-grid"><div><span>首印</span><strong>' + number(edition.printed) + '</strong></div>' +
     '<div><span>退报</span><strong>' + number(edition.returned) + '</strong></div>' +
     '<div><span>本期盈亏（元）</span><strong>' + money(edition.net) + '</strong></div></div>' +
@@ -595,7 +664,7 @@ function salesView() {
     (edition.adNotice ? '<section class="receipt-detail"><h3>广告回单</h3><p>' + h(edition.adNotice) + '</p></section>' : '') +
     '<p class="stand-note">本年累计实售 ' + number(soldOf(game)) + ' 份。</p>' +
     '<div class="sales-actions"><button type="button" class="issue" data-action="next"' + (edition.reprint === null ? ' disabled' : '') + '>' + nextLabel + '<b aria-hidden="true">→</b></button>' +
-    '<a class="soft export-link" data-download aria-disabled="true">下载头版 PNG</a></div></section>' +
+    '<a class="soft export-link" data-download aria-disabled="true">下载头版</a></div></section>' +
     paperPanel(edition, true) + '</div>' + bottom('各项收入和支出已记入财务台账。');
 }
 
@@ -614,7 +683,7 @@ function archiveView() {
     '<label class="archive-picker" for="archive-issue">选择期数<select id="archive-issue">' + options + '</select></label>' +
     '<p class="archive-meta">' + dotted(edition.date) + ' · 实售 ' + number(edition.sold) + ' 份' +
     (edition.corrections.length ? ' · 有刊后更正' : '') + '</p>' +
-    '<div class="archive-actions"><a class="soft accent export-link" data-download aria-disabled="true">下载头版 PNG</a></div>' +
+    '<div class="archive-actions"><a class="soft accent export-link" data-download aria-disabled="true">下载头版</a></div>' +
     '</section>' + paperPanel(edition, true) + '</div>';
 }
 
@@ -661,16 +730,16 @@ function annualSummaryView() {
     '</strong></div><div><span>年终公信力</span><strong>' + game.pressure.credibility +
     '</strong></div><div><span>期末现金（元）</span><strong>' + money(cashOf(game)) + '</strong></div></div>' +
     (best ? '<p class="summary-topline">销量最高为第 ' + best.issue + ' 期《' + h(best.title) + '》。</p>' : '') +
-    '<section class="receipt-detail"><h3>头条分量分布</h3><p>重 ' + weights.重 + ' · 中 ' + weights.中 + ' · 轻 ' + weights.轻 + '</p></section>' +
+    '<section class="receipt-detail"><h3>全年头条要闻级别</h3><p>重 ' + weights.重 + ' · 中 ' + weights.中 + ' · 轻 ' + weights.轻 + '</p></section>' +
     '<section class="receipt-detail"><h3>发行对比</h3><p>本报实售 ' + number(sold) + ' 份，《' + h(name) +
     '》同期回单合计 ' + number(rivalSold) + ' 份。</p></section>' +
     (yearly ? '<section class="receipt-detail"><h3>省好新闻奖</h3>' +
-      '<p>评审从全年头条中择前三名，调查曝光和风险批评优先。公信力至少 ' + AWARD_MIN_CREDIBILITY +
+      '<p>评审从全年头条中择前三名，调查曝光和追问责任的报道优先。公信力至少 ' + AWARD_MIN_CREDIBILITY +
       '，刊发过更正的头条无资格。</p>' + awardList(nominations, '获得提名', true) +
       awardList(missed, '错过提名', true) + '</section>' : '') +
     '<p class="summary-topline">' + h(review) + '</p>' + (last?.reprint === null ? reprintPanel(last) : '') +
     '<div class="sales-actions"><button type="button" class="issue" data-view="archive">翻阅合订本<b aria-hidden="true">→</b></button>' +
-    '<button type="button" class="soft" data-action="restart">重开一局</button></div></section>' +
+    '<button type="button" class="soft" data-action="restart">重新创刊</button></div></section>' +
     (best ? paperPanel(best, true) : '') + '</div>';
 }
 function staffView() {
@@ -830,6 +899,17 @@ function animateSales() {
 function render() {
   finishAnimation?.();
   activeProof = null;
+  const issueKey = game.seed + ':' + game.week;
+  if (issueKey !== deskIssueKey) {
+    deskIssueKey = issueKey;
+    deskStage = game.headline ? game.support ? 'proof' : 'support' : 'headline';
+    expandedStory = null;
+    disclosures.clear();
+  }
+  if (game.phase === 'desk' && !game.headline && deskStage !== 'headline') {
+    deskStage = 'headline';
+    expandedStory = null;
+  }
   mastheadName.textContent = newspaperName(game);
   mastheadIssue.textContent = game.year + ' 年 · 第 ' +
     (game.week + 1) + ' / ' + yearIssueCount(game.year) + ' 期';
@@ -841,7 +921,7 @@ function render() {
   }
   app.innerHTML = VIEWS[view]();
   deskShortcuts.hidden = view !== 'desk' || game.phase !== 'desk';
-  deskShortcuts.querySelector('[data-action="open-proof"]').disabled = !activeProof;
+  if (!deskShortcuts.hidden) renderDeskPrimary();
   renderGuide();
   if (document.getElementById('copies')) printInput();
   const proof = document.getElementById('proof');
@@ -858,6 +938,39 @@ function render() {
     });
   }
   animateSales();
+}
+
+function renderDeskPrimary() {
+  const placeButton = app.querySelector('.report button[data-action="' + deskStage + '"]');
+  if (placeButton) {
+    deskPrimary.dataset.action = deskStage;
+    deskPrimary.textContent = placeButton.textContent;
+    deskPrimary.disabled = placeButton.disabled;
+    return;
+  }
+  const actions = {headline:['desk-step', '选头条'], support:['desk-step', '选二条'],
+    proof:['open-proof', '查看大样'], print:['sign', '签发付印']};
+  const [action, label] = actions[deskStage];
+  deskPrimary.dataset.action = action;
+  deskPrimary.dataset.id = deskStage;
+  deskPrimary.textContent = label;
+  deskPrimary.disabled = deskStage === 'proof' && !activeProof;
+}
+
+function focusDeskStage() {
+  const heading = deskStage === 'proof' ? document.getElementById('desk-proof-title') :
+    app.querySelector('[data-action="desk-step"][data-id="' + deskStage + '"]');
+  heading?.focus({preventScroll:true});
+  heading?.scrollIntoView({block:'nearest'});
+}
+
+function openDeskStage(stage) {
+  if (deskStage !== stage) {
+    deskStage = stage;
+    expandedStory = null;
+    render();
+  }
+  focusDeskStage();
 }
 
 function printInput() {
@@ -878,7 +991,9 @@ function printInput() {
       '先从稿件里定一条头条。';
   hint.classList.toggle('error', !affordable);
   field.setAttribute('aria-invalid', String(!affordable));
-  app.querySelector('[data-action="sign"]').disabled = !affordable || !game.headline || coverLoading() || Boolean(pendingPressure(game));
+  const blocked = !affordable || !game.headline || coverLoading() || Boolean(pendingPressure(game));
+  app.querySelector('[data-action="sign"]').disabled = blocked;
+  deskPrimary.disabled = blocked;
   return {value, valid, affordable};
 }
 
@@ -937,10 +1052,11 @@ function openCity() {
   document.getElementById('paper-name').value = game.paperName || '';
   document.getElementById('year-field').hidden = game.cityReady;
   document.getElementById('campaign-year').value = String(game.year);
-  document.getElementById('city-submit').textContent = game.cityReady ? '保存名称' : '开始新一局';
+  document.getElementById('city-submit').textContent = game.cityReady ? '保存名称' : '创刊';
   cityDialog.querySelector('[data-action="close-city"]').hidden = !game.cityReady;
-  document.getElementById('city-error').textContent = !game.cityReady && outdatedSave ? '新规则需重开' :
+  document.getElementById('city-error').textContent = !game.cityReady && outdatedSave ? '旧报名册无法续用，请重新创刊。' :
     game.editions.length ? '新名称用于之后签发的报纸。' : '';
+  updateVisibleArea();
   cityDialog.showModal();
 }
 
@@ -961,7 +1077,9 @@ function openOriginal(id = null) {
   document.getElementById('original-body').value = existing?.body.join('\n') || '';
   document.getElementById('original-error').textContent = '';
   originalDialog.querySelector('[data-action="delete-original"]').hidden = !existing;
+  updateVisibleArea();
   originalDialog.showModal();
+  originalDialog.querySelector('.original-fields').scrollTop = 0;
 }
 
 function isCurrentDesk(request) {
@@ -984,7 +1102,7 @@ async function readCover(file) {
   if (!isCurrentDesk(request)) return;
   const next = cover && changeCover(game, cover);
   if (!next) {
-    coverError = '读不出这张照片。请换一张 20 MB 以内的 JPG、PNG 或 WebP。';
+    coverError = '这张照片送不进版面，请换一张小些的照片。';
     render();
     announce(coverError, 'notice');
   } else if (commit(next)) announce('头版照片已更换。');
@@ -1023,7 +1141,7 @@ function sign() {
 function advance() {
   const next = nextIssue(game);
   coverError = '';
-  collapsedStory = null;
+  expandedStory = null;
   if (next && commit(next, defaultView(next))) {
     window.scrollTo(0, 0);
     focusAppHeading();
@@ -1059,7 +1177,7 @@ function completeStoryWork(action, angle) {
     next = chooseAngle(game, id, angle);
   }
   if (!next) {
-    announce('这项采编当前无法安排，请查看编辑台时钟和记者状态。', 'notice');
+    announce('这趟采编现在排不开，请看截稿时间和记者回电。', 'notice');
     return;
   }
   if (!commit(next)) return;
@@ -1069,7 +1187,7 @@ function completeStoryWork(action, angle) {
     const details = app.querySelector('.report-details');
     if (details) details.open = detailsOpen;
     app.querySelector('[data-action="angle"][data-id="' + angle + '"]')?.focus({preventScroll:true});
-    announce('写法已切换为「' + PAPER_ANGLES.find(item => item.id === angle).label + '」。');
+    announce('这篇改用「' + PAPER_ANGLES.find(item => item.id === angle).label + '」。');
     return;
   }
   if (action === 'report') {
@@ -1108,7 +1226,7 @@ document.getElementById('city-form').addEventListener('submit', event => {
   if (commit(next)) {
     cityDialog.close();
     outdatedSave = false;
-    announce('已保存《' + newspaperName(game) + '》的报名与城市。');
+    announce('《' + newspaperName(game) + '》的报名与城市已登记。');
   }
 });
 
@@ -1126,13 +1244,13 @@ document.getElementById('original-form').addEventListener('submit', event => {
     return;
   }
   if (originalEditor.id && originalEditor.id === game.support && !originalFitsSupport(fields)) {
-    error.textContent = '这篇已排为副稿。请缩短正文，或先撤下副稿再写长稿。';
+    error.textContent = '这篇已排为二条。请缩短正文，或先撤下二条再写长稿。';
     return;
   }
   const next = saveOriginal(game, originalEditor.id, fields);
   if (next && commit(next)) {
     originalDialog.close();
-    app.querySelector('[data-id="' + game.focus + '"]')?.focus();
+    app.querySelector('[data-disclosure="desk-options"] summary')?.focus({preventScroll:true});
     announce('原创稿已保存。');
   }
 });
@@ -1166,6 +1284,15 @@ app.addEventListener('change', event => {
   document.getElementById('assignment-hint').hidden = !button.disabled;
 });
 
+app.addEventListener('toggle', event => {
+  const details = event.target;
+  if (details.isConnected && details.dataset.disclosure) disclosures.set(details.dataset.disclosure, details.open);
+}, true);
+
+paperDialog.addEventListener('close', () => {
+  if (view === 'desk' && deskStage === 'proof' && game.headline) openDeskStage('print');
+});
+
 cityDialog.addEventListener('cancel', event => {
   event.preventDefault();
   dismissCity();
@@ -1189,7 +1316,7 @@ restartDialog.addEventListener('close', () => {
   if (restartDialog.returnValue === 'restart') coverError = '';
   if (restartDialog.returnValue === 'restart' && commit(newGame(), 'desk')) {
     archiveIssue = 0;
-    collapsedStory = null;
+    expandedStory = null;
     clearDownloads();
     animated.clear();
     openCity();
@@ -1199,7 +1326,7 @@ restartDialog.addEventListener('close', () => {
 document.addEventListener('click', event => {
   const download = event.target.closest('a[data-download][href]');
   if (download) {
-    announce('头版 PNG 下载已开始。');
+    announce('头版正在下载。');
     return;
   }
   const button = event.target.closest('button[data-action], button[data-view]');
@@ -1219,15 +1346,13 @@ document.addEventListener('click', event => {
       (app.querySelector('[data-action="guide-close"]') || app.querySelector('h1'))?.focus({preventScroll:true});
       break;
     case 'focus-story':
-      if (id === game.focus) {
-        collapsedStory = collapsedStory === id ? null : id;
-        render();
-      } else {
-        collapsedStory = null;
-        if (!commit({...game, focus:id})) break;
-      }
-      app.querySelector('[data-id="' + id + '"]')?.focus({preventScroll:true});
+      if (id !== game.focus && !commit({...game, focus:id}, view, false)) break;
+      expandedStory = expandedStory === id ? null : id;
+      render();
+      app.querySelector('.lead[data-id="' + id + '"]')?.focus({preventScroll:true});
       break;
+    case 'desk-step': openDeskStage(id); break;
+    case 'skip-support': openDeskStage('proof'); break;
     case 'report':
     case 'verify-story':
     case 'follow-story':
@@ -1237,11 +1362,14 @@ document.addEventListener('click', event => {
     case 'headline':
     case 'support': {
       const next = placeStory(game, game.focus, action);
-      if (next && commit(next)) {
-        highlight('[data-id="' + game.focus + '"]', true);
+      if (next && commit(next, view, false)) {
+        deskStage = next.support ? 'proof' : 'support';
+        expandedStory = null;
+        render();
+        focusDeskStage();
         highlight('.proof-preview');
         announce(action === 'headline' ? '已排入头条，头版清样已更新。' :
-          next.support ? '副稿已排到头版左下。' : '已撤下所选副稿。');
+          next.support ? '二条已排到头版左下。' : '已撤下二条。');
       }
       break;
     }
@@ -1279,12 +1407,6 @@ document.addEventListener('click', event => {
       break;
     case 'open-proof': openProof(); break;
     case 'zoom-proof': setProofZoom(!paperViewport.classList.contains('zoomed')); break;
-    case 'show-print': {
-      const heading = document.getElementById('print-heading');
-      heading?.focus({preventScroll:true});
-      heading?.scrollIntoView({block:'start'});
-      break;
-    }
     case 'close-proof': paperDialog.close(); break;
     case 'new-original': openOriginal(); break;
     case 'edit-original': openOriginal(game.focus); break;
@@ -1293,7 +1415,7 @@ document.addEventListener('click', event => {
       const next = isCurrentDesk(originalEditor) && removeOriginal(game, originalEditor.id);
       if (next && commit(next)) {
         originalDialog.close();
-        app.querySelector('[data-action="new-original"]')?.focus();
+        app.querySelector('[data-disclosure="desk-options"] summary')?.focus({preventScroll:true});
         announce('原创草稿已删除。');
       }
       break;
@@ -1304,7 +1426,7 @@ document.addEventListener('click', event => {
       coverError = '';
       if (next && commit(next)) {
         app.querySelector('[data-action="choose-cover"]')?.focus({preventScroll:true});
-        announce('已恢复自动配图。');
+        announce('已换回本报资料图。');
       }
       break;
     }
@@ -1312,7 +1434,7 @@ document.addEventListener('click', event => {
     case 'close-city': dismissCity(); break;
     case 'skip-animation':
       finishAnimation?.();
-      announce('已显示当日销量与实收。');
+      announce('当日销量与回款已点清。');
       break;
     case 'hire':
     case 'fire': {
@@ -1380,6 +1502,20 @@ window.addEventListener('storage', event => {
     renderGuide();
   }
 });
+
+document.addEventListener('focusin', event => {
+  if (event.target.matches(editableField)) revealFocusedField();
+});
+window.addEventListener('resize', viewportResized);
+visualViewport?.addEventListener('resize', viewportResized);
+visualViewport?.addEventListener('scroll', updateVisibleArea);
+
+for (const type of ['gesturestart', 'gesturechange', 'gestureend']) {
+  document.addEventListener(type, event => event.preventDefault(), {passive:false});
+}
+document.addEventListener('touchmove', event => {
+  if (event.touches.length > 1 && event.cancelable) event.preventDefault();
+}, {passive:false});
 
 render();
 if (!game.cityReady) openCity();

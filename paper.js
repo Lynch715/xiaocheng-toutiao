@@ -121,7 +121,7 @@ function drawPaperPhoto(ctx, image, photo, x, y, width, height) {
   if (!image) {
     ctx.fillStyle = '#ddd6c8';
     ctx.fillRect(x, y, width, height);
-    paperText(ctx, photo.name + '　资料图暂缺', x + 18, y + 24, 15);
+    paperText(ctx, photo.name + '　本报资料图暂缺', x + 18, y + 24, 15);
     return;
   }
   const tiled = Number.isInteger(photo.tile);
@@ -223,7 +223,7 @@ function drawFullPaper(ctx, draft, image, photo, photoTop, left, right, line) {
     const photoRight = sidebar ? 539 : right;
     drawPaperPhoto(ctx, image, photo, left, photoTop, photoRight - left, photoHeight);
     paperText(ctx, cityText(photo.name, draft.city), left, photoBottom + 9, 12, 500, '#564b3a', PAPER_SANS);
-    paperTextRight(ctx, photo.custom ? '玩家供图' : photo.location ? '地点资料图' : '资料图',
+    paperTextRight(ctx, photo.custom ? '供图' : '本报资料图',
       photoRight, photoBottom + 9, 12, 500, '#564b3a');
   }
   if (photo && sidebar) {
@@ -249,7 +249,7 @@ function drawFullPaper(ctx, draft, image, photo, photoTop, left, right, line) {
   ctx.translate(0, paperFlashHeight(draft));
   paperRule(ctx, left, 830, right, 830, '#3b3327', 2);
   if (sidebar || draft.secondary.length) {
-    paperText(ctx, sidebar ? cityText('临渡街巷', draft.city) : '副稿', left, 840, 13, 800, PRESS_RED);
+    paperText(ctx, sidebar ? cityText('临渡街巷', draft.city) : '二条', left, 840, 13, 800, PRESS_RED);
   }
   paperRule(ctx, left, 858, right, 858, line);
   paperRule(ctx, 400, 869, 400, 977, '#b7aa92');
@@ -258,7 +258,7 @@ function drawFullPaper(ctx, draft, image, photo, photoTop, left, right, line) {
     const pendingWidth = frontAd ? 351 : right - left;
     ctx.fillStyle = '#e5e0d7';
     ctx.fillRect(left, 869, pendingWidth, 110);
-    paperText(ctx, '副稿待定', left + 16, 913, 20, 650, '#68625a');
+    paperText(ctx, '二条待定', left + 16, 913, 20, 650, '#68625a');
   }
   const secondary = frontAd ? draft.secondary.slice(0, 1) : draft.secondary;
   secondary.forEach((item, i) => {
@@ -284,8 +284,6 @@ function drawFullPaper(ctx, draft, image, photo, photoTop, left, right, line) {
   }
   paperRule(ctx, left, 989, right, 989, '#897b64');
   paperText(ctx, newspaperName(draft) + '编辑部', left, 999, 12, 500, '#5a4b3b', PAPER_SERIF, 420);
-  paperTextRight(ctx, draft.corrections?.length ? '《小城头条》游戏样报 · 本期有刊后更正' : '《小城头条》游戏样报',
-    right, 999, 12, 500, '#5a4b3b');
   ctx.restore();
 }
 
@@ -328,13 +326,21 @@ async function renderNewspaper(canvas, draft) {
   paperTextRight(ctx, '总第 ' + String(draft.issue).padStart(3, '0') + ' 期', right, 37, 13);
   paperRule(ctx, left, 59, right, 59, line);
   const masthead = newspaperName(draft);
+  const mastheadRule = 181;
+  const ruleWidth = 3;
+  const ruleTop = mastheadRule - ruleWidth / 2;
+  ctx.textBaseline = 'alphabetic';
   let mastSize = 108;
-  paperFont(ctx, mastSize, 900);
-  while (mastSize > 22 && ctx.measureText(masthead).width > 505) {
-    mastSize--;
+  let mastDescent;
+  for (; mastSize >= 22; mastSize--) {
     paperFont(ctx, mastSize, 900);
+    const metrics = ctx.measureText(masthead);
+    mastDescent = metrics.actualBoundingBoxDescent ?? mastSize * .12;
+    const ascent = metrics.actualBoundingBoxAscent ?? mastSize * .88;
+    if (mastSize === 22 || (metrics.width <= 505 && ascent + mastDescent <= ruleTop - mastSize * .15 - 65)) break;
   }
-  paperText(ctx, masthead, left + 2, 68 + (108 - mastSize) * .58, mastSize, 900, PRESS_RED, PAPER_SERIF, 505);
+  paperText(ctx, masthead, left + 2, ruleTop - mastSize * .15 - mastDescent, mastSize, 900, PRESS_RED, PAPER_SERIF, 505);
+  ctx.textBaseline = 'top';
   paperFont(ctx, 18, 800);
   const badgeWidth = ctx.measureText(draft.name).width + 20;
   ctx.strokeStyle = '#ad574a';
@@ -342,7 +348,7 @@ async function renderNewspaper(canvas, draft) {
   ctx.strokeRect(right - badgeWidth, 115, badgeWidth, 34);
   paperTextRight(ctx, draft.name, right - 10, 122, 18, 800, PRESS_RED);
   paperTextRight(ctx, '每周六出版　零售价 0.50 元', right, 155, 12);
-  paperRule(ctx, left, 181, right, 181, PRESS_RED, 3);
+  paperRule(ctx, left, mastheadRule, right, mastheadRule, PRESS_RED, ruleWidth);
   paperText(ctx, '第一版　要闻', left, 192, 14, 800, PRESS_RED);
   paperTextRight(ctx, draft.section, right, 192, 14, 800, PRESS_RED);
   paperRule(ctx, left, 214, right, 214, PRESS_RED);
