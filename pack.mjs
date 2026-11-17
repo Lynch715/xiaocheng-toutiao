@@ -7,6 +7,7 @@ const scripts = ['news.js', 'stories.js', 'editorial.js', 'followups.js', 'press
 
 let html = await read('index.html');
 const css = await read('style.css');
+const favicon = await readFile(new URL('favicon.ico', here));
 const libraryFiles = runInNewContext(await read('stories.js') + '\nArray.from(LIBRARY_PHOTOS.values(), photo => photo.file)');
 const assets = [
   ['millennium', '素材/千禧广场.webp'], ['scenes', '素材/临渡资料图.webp'], ['football', '素材/临渡足球场.webp'],
@@ -18,6 +19,7 @@ const imageUrls = Object.fromEntries(await Promise.all(assets.map(async ([key, f
   return [key, `data:image/${mime};base64,${bytes.toString('base64')}`];
 })));
 html = html.replace('<link rel="stylesheet" href="style.css">', () => '<style>\n' + css + '</style>');
+html = html.replace('href="favicon.ico"', () => `href="data:image/x-icon;base64,${favicon.toString('base64')}"`);
 html = html.replace(/<script id="assets">[^<]*<\/script>/, () =>
   '<script>const PAPER_ASSET_URLS = ' + JSON.stringify(imageUrls) + ';</script>');
 for (const file of scripts) {
