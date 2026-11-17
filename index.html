@@ -7,7 +7,7 @@
 <meta name="description" content="从 2000 年起，每周六出版一张地方小报。">
 <title>小城头条</title>
 <link rel="icon" type="image/x-icon" sizes="16x16 32x32 48x48 64x64" href="favicon.ico">
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="style.css?v=28febb2">
 </head>
 <body class="game">
 <header class="appbar">
@@ -25,6 +25,7 @@
         <button type="button" data-view="archive">合订本</button>
       </nav>
     </div>
+    <button id="achievements-button" class="soft" type="button" data-action="open-achievements" aria-haspopup="dialog">成就 <strong id="points-total">0 分</strong></button>
   </div>
 </header>
 <main id="app" class="game-main"></main>
@@ -40,10 +41,17 @@
     <canvas id="large-proof" role="img" aria-label="头版大样"></canvas>
   </div>
 </dialog>
+<dialog id="achievements-dialog" aria-labelledby="achievements-title">
+  <header class="dialog-head">
+    <h2 id="achievements-title">报社成就</h2>
+    <button type="button" data-action="close-achievements" autofocus>关闭</button>
+  </header>
+  <div id="achievement-content" class="achievement-content"></div>
+</dialog>
 <dialog id="restart-dialog" aria-labelledby="restart-title">
   <form method="dialog" class="restart-form">
     <h2 id="restart-title">重新创刊</h2>
-    <p>重新创刊将清掉现有的发行记录和合订本，从第一期办起。</p>
+    <p>重新创刊将从第一期办起，现有的发行记录、合订本、成就和积分会清空。</p>
     <div class="form-actions"><button type="submit" value="cancel" autofocus>取消</button>
       <button type="submit" value="restart" class="issue">重新创刊</button></div>
   </form>
@@ -55,6 +63,8 @@
     <label class="city-field">报名 <input id="paper-name" autocomplete="off" aria-describedby="paper-name-hint" required></label>
     <small id="paper-name-hint" class="field-hint">最多 18 字，按填写的名称登上报头。</small>
     <label class="city-field">城市名 <input id="city-name" maxlength="8" autocomplete="off" required></label>
+    <label class="city-field">总编辑姓名 <input id="editor-name" autocomplete="off" aria-describedby="editor-name-hint"></label>
+    <small id="editor-name-hint" class="field-hint">选填，最多 18 字，署名印在头版下方。</small>
     <label class="city-field" id="year-field">创刊年份 <select id="campaign-year" required>
       <option value="2000">2000 年</option><option value="2001">2001 年</option>
       <option value="2002">2002 年</option><option value="2003">2003 年</option>
@@ -101,8 +111,8 @@
 <script src="editorial.js"></script>
 <script src="followups.js"></script>
 <script src="pressure.js"></script>
-<script src="model.js"></script>
-<script src="paper.js"></script>
-<script src="game.js"></script>
+<script src="model.js?v=28febb2"></script>
+<script src="paper.js?v=28febb2"></script>
+<script src="game.js?v=28febb2"></script>
 </body>
 </html>

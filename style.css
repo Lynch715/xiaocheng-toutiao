@@ -24,7 +24,7 @@ button { font: inherit; }
 .game { background: var(--ground); font: 15px/1.55 var(--sans); }
 .appbar { padding-top: var(--safe-top); background: #f9f7f0; border-top: 5px solid var(--red-dark); border-bottom: 1px solid #d1c9bb; }
 .appbar-inner { max-width: 1350px; margin: auto; padding: 0 38px; min-height: 75px; display: flex; align-items: center; gap: 53px; }
-.brand { font: 800 21px/1.25 var(--serif); letter-spacing: .02em; display: flex; align-items: center; gap: 11px; }
+.brand { font: 800 21px/1.25 var(--serif); letter-spacing: .02em; display: flex; align-items: center; gap: 11px; min-width: 0; }
 #progress { min-width: 0; overflow-wrap: anywhere; }
 #masthead-issue::before { content: ' · '; }
 .brand-mark { width: 27px; height: 32px; background: var(--red); display: grid; flex-shrink: 0; place-content: center; }
@@ -32,6 +32,8 @@ button { font: inherit; }
 .brand-mark i:first-child { height: 5px; margin-bottom: 3px; }
 .appnav { display: flex; align-items: stretch; align-self: stretch; gap: 32px; color: var(--muted); white-space: nowrap; }
 .workbar { display: flex; align-self: stretch; }
+#achievements-button { margin-left: auto; display: inline-flex; flex: none; align-items: center; gap: 6px; white-space: nowrap; }
+#points-total { color: var(--red-dark); }
 .desk-shortcuts, .archive-picker, .archive-meta { display: none; }
 .game-main { max-width: 1350px; margin: auto; padding: 32px 38px 36px; }
 .page-title { display: flex; justify-content: space-between; align-items: end; margin-bottom: 24px; gap: 20px; }
@@ -186,6 +188,19 @@ button:disabled { cursor: default; opacity: .52; }
 .export-link[aria-disabled="true"]:not([hidden])::after { content: " · 准备中"; }
 #paper-dialog { width: min(860px, calc(100% - 22px)); max-height: calc(100dvh - var(--dialog-top) - var(--dialog-bottom)); padding: 0; border: 1px solid var(--line); background: #e6e0d5; color: var(--ink); }
 #paper-dialog[open] { display: flex; flex-direction: column; }
+#achievements-dialog { width: min(490px, calc(100% - 24px)); max-height: calc(100dvh - var(--dialog-top) - var(--dialog-bottom)); padding: 0; border: 1px solid var(--line); background: var(--sheet); color: var(--ink); }
+#achievements-dialog[open] { display: flex; flex-direction: column; }
+.achievement-content { min-height: 0; overflow: auto; overscroll-behavior: contain; }
+.achievement-total { padding: 12px 16px 14px; background: #f3e9de; border-bottom: 1px solid var(--line); }
+.achievement-total > strong { color: var(--red-dark); font: 750 29px/1.2 var(--serif); }
+.achievement-total p, .achievement-list p { color: var(--muted); font-size: 13px; margin-top: 3px; }
+.achievement-count { padding: 10px 16px 0; color: var(--muted); font-size: 12px; }
+.achievement-list { margin: 0; padding: 0 16px 8px; list-style: none; }
+.achievement-list li { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 9px 0; border-bottom: 1px solid var(--line); }
+.achievement-list li:last-child { border-bottom: 0; }
+.achievement-list li > span { text-align: right; color: var(--muted); font-size: 12px; white-space: nowrap; }
+.achievement-list li.earned > span { color: var(--red-dark); }
+.achievement-list b { display: block; }
 .game dialog::backdrop { background: #27221bc2; }
 .dialog-head { flex: none; background: var(--sheet); border-bottom: 1px solid var(--line); padding: 10px 14px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 6px; }
 .dialog-actions { display: flex; flex-wrap: wrap; gap: 6px; }
@@ -276,7 +291,7 @@ button:disabled { cursor: default; opacity: .52; }
   html { scroll-padding-block: calc(12px + var(--safe-top)) calc(114px + var(--safe-bottom)); }
   .game { --workbar-height: calc(51px + var(--safe-bottom)); }
   .game:has(.desk-shortcuts:not([hidden])) { --workbar-height: calc(104px + var(--safe-bottom)); }
-  .appbar-inner { display: block; min-height: 0; padding: 9px max(14px, env(safe-area-inset-right)) 9px max(14px, env(safe-area-inset-left)); }
+  .appbar-inner { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 8px; min-height: 0; padding: 9px max(14px, env(safe-area-inset-right)) 9px max(14px, env(safe-area-inset-left)); }
   .brand { font-size: 17px; gap: 8px; }
   .brand-mark { width: 22px; height: 27px; }
   .brand-mark i { width: 9px; }

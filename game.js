@@ -1,6 +1,9 @@
 const app = document.getElementById('app');
 const announcer = document.getElementById('announcer');
 const paperDialog = document.getElementById('paper-dialog');
+const achievementsDialog = document.getElementById('achievements-dialog');
+const pointsTotal = document.getElementById('points-total');
+const achievementContent = document.getElementById('achievement-content');
 const paperViewport = document.getElementById('paper-viewport');
 const proofZoom = paperDialog.querySelector('[data-action="zoom-proof"]');
 const restartDialog = document.getElementById('restart-dialog');
@@ -261,6 +264,7 @@ function paperPanel(draft, signed) {
   const preview = '<div class="proof-preview" style="aspect-ratio:800/' + (1040 + paperFlashHeight(draft)) +
     '"><canvas id="proof" role="img" aria-label="' +
     h(newspaperName(draft) + '头版：' + draft.title + '。' + draft.body[0] +
+      (draft.editorName ? ' 总编辑：' + draft.editorName : '') +
       (draft.supportId ? ' 二条：' + draft.secondary[0].title : supportPending ? ' 二条待定' : '') +
       (draft.flashes?.length ? ' 简讯：' + draft.flashes.map(item => item.text).join('') : '')) + '"></canvas>' +
     '<span class="proof-loading">清样排版中…</span></div>';
@@ -391,9 +395,17 @@ function deskClockPanel() {
 
 function deskView() {
   if (game.phase !== 'desk') {
-    return pageHeader('周五编辑台', newspaperName(game)) +
-      '<section class="panel blank"><p>' + (game.phase === 'complete' ? '本年已经结账。' : '本期已经付印，周六的发行回单到了。') +
-      '</p><button type="button" class="soft accent" data-view="sales">查看发行</button></section>';
+    const title = pageHeader('编辑台', newspaperName(game));
+    if (game.phase === 'complete') {
+      return title + '<section class="panel blank"><p>本年已经结账。</p>' +
+        '<button type="button" class="soft accent" data-view="sales">查看结算</button></section>';
+    }
+    const pending = game.editions.at(-1).reprint === null;
+    return title + '<section class="panel blank"><p>本期已经付印，周六的发行回单到了。' +
+      (pending ? '还有报摊来电等你决定是否补印。' : '') + '</p><div class="report-buttons">' +
+      '<button type="button" class="soft" data-view="sales">查看发行</button>' +
+      '<button type="button" class="issue" data-action="' + (pending ? 'next-without-reprint' : 'next') + '">' +
+      (pending ? '不补印，进入下一期' : nextIssueLabel()) + '</button></div></section>';
   }
   const week = issueWeek(game.week, game.year);
   const dates = weekDates(game.week, game.year);
@@ -635,6 +647,10 @@ function finishReprint(orders) {
   }
 }
 
+function nextIssueLabel() {
+  return nextIssue(game)?.ending === 'insolvent' ? '查看资金链断裂结局' : '进入下一期';
+}
+
 function salesView() {
   if (game.phase === 'complete') return annualSummaryView();
   if (game.phase !== 'sales') return channelsView();
@@ -651,7 +667,6 @@ function salesView() {
       ' 补送 ' + number(stand.reprint.copies) + ' 份，卖出 ' + number(stand.reprint.sold) +
       ' 份，退回 ' + number(stand.reprint.returned) + ' 份。' :
       edition.reprint && stand.requests > stand.printed && stand.stockout ? ' 本摊未补送。' : '') + '</td></tr>' : '')).join('');
-  const nextLabel = nextIssue(game)?.ending === 'insolvent' ? '查看资金链断裂结局' : '进入下一期';
   return pageHeader('周六发行', newspaperName(edition) + ' · 第 ' + edition.issue + ' 期 · ' + dotted(edition.date)) +
     '<div class="workspace"><section class="panel sales-panel"><header class="receipt-head"><div><h2>发行回单</h2>' +
     '<p>' + h(edition.title) + '</p></div><span class="flag red">当日</span></header><div class="sales-number">' +
@@ -671,7 +686,7 @@ function salesView() {
     edition.corrections.map(item => '<section class="receipt-detail"><h3>刊后更正</h3><p>' + h(item.text) + '</p></section>').join('') +
     (edition.adNotice ? '<section class="receipt-detail"><h3>广告回单</h3><p>' + h(edition.adNotice) + '</p></section>' : '') +
     '<p class="stand-note">本年累计实售 ' + number(soldOf(game)) + ' 份。</p>' +
-    '<div class="sales-actions"><button type="button" class="issue" data-action="next"' + (edition.reprint === null ? ' disabled' : '') + '>' + nextLabel + '<b aria-hidden="true">→</b></button>' +
+    '<div class="sales-actions"><button type="button" class="issue" data-action="next"' + (edition.reprint === null ? ' disabled' : '') + '>' + nextIssueLabel() + '<b aria-hidden="true">→</b></button>' +
     '<a class="soft export-link" data-download aria-disabled="true">下载头版</a></div></section>' +
     paperPanel(edition, true) + '</div>' + bottom('各项收入和支出已记入财务台账。');
 }
@@ -928,6 +943,7 @@ function render() {
     else button.removeAttribute('aria-current');
   }
   app.innerHTML = VIEWS[view]();
+  renderAchievements();
   deskShortcuts.hidden = view !== 'desk' || game.phase !== 'desk';
   if (!deskShortcuts.hidden) renderDeskPrimary();
   renderGuide();
@@ -946,6 +962,20 @@ function render() {
     });
   }
   animateSales();
+}
+
+function renderAchievements() {
+  const {total, pressPoints, salePoints, awardPoints, achievements} = newsroomProgress(game);
+  pointsTotal.textContent = number(total) + ' 分';
+  if (!achievementsDialog.open) return;
+  const earned = achievements.filter(achievement => achievement.earned).length;
+  achievementContent.innerHTML = '<div class="achievement-total"><strong>' + number(total) +
+    ' 分</strong><p>签发 ' + number(pressPoints) + ' · 实售 ' + number(salePoints) + ' · 成就 ' + number(awardPoints) + '</p>' +
+    '<p>每签发一期得 10 分，累计实售每满 1,000 份得 1 分，每项成就只计一次。</p></div>' +
+    '<p class="achievement-count">已达成 ' + earned + ' / ' + achievements.length + '</p><ul class="achievement-list">' +
+    achievements.map(({name, description, reward, earned}) => '<li' + (earned ? ' class="earned"' : '') +
+      '><div><strong>' + h(name) + '</strong><p>' + h(description) + '</p></div><span>' +
+      (earned ? '已达成' : '待达成') + '<b>+' + reward + ' 分</b></span></li>').join('') + '</ul>';
 }
 
 function renderDeskPrimary() {
@@ -1044,7 +1074,8 @@ function openProof() {
   link.dataset.issue = String(largeProof.draft.issue);
   link.removeAttribute('href');
   link.setAttribute('aria-disabled', 'true');
-  canvas.setAttribute('aria-label', newspaperName(largeProof.draft) + '头版：' + largeProof.draft.title);
+  canvas.setAttribute('aria-label', newspaperName(largeProof.draft) + '头版：' + largeProof.draft.title +
+    (largeProof.draft.editorName ? '。总编辑：' + largeProof.draft.editorName : ''));
   paperDialog.showModal();
   setProofZoom(false);
   renderNewspaper(canvas, largeProof.draft).then(rendered => {
@@ -1058,12 +1089,13 @@ function openCity() {
   document.getElementById('city-title').textContent = game.cityReady ? '城市与报纸' : '给报纸和城市起名';
   document.getElementById('city-name').value = game.city;
   document.getElementById('paper-name').value = game.paperName || '';
+  document.getElementById('editor-name').value = game.editorName || '';
   document.getElementById('year-field').hidden = game.cityReady;
   document.getElementById('campaign-year').value = String(game.year);
   document.getElementById('city-submit').textContent = game.cityReady ? '保存名称' : '创刊';
   cityDialog.querySelector('[data-action="close-city"]').hidden = !game.cityReady;
   document.getElementById('city-error').textContent = !game.cityReady && outdatedSave ? '旧报名册无法续用，请重新创刊。' :
-    game.editions.length ? '新名称用于之后签发的报纸。' : '';
+    game.editions.length ? '新名称和署名用于之后签发的报纸。' : '';
   updateVisibleArea();
   cityDialog.showModal();
 }
@@ -1146,8 +1178,9 @@ function sign() {
   } else finishPress(value);
 }
 
-function advance() {
-  const next = nextIssue(game);
+function advance(withoutReprint = false) {
+  const settled = withoutReprint ? settleReprint(game, {}) : game;
+  const next = settled && nextIssue(settled);
   coverError = '';
   expandedStory = null;
   if (next && commit(next, defaultView(next))) {
@@ -1225,16 +1258,21 @@ document.getElementById('city-form').addEventListener('submit', event => {
     document.getElementById('city-error').textContent = '请填写 1～8 个汉字、英文字母或数字。';
     return;
   }
+  const editorName = document.getElementById('editor-name').value.trim();
+  if (editorName && !validPaperName(editorName)) {
+    document.getElementById('city-error').textContent = '总编辑姓名请填 18 字以内。';
+    return;
+  }
   const year = game.cityReady ? game.year : Number(document.getElementById('campaign-year').value);
   if (!CAMPAIGN_YEARS.includes(year)) {
     document.getElementById('city-error').textContent = '请选择创刊年份。';
     return;
   }
   const next = game.cityReady ? {...game, city, paperName} : newCampaign(game.seed, city, true, paperName, true, year);
-  if (commit(next)) {
+  if (commit({...next, editorName:editorName || null})) {
     cityDialog.close();
     outdatedSave = false;
-    announce('《' + newspaperName(game) + '》的报名与城市已登记。');
+    announce('《' + newspaperName(game) + '》的报纸资料已登记。');
   }
 });
 
@@ -1406,6 +1444,12 @@ document.addEventListener('click', event => {
       break;
     }
     case 'next': advance(); break;
+    case 'next-without-reprint': advance(true); break;
+    case 'open-achievements':
+      achievementsDialog.showModal();
+      renderAchievements();
+      break;
+    case 'close-achievements': achievementsDialog.close(); break;
     case 'reprint': confirmReprint(); break;
     case 'open-edition':
       archiveIssue = Number(issue);

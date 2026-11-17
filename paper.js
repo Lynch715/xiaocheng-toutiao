@@ -284,6 +284,7 @@ function drawFullPaper(ctx, draft, image, photo, photoTop, left, right, line) {
   }
   paperRule(ctx, left, 989, right, 989, '#897b64');
   paperText(ctx, newspaperName(draft) + '编辑部', left, 999, 12, 500, '#5a4b3b', PAPER_SERIF, 420);
+  if (draft.editorName) paperTextRight(ctx, '总编辑：' + draft.editorName, right, 999, 12, 600, '#5a4b3b');
   ctx.restore();
 }
 

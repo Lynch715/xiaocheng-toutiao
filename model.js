@@ -733,7 +733,7 @@ function editionDraft(campaign, story) {
   }
   return {
     issue:index + 1, name:week.name, date:week.date, section:story.section, storyId:story.id, city,
-    paperName:newspaperName(campaign), cover:campaign.cover || null,
+    paperName:newspaperName(campaign), editorName:campaign.editorName ?? null, cover:campaign.cover || null,
     flashes:selectedBriefs(campaign).map(item => ({id:item.id, section:item.section, text:local(item.flash), stored:item.stored})),
     angle:angle.label, title:storyText(story, copy.title, city),
     subtitle:story.original || story.library ? '' : local(special && angle.id === 'news' ? '广场钟声敲过零点，街坊一起迎接新年' :
@@ -941,6 +941,31 @@ function finishYear(campaign) {
   return applyPublicationPressure({...campaign, phase:'complete', ending:'year'}, null);
 }
 
+function newsroomProgress(campaign) {
+  const editions = campaign.editions;
+  const signed = editions.length;
+  const sold = soldOf(campaign);
+  const completed = campaign.ending === 'year';
+  const original = id => /^original-[1-3]$/.test(id);
+  const achievements = [
+    {name:'创刊见报', description:'签发第一期报纸', reward:20, earned:signed >= 1},
+    {name:'两条上版', description:'同一期刊出头条和二条', reward:15, earned:editions.some(edition => edition.supportId)},
+    {name:'原创见报', description:'刊出一篇自己的原创稿', reward:25,
+      earned:editions.some(edition => original(edition.storyId) || original(edition.supportId))},
+    {name:'第一份广告', description:'刊登广告并收到广告费', reward:15, earned:editions.some(edition => edition.ad > 0)},
+    {name:'报摊催印', description:'完成一次补印', reward:20, earned:editions.some(edition => edition.reprint?.printed > 0)},
+    {name:'十二期报纸', description:'累计签发十二期', reward:40, earned:signed >= 12},
+    {name:'五万份出摊', description:'累计实售五万份', reward:40, earned:sold >= 50000},
+    {name:'全年交卷', description:'办到年末并出版最后一期', reward:80, earned:completed},
+    {name:'入围省奖', description:'年终获得省好新闻奖提名', reward:50,
+      earned:completed && annualAwardResults(campaign).nominations.length > 0}
+  ];
+  const pressPoints = signed * 10;
+  const salePoints = Math.floor(sold / 1000);
+  const awardPoints = achievements.reduce((points, award) => points + (award.earned ? award.reward : 0), 0);
+  return {pressPoints, salePoints, awardPoints, total:pressPoints + salePoints + awardPoints, achievements};
+}
+
 function annualSummary(campaign) {
   const count = campaign.ending === 'year' ? yearIssueCount(campaign.year) : campaign.week + 1;
   const curve = Array(count).fill(0);
@@ -1056,6 +1081,7 @@ function validMarket(campaign) {
 function validSave(saved) {
   if (!saved || saved.version !== SAVE_VERSION || !normalizeCity(saved.city) || typeof saved.cityReady !== 'boolean' ||
       (saved.cityReady ? !validPaperName(saved.paperName) : saved.paperName !== null) ||
+      (saved.editorName != null && !validPaperName(saved.editorName)) ||
       (saved.cover != null && !validCover(saved.cover)) ||
       (saved.originals != null && !validOriginals(saved.originals)) ||
       !Number.isInteger(saved.seed) || !Number.isInteger(saved.revision) || !Number.isInteger(saved.week) || saved.week < 0 ||
@@ -1093,7 +1119,7 @@ function validSave(saved) {
   return saved.editions.every((edition, index) => Number.isInteger(edition?.issue) &&
     edition.issue > (saved.editions[index - 1]?.issue || 0) &&
     edition.issue <= saved.week + 1 && edition.date === issueWeek(edition.issue - 1, saved.year).date &&
-    validPaperName(edition.paperName) &&
+    validPaperName(edition.paperName) && (edition.editorName == null || validPaperName(edition.editorName)) &&
     (edition.cover == null || validCover(edition.cover)) &&
     (edition.nextLead == null || READER_LEADS.has(edition.nextLead)) &&
     typeof edition.title === 'string' && typeof edition.subtitle === 'string' &&
