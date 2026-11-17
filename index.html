@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#eeece5">
+<meta name="description" content="从 2000 年起，每周六出版一张地方小报。">
+<title>小城头条</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="game">
+<header class="appbar">
+  <div class="appbar-inner">
+    <div class="brand"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span><span id="progress"><span id="masthead-name"></span><span id="masthead-issue"></span></span></div>
+    <div class="workbar">
+      <div id="desk-shortcuts" class="desk-shortcuts" hidden>
+        <button type="button" class="soft" data-action="open-proof">查看大样 ↗</button>
+        <button type="button" class="soft accent" data-action="show-print">印刷安排 ↓</button>
+      </div>
+      <nav class="appnav" aria-label="工作区">
+        <button type="button" data-view="desk">采编台</button>
+        <button type="button" data-view="sales">发行</button>
+        <button type="button" data-view="staff">记者</button>
+        <button type="button" data-view="finance">财务</button>
+        <button type="button" data-view="archive">合订本</button>
+      </nav>
+    </div>
+  </div>
+</header>
+<main id="app" class="game-main"></main>
+<div class="feedback" id="announcer" role="status" aria-atomic="true"></div>
+<dialog id="paper-dialog" aria-labelledby="paper-dialog-title">
+  <header class="dialog-head">
+    <h2 id="paper-dialog-title">头版大样</h2>
+    <div class="dialog-actions"><a class="soft export-link" data-download aria-disabled="true">下载 PNG</a>
+      <button class="proof-zoom" type="button" data-action="zoom-proof" aria-pressed="false" aria-controls="paper-viewport">放大</button>
+      <button type="button" data-action="close-proof" autofocus>关闭</button></div>
+  </header>
+  <div id="paper-viewport" class="paper-viewport" tabindex="0" role="region" aria-label="头版阅读区">
+    <canvas id="large-proof" role="img" aria-label="头版大样"></canvas>
+  </div>
+</dialog>
+<dialog id="restart-dialog" aria-labelledby="restart-title">
+  <form method="dialog" class="restart-form">
+    <h2 id="restart-title">重开试玩</h2>
+    <p>新一局将从创刊号开始，并替换当前的试玩进度和合订本。</p>
+    <div><button type="submit" value="cancel" autofocus>取消</button>
+      <button type="submit" value="restart" class="issue">开始新一局</button></div>
+  </form>
+</dialog>
+<dialog id="city-dialog" aria-labelledby="city-title">
+  <form id="city-form" class="restart-form">
+    <h2 id="city-title">给报纸和城市起名</h2>
+    <p>每周六发行一期，从创刊年份的第一个周六办到年底。</p>
+    <label class="city-field">报名 <input id="paper-name" autocomplete="off" aria-describedby="paper-name-hint" required autofocus></label>
+    <small id="paper-name-hint" class="field-hint">最多 18 字，按填写的名称登上报头。</small>
+    <label class="city-field">城市名 <input id="city-name" maxlength="8" autocomplete="off" required></label>
+    <label class="city-field" id="year-field">创刊年份 <select id="campaign-year" required>
+      <option value="2000">2000 年</option><option value="2001">2001 年</option>
+      <option value="2002">2002 年</option><option value="2003">2003 年</option>
+    </select></label>
+    <span class="form-status" id="city-error" aria-live="polite"></span>
+    <div><button type="button" data-action="close-city">取消</button><button type="submit" id="city-submit" class="issue">开始新一局</button></div>
+  </form>
+</dialog>
+<dialog id="original-dialog" aria-labelledby="original-title">
+  <form id="original-form" class="restart-form">
+    <h2 id="original-title">写原创稿</h2>
+    <label class="city-field">新闻类别 <select id="original-topic"></select></label>
+    <label class="city-field">稿件标题 <input id="original-headline" autocomplete="off" required autofocus></label>
+    <label class="city-field">正文 <textarea id="original-body" rows="8" aria-describedby="original-hint" required></textarea></label>
+    <small id="original-hint" class="field-hint">标题最多 28 字，正文最多 420 字、6 段。排为头版副稿时正文最多 105 字。</small>
+    <span class="form-status" id="original-error" aria-live="polite"></span>
+    <div><button class="soft delete-original" type="button" data-action="delete-original" hidden>删除草稿</button>
+      <button type="button" data-action="close-original">取消</button>
+      <button type="submit" class="issue">保存草稿</button></div>
+  </form>
+</dialog>
+<input id="cover-file" type="file" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp" hidden>
+<dialog id="risk-dialog" aria-labelledby="risk-title">
+  <form method="dialog" class="restart-form">
+    <h2 id="risk-title">签发前还有材料待核</h2>
+    <p id="risk-copy"></p>
+    <div><button type="submit" value="cancel" autofocus>回到采编台</button>
+    <button type="submit" value="publish" class="issue">仍然签发</button></div>
+  </form>
+</dialog>
+<dialog id="reprint-dialog" aria-labelledby="reprint-title">
+  <form method="dialog" class="restart-form">
+    <h2 id="reprint-title">财务老周来电</h2>
+    <p id="reprint-reserve-copy"></p>
+    <div><button type="submit" value="cancel" autofocus>回去改补印单</button>
+      <button type="submit" value="confirm" class="issue">照单补印</button></div>
+  </form>
+</dialog>
+<script id="assets">const PAPER_ASSET_URLS = {millennium: '素材/千禧广场.webp', scenes: '素材/临渡资料图.webp', football: '素材/临渡足球场.webp'};</script>
+<script src="news.js"></script>
+<script src="stories.js"></script>
+<script src="editorial.js"></script>
+<script src="followups.js"></script>
+<script src="pressure.js"></script>
+<script src="model.js"></script>
+<script src="paper.js"></script>
+<script src="game.js"></script>
+</body>
+</html>
