@@ -3233,9 +3233,25 @@ const LIBRARY_PHOTOS = new Map([
   }])
 ]);
 
+// 三年版新增稿没有专属图：按稿件写到的地方借用一张同类空镜资料图，找不到再按题材挑。
+const FALLBACK_PHOTO_RULES = [
+  [/医院|卫生院|门诊|药/u, '医院门口'], [/学校|小学|中学|附小|职校|夜校|托儿所|学区|学院|大学|教务/u, '学校'],
+  [/车站|客运|公交|汽车|调度|班车|候车|火车/u, '客运站'], [/菜|粮|市场|集贸|供应社|副食/u, '菜场'],
+  [/厂|车间|工地|宿舍/u, '厂门'], [/江边|河堤|河滩|渡口|码头|轮渡/u, '河堤'],
+  [/百货|商店|柜台|修理|营业厅|门市/u, '百货柜台'], [/球|体育|乒乓|游泳|田径/u, '足球场'],
+  [/广场|文化宫|文化馆|少年宫|影院|戏|电影|晚会|庙会|俱乐部/u, '市民广场'], [/巷|街|铺|行|馆|店|社|所/u, '老街']
+];
+const FALLBACK_PHOTO_SECTIONS = {街巷:'老街', 民生:'老街', 消费:'菜场', 交通:'客运站', 教育:'学校', 奇闻:'河堤',
+  文娱:'市民广场', 体育:'足球场', 科技:'百货柜台', 节庆:'市民广场', 跨年:'市民广场'};
+
 function libraryPhotoId(story) {
   if (story.photoNumber) return story.id;
-  return story.photoLocation ? `location:${story.photoLocation}` : null;
+  if (story.photoLocation) return `location:${story.photoLocation}`;
+  if (!story.roundSeven) return null;
+  // 先看稿件走访的地点名，地点名对不上再按题材挑。
+  const visited = /走访了临渡([^。，]+)/u.exec(story.lead)?.[1] || '';
+  const place = FALLBACK_PHOTO_RULES.find(([pattern]) => pattern.test(visited))?.[1] || FALLBACK_PHOTO_SECTIONS[story.section];
+  return place ? `location:${place}` : null;
 }
 
 const LIBRARY_PHOTO_IDS = new Map(STORIES.map(story => [story.id, libraryPhotoId(story)]));

@@ -904,6 +904,7 @@ span.map-pin { cursor: default; }
 .archive-row { padding: 5px 12px; gap: 10px; grid-template-columns: 116px 1fr auto; }
 .archive-row span { font-family: var(--num); }
 .archive-row span br { display: none; }
+.archive-row span i { font-style: normal; margin-left: 8px; color: var(--muted); }
 .archive-row strong { font: 600 14px/1.4 var(--serif); }
 .archive-row.active { background: var(--accent-soft); box-shadow: inset 3px 0 var(--accent); }
 /* 发行回单与每周结算：控制台密度 */

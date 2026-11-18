@@ -2,7 +2,9 @@
 const FEEDBACK_CONFIG = {
   campaign:{
     // 周六见报。逐年重订房租、记者周薪和每份纸张印刷费，金额单位为分。
-    prices:[{office:1, salary:1, paper:20}, {office:1.025, salary:1.04, paper:21}, {office:1.06, salary:1.09, paper:22}],
+    prices:[{office:1, salary:1, paper:20}, {office:1.12, salary:1.10, paper:23}, {office:1.20, salary:1.16, paper:24}],
+    // 三年局的网点开拓费是旧局的倍数：开拓和升级都要五六期才回本，成为真正的取舍。
+    setupScale:4.7,
     // 原有对手换版后加印；新进分印版以降价吸客，都市晚报善于争夺铺货点。
     rivalStyles:[['河西晚报','江岸日报','本地晚报'],['江洲晨讯','省城晨讯','低价分印版'],['临渡都市晚报','沿江都市报','抢占网点']],
     // 年度送评卷宗至少十二篇调查或批评头条：版面 A 等以上，且获转载、正面后续或异议复核确认。
@@ -96,8 +98,9 @@ Object.assign(FEEDBACK_CONFIG, {
 // 三年版的号外按该条消息发生后的首个周六发行。份数、成本和奖励均独立于正刊。
 Object.assign(FEEDBACK_CONFIG, {
   extra:{
-    batches:[600,1200,2000], printCents:19, deliveryCents:2200, priceCents:45, baseDemand:600,
-    readersPerStand:80, demandSwing:750, copiesPerPoint:380, copiesPerSubscriber:28, rivalChance:.58,
+    // 号外是一年一两次的大事：份数、需求和回报都按全城抢购设计。
+    batches:[1500,3000,5000], printCents:19, deliveryCents:2200, priceCents:45, baseDemand:1800,
+    readersPerStand:260, demandSwing:1800, copiesPerPoint:300, copiesPerSubscriber:18, rivalChance:.58,
     events:[
       {date:'2000-09-23',title:'悉尼赛场传来首金，陶璐娜夺冠',call:'射击决赛的剪报刚贴上橱窗，孩子们就围了过来。'},
       {date:'2001-07-14',title:'北京赢得二〇〇八年夏季奥运会举办权',call:'钟楼下的报童举起号外，排在队尾的人也跟着念出了头条。'},
@@ -108,7 +111,7 @@ Object.assign(FEEDBACK_CONFIG, {
   },
   // 网点升级按原有零售能力定价；提升容量和读者需求，第三级把覆盖推出一圈。
   network:{names:['报摊','报刊亭','发行站'],cap:[1,1.32,1.68],weight:[1,1.25,1.55],radii:[2,2,3],
-    costPerWeight:[390,480],width:16,height:11,step:10,minNationalStands:8,
+    costPerWeight:[1800,2250],width:16,height:11,step:10,minNationalStands:8,
     // 按省图由近及远，77格中的第65格进入最远的石门县。
     provinceTiles:77,ninthCountyTile:65},
   // 设备只买一次，按印厂安装顺序开放。金额单位为分。
@@ -122,7 +125,9 @@ Object.assign(FEEDBACK_CONFIG, {
   meeting:{lookback:4,openingSales:3800,retailFactor:1.01,step:50,
     topicGoal:2,salesGoal:2,hardGoal:2,trustGoal:2,trustRise:1,trustChance:.34,coverageGoal:3,coverageChance:.55,rewards:[{cash:3000,influence:0,trust:0},{cash:0,influence:0,trust:1},{cash:0,influence:2,trust:0}],
     difficulties:['易','中','难']},
-  highlights:{recordGap:6,recordFactor:1.045,largeLead:1.55,leadLookback:3,hitMs:1000, replayMs:10000, timelineLimit:12},
+  // 爆款：全部网点售罄，且首印不少于近四期平均实售的 1.05 倍、实售追平近八期最高，两次爆款至少相隔四期。
+  highlights:{recordGap:6,recordFactor:1.045,largeLead:1.55,leadLookback:3,hitMs:1000, replayMs:10000, timelineLimit:12,
+    selloutBold:1.05, selloutAverageWeeks:4, selloutPeakWeeks:8, selloutGap:4},
   // 稳定的本地发行每周约两三点；县外网点和销售面能扩大传播范围，全国档要求至少八个在营网点。
   // 长局中的各家报纸，持续接近两倍的销量差距才会停刊。
   careerRival:{thinRatio:1.95,closeRatio:2.18,maxLoss:1150},

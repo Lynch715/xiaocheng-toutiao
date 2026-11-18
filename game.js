@@ -926,7 +926,7 @@ function archiveView() {
   const edition = game.editions.find(entry => entry.issue === archiveIssue) || game.editions.at(-1);
   const rows = game.editions.map(entry => '<button type="button" class="archive-row' + (entry.issue === edition.issue ? ' active' : '') +
     '" data-action="open-edition" data-issue="' + entry.issue + '" aria-pressed="' + (entry.issue === edition.issue) +
-    '"><span>第 ' + ordinal(entry.issue) + ' 期<br>' + dotted(entry.date) + '</span><strong>' + h(entry.title) +
+    '"><span>第 ' + ordinal(entry.issue) + ' 期<br><i>' + dotted(entry.date) + '</i>' + '</span><strong>' + h(entry.title) +
     (entry.corrections.length ? ' <small class="money-out">有刊后更正</small>' : '') + '</strong><span>' + number(entry.sold) + ' 份</span></button>').join('');
   const options = game.editions.slice().reverse().map(entry => '<option value="' + entry.issue + '"' +
     (entry.issue === edition.issue ? ' selected' : '') + '>第 ' + ordinal(entry.issue) + ' 期 · ' + h(entry.title) + '</option>').join('');
@@ -1789,7 +1789,7 @@ document.addEventListener('click', event => {
       if (next && commit({...next, copies:Math.min(next.copies, printLimit(next))})) {
         const channel = channelById(id);
         announce(channel.name + (active ? '已暂停配送' : opened ? '已恢复配送' :
-          '已开通 · 支出 ' + money(channel.setup) + ' 元') +
+          '已开通 · 支出 ' + money(channelSetupCost(game, channel)) + ' 元') +
           (copies !== game.copies ? '，首印量已调至 ' + number(game.copies) + ' 份。' : '。'));
       }
       break;

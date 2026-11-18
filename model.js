@@ -146,6 +146,10 @@ function channelConnected(campaign, channel) {
   return campaign.active.some(id => id !== channel.id && CHANNEL_HEX[id] && hexDistance(CHANNEL_HEX[id], spot) <= channelRadius(campaign, id) + 1);
 }
 
+function channelSetupCost(campaign, channel) {
+  return Math.round(channel.setup * (roundEnabled(campaign) ? FEEDBACK_CONFIG.campaign.setupScale : 1));
+}
+
 function influenceLevelOf(campaign) {
   return campaign.editions?.at(-1)?.feedback?.influence?.level ?? 0;
 }
@@ -290,6 +294,14 @@ function newCampaign(seed, city = DEFAULT_CITY, cityReady = false, paperName = c
 
 let libraryDraw;
 
+const STORY_PLACE_COOLDOWN_ISSUES = 16;
+
+function storyPlace(id) {
+  // 三年版批量稿以「citywire-地点号-篇号」编号，同一地点号即同一采访地点。
+  const match = /^citywire-(\d+)-\d+$/.exec(id || '');
+  return match ? 'citywire-' + match[1] : null;
+}
+
 function librarySlate(campaign) {
   if (campaign.year) return campaign.annual.ids.map(id => libraryStory(STORY_BY_ID.get(id)));
   if (libraryDraw?.seed !== campaign.seed) {
@@ -347,11 +359,24 @@ function prepareAnnualSlate(campaign) {
   const fixed = STORIES.filter(story => story.date === date && !published.has(story.id));
   const eligible = unusedEvergreens(campaign).filter(story =>
     (annual.availability[story.id]?.availableAt ?? 0) <= week);
-  const drawn = eligible.map(story => {
+  // 同一采访地点的稿件错开出现：近若干期刊过的地点排到最后，同一期候选里每个地点只放一篇。
+  const recentPlaces = new Set(campaign.editions.filter(edition => edition.issue > week - STORY_PLACE_COOLDOWN_ISSUES)
+    .flatMap(editionStoryIds).filter(Boolean).map(storyPlace).filter(Boolean));
+  const ranked = eligible.map(story => {
     const recent = annual.availability[story.id]?.offered === week - 1;
-    return {id:story.id, recent, order:randomAt(seed, date + '/desk/' + story.id)};
-  }).sort((a, b) => Number(a.recent) - Number(b.recent) || a.order - b.order || a.id.localeCompare(b.id))
-    .slice(0, CANDIDATES_PER_ISSUE - fixed.length);
+    return {id:story.id, place:storyPlace(story.id), near:recentPlaces.has(storyPlace(story.id)), recent,
+      order:randomAt(seed, date + '/desk/' + story.id)};
+  }).sort((a, b) => Number(a.near) - Number(b.near) || Number(a.recent) - Number(b.recent) || a.order - b.order || a.id.localeCompare(b.id));
+  const need = CANDIDATES_PER_ISSUE - fixed.length;
+  const places = new Set();
+  const drawn = [];
+  for (const entry of ranked) {
+    if (drawn.length >= need) break;
+    if (entry.place && places.has(entry.place)) continue;
+    if (entry.place) places.add(entry.place);
+    drawn.push(entry);
+  }
+  for (const entry of ranked) if (drawn.length < need && !drawn.includes(entry)) drawn.push(entry);
   const ids = [...fixed.map(story => story.id), ...drawn.map(story => story.id)];
   return {...campaign, annual:{...annual, ids}, focus:ids[0] || null};
 }
@@ -696,9 +721,9 @@ function changeChannel(campaign, id) {
   const open = campaign.unlocked.includes(id);
   if (!open && (channelLocked(campaign, channel) || !channelConnected(campaign, channel))) return null;
   if (campaign.active.length >= channelLimit(campaign)) return null;
-  if (!open && cashOf(campaign) < channel.setup) return null;
+  if (!open && cashOf(campaign) < channelSetupCost(campaign, channel)) return null;
   return withEntries({...campaign, active:[...campaign.active, id], unlocked:open ? campaign.unlocked : [...campaign.unlocked, id]},
-    open ? [] : [{label:'开拓网点 · ' + channel.name, cents:-channel.setup}]);
+    open ? [] : [{label:'开拓网点 · ' + channel.name, cents:-channelSetupCost(campaign, channel)}]);
 }
 
 function printLimit(campaign) {

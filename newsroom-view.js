@@ -61,7 +61,7 @@ function issueHighlights(edition) {
     number(extra.sold) + ' 份。印配费 ' + money(extra.cost) + ' 元，报款 ' + money(extra.revenue) + ' 元。</p><p>影响力 +' +
     extra.influence + ' · 新订户 +' + extra.subscribers + ' 户</p>');
   if (f.pressHit) {
-    const labels = {sellout:'各网点全部售罄', record:'刷新发行纪录', overtake:'大幅反超对手'};
+    const labels = {sellout:'多印也卖光，创近期新高', record:'刷新发行纪录', overtake:'大幅反超对手'};
     const reasons = (f.hitReasons || []).map(reason => labels[reason]).filter(Boolean);
     news.push('<p class="weekly-highlight"><b>爆款</b> · ' + h(reasons.join('、') || '报摊传来捷报') + '。这期头版已镶上金框。</p>');
   }

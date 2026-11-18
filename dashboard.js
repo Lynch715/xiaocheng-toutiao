@@ -124,7 +124,7 @@ function channelsTableView() {
     }
     const rate = printed ? sold / printed : null;
     const topics = Object.entries(channel.interests).sort((a, b) => b[1] - a[1]).slice(0, 3).map(([topic]) => topic).join(' ');
-    const disabled = !editable || (state === 'available' && cash < channel.setup) ||
+    const disabled = !editable || (state === 'available' && cash < channelSetupCost(game, channel)) ||
       (active ? game.active.length === 1 : game.active.length >= channelLimit(game));
     const action = state === 'captured' ? '<span class="cell-note">对手停刊后开放</span>' :
       state === 'remote' ? '<span class="cell-note">先开通相邻网点</span>' :
@@ -132,7 +132,7 @@ function channelsTableView() {
       (active ? '<button type="button" class="soft' + (focus ? ' accent' : '') + '" aria-pressed="' + focus +
         '" data-action="priority" data-id="' + channel.id + '"' + (editable ? '' : ' disabled') + '>' + (focus ? '重点中' : '重点') + '</button>' : '') +
       '<button type="button" class="' + (state === 'available' ? 'issue' : 'soft') + '" data-action="channel" data-id="' + channel.id + '"' +
-      (disabled ? ' disabled' : '') + '>' + (active ? '暂停' : state === 'paused' ? '恢复' : '开拓 ' + money(channel.setup)) + '</button>';
+      (disabled ? ' disabled' : '') + '>' + (active ? '暂停' : state === 'paused' ? '恢复' : '开拓 ' + money(channelSetupCost(game, channel))) + '</button>';
     return '<tr class="row-' + state + '"><th scope="row"><b>' + h(channel.name) + '</b><small>' + h(CITY_MAP.nodes[channel.id]?.district || '') +
       '</small></th><td>' + (game.issueCount === 156 && game.unlocked.includes(channel.id) ? '<span class="chip">' + FEEDBACK_CONFIG.network.names[channelGrade(game,channel.id)-1] + '</span>' : '') + statusChip(state) + (rivalOutlets.includes(channel.id) && state !== 'captured' ? '<span class="chip chip-rival">对手同点</span>' : '') +
       '</td><td class="num">' + number(channel.cap) + '</td><td class="num">' + (active ? number(plan) : '—') +

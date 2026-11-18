@@ -257,7 +257,16 @@ function pressBreakthrough(edition,earlier,record) {
   const overtake = rival.sold > 0 && rival.ratio >= rules.largeLead &&
     recent.some(item => item.feedback?.rival?.sold > item.sold) &&
     !recent.some(item => item.feedback?.rival?.ratio >= rules.largeLead);
-  const hitReasons = [allSold && 'sellout',record && 'record',overtake && 'overtake'].filter(Boolean);
+  // 售罄只有在敢印、又卖出近期新高时才算爆款，少印卖光不算；两次爆款之间留出间隔。
+  const sold = edition.stands?.reduce((sum, stand) => sum + stand.sold, 0) ?? 0;
+  const printed = edition.stands?.reduce((sum, stand) => sum + stand.printed, 0) ?? 0;
+  const averageSold = earlier.slice(-rules.selloutAverageWeeks).reduce((sum, item) => sum + item.sold, 0) /
+    Math.max(1, Math.min(rules.selloutAverageWeeks, earlier.length));
+  const peak = Math.max(0, ...earlier.slice(-rules.selloutPeakWeeks).map(item => item.sold));
+  const lastHit = earlier.findLast(item => item.feedback?.hitReasons?.includes('sellout'));
+  const bold = earlier.length > 0 && printed >= averageSold * rules.selloutBold && sold >= peak &&
+    (!lastHit || edition.issue - lastHit.issue >= rules.selloutGap);
+  const hitReasons = [allSold && bold && 'sellout',record && 'record',overtake && 'overtake'].filter(Boolean);
   return {allSold,hitReasons,pressHit:hitReasons.length > 0};
 }
 

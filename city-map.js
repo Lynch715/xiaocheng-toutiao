@@ -362,13 +362,13 @@ function mapChannelCard(campaign, id) {
   let controls;
   if (state === 'captured') controls = '<p class="map-card-note">《' + h(rivalPaperName(campaign)) + '》接手了这里。对手停刊后会重新开放。</p>';
   else if (state === 'locked') controls = '<p class="map-card-note">影响力达到「' + h(mapLevelNames()[channelRequiredLevel(campaign,channel)]) +
-    '」' + (campaign.issueCount === 156 && ['county','capital'].includes(id) ? '，且进入第二年' : '') + '后可开拓，开拓费 ' + money(channel.setup) + ' 元。</p>';
+    '」' + (campaign.issueCount === 156 && ['county','capital'].includes(id) ? '，且进入第二年' : '') + '后可开拓，开拓费 ' + money(channelSetupCost(campaign, channel)) + ' 元。</p>';
   else if (state === 'remote') controls = '<p class="map-card-note">发行线还没铺到这里。可先开通相邻网点，或将附近网点升为发行站。相邻网点有' +
     h(connectingChannels(channel).map(other => other.name).join('、')) + '。</p>';
   else {
     const active = state === 'active';
     const focus = campaign.priority === id;
-    const disabled = !editable || (state === 'available' && cash < channel.setup) ||
+    const disabled = !editable || (state === 'available' && cash < channelSetupCost(campaign, channel)) ||
       (active ? campaign.active.length === 1 : campaign.active.length >= channelLimit(campaign));
     const paused = {...campaign, active:campaign.active.filter(base => base !== id)};
     const dependants = active ? CHANNELS.filter(other => !campaign.unlocked.includes(other.id) &&
@@ -377,8 +377,8 @@ function mapChannelCard(campaign, id) {
       '" aria-pressed="' + focus + '" data-action="priority" data-id="' + id + '"' + (editable ? '' : ' disabled') + '>' +
       (focus ? '已重点配送' : '设为重点配送') + '</button>' : '') +
       '<button type="button" class="' + (state === 'available' ? 'issue' : 'soft') + '" data-action="channel" data-id="' + id + '"' +
-      (disabled ? ' disabled' : '') + '>' + (active ? '暂停配送' : state === 'paused' ? '恢复配送' : '开拓 · ' + money(channel.setup) + ' 元') +
-      '</button>' + (active ? upgradeButton(campaign,id) : '') + '</div>' + (editable ? (state === 'available' && cash < channel.setup ? '<p class="map-card-note">现金不足以开拓。</p>' : '') :
+      (disabled ? ' disabled' : '') + '>' + (active ? '暂停配送' : state === 'paused' ? '恢复配送' : '开拓 · ' + money(channelSetupCost(campaign, channel)) + ' 元') +
+      '</button>' + (active ? upgradeButton(campaign,id) : '') + '</div>' + (editable ? (state === 'available' && cash < channelSetupCost(campaign, channel) ? '<p class="map-card-note">现金不足以开拓。</p>' : '') :
         '<p class="map-card-note">下期采编开始后可调整网点。</p>') +
       (dependants.length ? '<p class="map-card-note">暂停后，' + h(dependants.map(other => other.name).join('、')) + '将失去开拓线路。已开通的其他网点照常配送。</p>' : '');
   }
@@ -387,7 +387,7 @@ function mapChannelCard(campaign, id) {
       '<p>' + FEEDBACK_CONFIG.network.names[channelGrade(campaign,id)-1] + ' · 在营时覆盖 ' + channelRadius(campaign,id) + ' 圈</p>' : '') +
     '<dl class="map-card-stats">' + (state === 'active' ? '<div><dt>上期实售</dt><dd>' + number(sold) + '</dd></div>' : '') +
     '<div><dt>容量</dt><dd>' + number(channel.cap) + '</dd></div><div><dt>配送费</dt><dd>' + money(channel.fee) + '</dd></div>' +
-    '<div><dt>代售/份</dt><dd>' + money(channel.commission) + '</dd></div><div><dt>开拓费</dt><dd>' + money(channel.setup) + '</dd></div></dl>' +
+    '<div><dt>代售/份</dt><dd>' + money(channel.commission) + '</dd></div><div><dt>开拓费</dt><dd>' + money(channelSetupCost(campaign, channel)) + '</dd></div></dl>' +
     (rival ? '<p class="map-card-note rival">《' + h(rivalPaperName(campaign)) + '》' + (campaign.phase === 'desk' ? '本期' : '上期') +
       '也在这里铺货，两家抢同一拨读者。</p>' : '') +
     '<h4>读者偏好 · 题材需求加成</h4><ul class="map-interests">' + interests + '</ul>' +
