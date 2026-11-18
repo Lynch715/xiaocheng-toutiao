@@ -162,8 +162,8 @@ function cityMapMarkup(campaign, selected, interactive = true) {
   const labels = '<text class="hex-area-label" x="' + ox.toFixed(0) + '" y="' + (oy + 5).toFixed(0) + '" text-anchor="middle">老城</text>' +
     '<text class="hex-water-label" x="' + river[0].toFixed(0) + '" y="' + river[1].toFixed(0) + '" text-anchor="middle">渡</text>' +
     '<text class="hex-water-label" x="' + river[0].toFixed(0) + '" y="' + (river[1] + 40).toFixed(0) + '" text-anchor="middle">江</text>' +
-    '<text class="hex-small-label" x="96" y="18">铁路</text><text class="hex-small-label" x="' + (hexCenter(CITY_GRID, CITY_MAP.bridge)[0] - 28).toFixed(0) +
-    '" y="' + (hexCenter(CITY_GRID, CITY_MAP.bridge)[1] + 4).toFixed(0) + '" text-anchor="end">临渡大桥</text>';
+    '<text class="hex-small-label" x="96" y="18">铁路</text><text class="hex-small-label" x="' + (hexCenter(CITY_GRID, CITY_MAP.bridge)[0] + 30).toFixed(0) +
+    '" y="' + (hexCenter(CITY_GRID, CITY_MAP.bridge)[1] - 6).toFixed(0) + '" text-anchor="start">临渡大桥</text>';
   const pins = CHANNELS.map(channel => {
     const hex = CHANNEL_HEX[channel.id];
     if (!hex) return '';
