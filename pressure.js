@@ -17,9 +17,9 @@ function newPressureState() {
 }
 
 function choosePublicationPressure(campaign, stories) {
-  for (const story of [...stories].sort((a, b) =>
-    PUBLICATION_PRESSURE_CHANCE[b.publicationRisk ?? '无'] - PUBLICATION_PRESSURE_CHANCE[a.publicationRisk ?? '无'])) {
-    const chance = PUBLICATION_PRESSURE_CHANCE[story.publicationRisk ?? '无'];
+  for (const [index, story] of stories.entries()) {
+    const chance = PUBLICATION_PRESSURE_CHANCE[story.publicationRisk ?? '无'] *
+      (index ? EDITION_RULES.secondaryShare : 1);
     if (!chance || randomAt(campaign.seed, campaign.year + '/' + campaign.week + '/pressure/' + story.id) >= chance) continue;
     return {storyId:story.id, title:story.title,
       ...(story.pressure || {kind:'complaint', target:'报道当事方'})};
@@ -81,30 +81,53 @@ function repliesForIssue(campaign) {
   }));
 }
 
+function canContendForAward(campaign, story) {
+  if (!story) return false;
+  const score = (AWARD_TYPE_SCORE[story.awardType] || 0) + (story.weight === '重' ? AWARD_HEAVY_BONUS : 0);
+  return score >= FEEDBACK_CONFIG.annual.winnerMinScore;
+}
+
 function annualAwardResults(campaign) {
   const credible = campaign.pressure.credibility >= AWARD_MIN_CREDIBILITY;
-  const ranked = campaign.editions.map(edition => {
+  const last = campaign.editions.at(-1);
+  const year = last?.date?.slice(0,4);
+  const editions = campaign.editions.filter(edition => edition.date?.startsWith(year));
+  const modern = campaign.issueCount === CAMPAIGN_ISSUES;
+  const rules = FEEDBACK_CONFIG.campaign.provincialPrize;
+  const followed = new Set(editions.flatMap(edition => edition.feedback?.followUps || [])
+    .filter(later => later.slot === 'headline' && later.type === 'positive').map(later => later.issue));
+  const ranked = editions.map(edition => {
     const {storyId, issue, title, weight} = edition;
-    const story = STORIES.find(item => item.id === storyId);
+    const story = STORY_BY_ID.get(storyId);
     const category = story?.awardType || '其他';
     const response = campaign.pressure.events.find(event => event.issue === issue && event.storyId === storyId);
     const confirmed = story?.publicationRisk === '高' && response?.status === 'confirmed';
     const corrected = response?.status === 'correction' || (edition.corrections || []).some(item => item.storyId === storyId);
     const score = AWARD_TYPE_SCORE[category] + (weight === '重' ? AWARD_HEAVY_BONUS : 0) +
       (confirmed ? AWARD_CONFIRMED_RISK_BONUS : 0);
-    return {issue, title, score, corrected};
-  }).sort((a, b) => b.score - a.score || a.issue - b.issue);
-  const nominations = ranked.slice(0, AWARD_NOMINATION_LIMIT)
-    .filter(item => credible && !item.corrected).map(item => item.title);
-  const missed = ranked.slice(AWARD_NOMINATION_LIMIT, AWARD_NOMINATION_LIMIT + AWARD_MISSED_LIMIT)
-    .map((item, index) => ({title:item.title, rank:AWARD_NOMINATION_LIMIT + index + 1,
+    const impact = followed.has(issue) || confirmed || edition.feedback?.syndication?.some(piece => piece.slot === 'headline');
+    const documented = score >= FEEDBACK_CONFIG.annual.winnerMinScore && !corrected &&
+      Boolean(impact) && rules.grades.includes(edition.feedback?.score?.grade);
+    return {issue, title, score, corrected, documented};
+  }).sort((a, b) => Number(modern) * (Number(b.documented) - Number(a.documented)) || b.score - a.score || a.issue - b.issue);
+  const candidates = modern ? ranked : ranked.slice(0, AWARD_NOMINATION_LIMIT);
+  const nominated = candidates.filter(item => credible && !item.corrected).slice(0, AWARD_NOMINATION_LIMIT);
+  const nominations = nominated.map(item => item.title);
+  const nominationIssues = nominated.map(item => item.issue);
+  const others = modern ? ranked.filter(item => !nominationIssues.includes(item.issue)) : ranked.slice(AWARD_NOMINATION_LIMIT);
+  const missed = others.slice(0, AWARD_MISSED_LIMIT)
+    .map(item => ({title:item.title, rank:ranked.indexOf(item) + 1,
       reason:item.corrected ? '刊发过更正' : !credible ? '公信力不足' : '评分排在年度提名名额之外'}));
-  return {nominations, missed};
+  // 全省选报时还看一家报纸全年能否持续刊出有回音的调查稿，单靠一个固定选题不会届届得奖。
+  const qualified = !modern || ranked.filter(item => item.documented).length >= rules.series;
+  const winner = last && isAnnualIssue(campaign, last.issue) && qualified ?
+    nominated.find(item => item.score >= FEEDBACK_CONFIG.annual.winnerMinScore && (!modern || item.documented)) : null;
+  return {nominations, missed, nominationIssues, winner:winner ? {issue:winner.issue, title:winner.title} : null};
 }
 
 function validPublicationPressure(entry) {
   return entry === null || Boolean(entry && ['advertiser','government','complaint'].includes(entry.kind) &&
-    STORIES.some(story => story.id === entry.storyId) && typeof entry.title === 'string' && typeof entry.target === 'string');
+    STORY_BY_ID.has(entry.storyId) && typeof entry.title === 'string' && typeof entry.target === 'string');
 }
 
 function validPressureState(campaign) {

@@ -3,7 +3,7 @@ const PAPER_HEIGHT = 1040;
 const PAPER_SERIF = '"Songti SC", "Noto Serif SC", "STSong", "SimSun", serif';
 const PAPER_SANS = '"PingFang SC", "Noto Sans SC", "Microsoft YaHei", sans-serif';
 const PRESS_RED = '#972a21';
-const PRESS_INK = '#242018';
+const PRESS_INK = '#2B2B2B';
 
 const photoPromises = new Map();
 const proofVersions = new WeakMap();
@@ -18,8 +18,13 @@ function loadPaperImage(source) {
 }
 
 function photoAsset(name) {
-  if (!photoPromises.has(name)) photoPromises.set(name, loadPaperImage(PAPER_ASSET_URLS[name] || name));
-  return photoPromises.get(name);
+  const source = PAPER_ASSET_URLS[name] || name;
+  const url = source.startsWith('素材/') ? '素材/印刷图/' + source.split('/').pop().replace(/\.[^.]+$/, '.webp') : source;
+  const photo = photoPromises.get(name) || loadPaperImage(url);
+  photoPromises.delete(name);
+  photoPromises.set(name, photo);
+  if (photoPromises.size > 8) photoPromises.delete(photoPromises.keys().next().value);
+  return photo;
 }
 
 async function prepareCoverPhoto(file) {
@@ -117,7 +122,7 @@ function chinesePaperDate(date) {
     '月' + chinese(Number(day)) + '日　星期六';
 }
 
-function drawPaperPhoto(ctx, image, photo, x, y, width, height) {
+function drawPaperPhoto(ctx, image, photo, x, y, width, height, equipment) {
   if (!image) {
     ctx.fillStyle = '#ddd6c8';
     ctx.fillRect(x, y, width, height);
@@ -136,12 +141,28 @@ function drawPaperPhoto(ctx, image, photo, x, y, width, height) {
   const cropWidth = Math.min(areaWidth, areaHeight * ratio);
   const cropHeight = cropWidth / ratio;
   const topBias = tiled || photo.custom ? .5 : .44;
+  ctx.save();
+  if (equipment != null && equipment < 2) ctx.filter = 'grayscale(1)';
   ctx.drawImage(
     image,
     regionX + safeBorder + (areaWidth - cropWidth) / 2,
     regionY + safeBorder + (areaHeight - cropHeight) * topBias,
     cropWidth, cropHeight, x, y, width, height
   );
+  ctx.restore();
+  if (equipment >= 2) {
+    // 资料照片来自黑白底片，套一层青墨；自备彩照直接按原色印刷。
+    if (!photo.custom) {
+      ctx.save();
+      ctx.globalCompositeOperation = 'screen';
+      ctx.fillStyle = '#163546';
+      ctx.fillRect(x,y,width,height);
+      ctx.restore();
+    }
+    ['#16788c','#a53257','#c29a2c','#343434'].forEach((ink,i) => {
+      ctx.fillStyle=ink; ctx.fillRect(x+i*12,y+height-4,12,4);
+    });
+  }
 }
 
 function fitPaperParagraph(ctx, text, x, top, width, height, preferred = 14, minimum = 11) {
@@ -159,18 +180,18 @@ function fitPaperParagraph(ctx, text, x, top, width, height, preferred = 14, min
   });
 }
 
-function fullBody(ctx, paragraphs, left, right, top, bottom, count = 3) {
+function fullBody(ctx, paragraphs, left, right, top, bottom, count = 3, minimum = 12) {
   const gap = 16;
   const width = (right - left - gap * (count - 1)) / count;
   let size = count === 2 ? 23 : 17;
   let leading;
   let lines;
-  for (; size >= 12; size -= .5) {
+  for (; size >= minimum; size -= .5) {
     leading = Math.ceil(size * 1.42);
     paperFont(ctx, size);
     lines = paragraphs.flatMap((paragraph, index) =>
       wrapPaperText(ctx, (index ? '　　' : '本报讯　') + paragraph, width));
-    if (Math.ceil(lines.length / count) * leading <= bottom - top || size === 12) break;
+    if (Math.ceil(lines.length / count) * leading <= bottom - top || size === minimum) break;
   }
   const rows = Math.ceil(lines.length / count);
   for (let col = 0; col < count; col++) {
@@ -190,22 +211,22 @@ function paperFlashHeight(draft) {
   return (count ? 32 + count * 20 : 0) + (draft.replies?.length || 0) * 45;
 }
 
-function drawPaperFlashes(ctx, draft, left, right) {
+function drawPaperFlashes(ctx, draft, left, right, start = 830) {
   const flashes = paperFlashes(draft);
   if (!flashes.length) return;
-  paperRule(ctx, left, 830, right, 830, '#3b3327', 2);
-  paperText(ctx, '城中简讯', left, 840, 13, 800, PRESS_RED);
+  paperRule(ctx, left, start, right, start, '#3b3327', 2);
+  paperText(ctx, '城中简讯', left, start + 10, 13, 800, PRESS_RED);
   flashes.forEach((item, index) => {
-    const top = 862 + index * 20;
+    const top = start + 32 + index * 20;
     paperText(ctx, item.section + (item.stored ? '·存稿' : ''), left, top + 1, 12, 700, '#564b3a');
     paperParagraph(ctx, item.text, left + 74, top, right - left - 74,
       {size:14, leading:19, maxLines:1});
   });
 }
 
-function drawPaperReplies(ctx, draft, left, right) {
+function drawPaperReplies(ctx, draft, left, right, start = 830) {
   const flashes = paperFlashes(draft).length;
-  const top = flashes ? 862 + flashes * 20 : 830;
+  const top = flashes ? start + 32 + flashes * 20 : start;
   (draft.replies || []).forEach((reply, index) => {
     const y = top + index * 45;
     paperRule(ctx, left, y, right, y, '#897b64');
@@ -221,7 +242,7 @@ function drawFullPaper(ctx, draft, image, photo, photoTop, left, right, line) {
   const photoBottom = photoTop + photoHeight;
   if (photo) {
     const photoRight = sidebar ? 539 : right;
-    drawPaperPhoto(ctx, image, photo, left, photoTop, photoRight - left, photoHeight);
+    drawPaperPhoto(ctx, image, photo, left, photoTop, photoRight - left, photoHeight,draft.equipment);
     paperText(ctx, cityText(photo.name, draft.city), left, photoBottom + 9, 12, 500, '#564b3a', PAPER_SANS);
     paperTextRight(ctx, photo.custom ? '供图' : '本报资料图',
       photoRight, photoBottom + 9, 12, 500, '#564b3a');
@@ -248,19 +269,11 @@ function drawFullPaper(ctx, draft, image, photo, photoTop, left, right, line) {
   ctx.save();
   ctx.translate(0, paperFlashHeight(draft));
   paperRule(ctx, left, 830, right, 830, '#3b3327', 2);
-  if (sidebar || draft.secondary.length) {
-    paperText(ctx, sidebar ? cityText('临渡街巷', draft.city) : '二条', left, 840, 13, 800, PRESS_RED);
-  }
+  if (sidebar) paperText(ctx, cityText('临渡街巷', draft.city), left, 840, 13, 800, PRESS_RED);
   paperRule(ctx, left, 858, right, 858, line);
-  paperRule(ctx, 400, 869, 400, 977, '#b7aa92');
   const frontAd = draft.adInfo?.placement === 'front' ? draft.adInfo : null;
-  if (draft.supportPending) {
-    const pendingWidth = frontAd ? 351 : right - left;
-    ctx.fillStyle = '#e5e0d7';
-    ctx.fillRect(left, 869, pendingWidth, 110);
-    paperText(ctx, '二条待定', left + 16, 913, 20, 650, '#68625a');
-  }
   const secondary = frontAd ? draft.secondary.slice(0, 1) : draft.secondary;
+  if (frontAd || secondary.length > 1) paperRule(ctx, 400, 869, 400, 977, '#b7aa92');
   secondary.forEach((item, i) => {
     const x = i ? 415 : left;
     let size = 22;
@@ -273,20 +286,142 @@ function drawFullPaper(ctx, draft, image, photo, photoTop, left, right, line) {
     if (item.original) paperText(ctx, item.title, x, 870, size, 850, PRESS_INK, PAPER_SERIF, 351);
     const y = item.original ? 874 + size :
       paperParagraph(ctx, item.title, x, 870, 351, {size, leading:size + 4, maxLines:2, weight:850});
-    fitPaperParagraph(ctx, item.text, x, y + 6, 351, 977 - y - 5);
+    paperParagraph(ctx, item.text, x, y + 6, 351, {size:14, leading:19, maxLines:2});
   });
   if (frontAd) {
-    ctx.fillStyle = '#ede0cd';
-    ctx.fillRect(415, 869, 351, 110);
-    paperText(ctx, '广告 · ' + frontAd.category, 425, 875, 12, 700, PRESS_RED);
-    const y = paperParagraph(ctx, frontAd.name, 425, 894, 330, {size:21, leading:24, maxLines:1, weight:850});
-    fitPaperParagraph(ctx, frontAd.lines.join(''), 425, y + 4, 330, 973 - y, 13);
+    drawEditionAd(ctx, frontAd, 415, 869, 351, 110);
   }
-  paperRule(ctx, left, 989, right, 989, '#897b64');
-  paperText(ctx, newspaperName(draft) + '编辑部', left, 999, 12, 500, '#5a4b3b', PAPER_SERIF, 420);
-  if (draft.editorName) paperTextRight(ctx, '总编辑：' + draft.editorName, right, 999, 12, 600, '#5a4b3b');
+  drawEditionFooter(ctx, draft, left, right, 989);
   ctx.restore();
 }
+
+function drawEditionFooter(ctx, draft, left, right, y) {
+  paperRule(ctx, left, y, right, y, '#897b64');
+  paperText(ctx, newspaperName(draft) + '编辑部', left, y + 10, 12, 500, '#5a4b3b', PAPER_SERIF, 420);
+  if (draft.editorName) paperTextRight(ctx, '总编辑：' + draft.editorName, right, y + 10, 12, 600, '#5a4b3b');
+}
+
+function drawEditionTitle(ctx, title, x, y, width, preferred, minimum) {
+  let size = preferred;
+  for (; size > minimum; size--) {
+    paperFont(ctx, size, 900);
+    if (wrapPaperText(ctx, title, width).length <= (size > preferred * .78 ? 1 : 2)) break;
+  }
+  return paperParagraph(ctx, title, x, y, width, {size, leading:size + 4, maxLines:2, weight:900});
+}
+
+function drawEditionPhoto(ctx, draft, photo, image, x, y, width, height) {
+  drawPaperPhoto(ctx, image, photo, x, y, width, height,draft.equipment);
+  paperText(ctx, cityText(photo.name, draft.city), x, y + height + 6, 12, 500, '#564b3a', PAPER_SANS, width - 60);
+  paperTextRight(ctx, photo.custom ? '供图' : '本报资料图', x + width, y + height + 6, 12, 500, '#564b3a');
+  return y + height + 26;
+}
+
+function drawEditionAd(ctx, ad, x, y, width, height, banner = false) {
+  ctx.fillStyle = 'rgba(173, 125, 65, .17)';
+  ctx.fillRect(x, y, width, height);
+  ctx.strokeStyle = '#9c8265';
+  ctx.lineWidth = 1;
+  ctx.strokeRect(x + .5, y + .5, width - 1, height - 1);
+  paperTextRight(ctx, '广告', x + width - 10, y + 8, 12, 650, '#684931');
+  const bottom = drawEditionTitle(ctx, ad.name, x + 12, y + 24, width - 24, banner ? 34 : 23, 14);
+  paperParagraph(ctx, ad.lines.join(' '), x + 12, bottom + 3, width - 24,
+    {size:banner ? 17 : 14, leading:banner ? 22 : 18, maxLines:2});
+}
+
+function editionSideBlocks(draft) {
+  const blocks = SECONDARY_SLOTS.map(slot => {
+    const ad = draft.slotAds?.find(offer => offer.placement === slot);
+    const news = draft.secondary.find(item => item.slot === slot);
+    return ad ? {ad} : news ? {news} : null;
+  });
+  const legacySlot = blocks.lastIndexOf(null);
+  if (draft.adInfo?.placement === 'front' && legacySlot >= 0) blocks[legacySlot] = {ad:draft.adInfo};
+  return blocks.map((block, index) =>
+    block || (draft.emptySlots?.includes(SECONDARY_SLOTS[index]) ? {empty:true} : null)).filter(Boolean);
+}
+
+function drawEmptySlot(ctx, x, y, width, height) {
+  ctx.fillStyle = 'rgba(255, 255, 255, .46)';
+  ctx.fillRect(x, y, width, height);
+  ctx.strokeStyle = '#b6ab96';
+  ctx.lineWidth = 1.4;
+  ctx.strokeRect(x + .7, y + .7, width - 1.4, height - 1.4);
+}
+
+function drawSideBlock(ctx, block, x, y, width, height) {
+  if (block.empty) {
+    drawEmptySlot(ctx, x, y, width, height);
+    return;
+  }
+  if (block.ad) {
+    drawEditionAd(ctx, block.ad, x, y, width, height);
+    return;
+  }
+  paperRule(ctx, x, y, x + width, y, '#a1957f');
+  const bottom = drawEditionTitle(ctx, block.news.title, x, y + 9, width, 25, 15);
+  paperParagraph(ctx, block.news.text, x, bottom + 5, width, {size:15, leading:21, maxLines:2});
+}
+
+function drawSideRow(ctx, blocks, left, right, y, height) {
+  const gap = 22;
+  const width = Math.min(355, (right - left - gap * (blocks.length - 1)) / (blocks.length || 1));
+  blocks.forEach((block, i) => drawSideBlock(ctx, block, left + i * (width + gap), y, width, height));
+}
+
+function drawLeadEdition(ctx, draft, photo, image, left, right, blocks) {
+  const width = right - left;
+  let y = drawEditionTitle(ctx, draft.title, left, 230, width, 74, 38) + 10;
+  const bodyBottom = blocks.length ? 846 : 972;
+  if (photo) y = drawEditionPhoto(ctx, draft, photo, image, left, y, width, 304);
+  fullBody(ctx, draft.body, left, right, y, bodyBottom, 3, 10);
+  drawSideRow(ctx, blocks, left, right, 861, 112);
+}
+
+function drawBalancedEdition(ctx, draft, photo, image, left, right, blocks) {
+  const mainRight = blocks.length ? 508 : right;
+  const width = mainRight - left;
+  let y = drawEditionTitle(ctx, draft.title, left, 230, width, 54, 28) + 12;
+  if (photo) y = drawEditionPhoto(ctx, draft, photo, image, left, y, width, 263);
+  fullBody(ctx, draft.body, left, mainRight, y, 972, blocks.length ? 2 : 3, 10);
+  if (blocks.length) paperRule(ctx, 523, 232, 523, 973, '#a1957f');
+  blocks.forEach((block, i) => drawSideBlock(ctx, block, 539, 233 + i * 188, right - 539, 160));
+}
+
+function drawPhotoEdition(ctx, draft, photo, image, left, right, blocks) {
+  const width = right - left;
+  const titleY = drawEditionPhoto(ctx, draft, photo, image, left, 226, width, 358);
+  const y = drawEditionTitle(ctx, draft.title, left, titleY + 3, width, 56, 29) + 8;
+  fullBody(ctx, draft.body, left, right, y, blocks.length ? 844 : 972, 3, 10);
+  drawSideRow(ctx, blocks, left, right, 861, 112);
+}
+
+function drawBannerEdition(ctx, draft, photo, image, left, right, blocks) {
+  const fixed = draft.emptySlots != null;
+  const side = fixed ? [] : blocks.filter(block => block.news);
+  const mainRight = side.length ? 504 : right;
+  const mainWidth = mainRight - left;
+  let y = drawEditionTitle(ctx, draft.title, left, 229, mainWidth, 52, 25) + 10;
+  if (photo) y = drawEditionPhoto(ctx, draft, photo, image, left, y, mainWidth, 173);
+  fullBody(ctx, draft.body, left, mainRight, y, 796, side.length ? 2 : 3, 10);
+  if (side.length) paperRule(ctx, 518, 232, 518, 797, '#a1957f');
+  side.forEach((block, i) => drawSideBlock(ctx, block, 532, 233 + i * 168, right - 532, 145));
+  const banner = fixed ? blocks : blocks.filter(block => block.ad);
+  const width = (right - left) / (banner.length || 1);
+  if (!banner.length) {
+    paperRule(ctx, left, 811, right, 811, '#a1957f');
+    paperRule(ctx, left, 973, right, 973, '#a1957f');
+  }
+  banner.forEach((block, i) => {
+    const x = left + i * width;
+    if (block.ad) drawEditionAd(ctx, block.ad, x, 811, width, 162, true);
+    else drawSideBlock(ctx, block, x, 811, width, 162);
+  });
+}
+
+const EDITION_DRAWERS = {
+  lead:drawLeadEdition, balanced:drawBalancedEdition, photo:drawPhotoEdition, banner:drawBannerEdition
+};
 
 function editionPhoto(draft) {
   // 稿库头版按稿件编号查配图，兼容尚未记录新版配图的旧合订本。
@@ -298,35 +433,22 @@ function editionPhoto(draft) {
   return PHOTOS[original?.image || draft.image];
 }
 
-async function renderNewspaper(canvas, draft) {
-  const version = (proofVersions.get(canvas) || 0) + 1;
-  proofVersions.set(canvas, version);
-  let photo = editionPhoto(draft);
-  let image = draft.cover ? await loadPaperImage(draft.cover) : null;
-  if (image) photo = {name:'自选头版照片', custom:true};
-  else if (photo) image = await photoAsset(photo.file || photo.image || 'scenes');
-  if (version !== proofVersions.get(canvas)) return false;
-
+function paperCanvas(canvas, height, stock) {
   canvas.width = PAPER_WIDTH * 2;
-  const paperHeight = PAPER_HEIGHT + paperFlashHeight(draft);
-  canvas.height = paperHeight * 2;
+  canvas.height = height * 2;
   const ctx = canvas.getContext('2d', {alpha: false});
   ctx.scale(2, 2);
   ctx.textBaseline = 'top';
-  const paper = ctx.createLinearGradient(0, 0, PAPER_WIDTH, paperHeight);
-  paper.addColorStop(0, '#fbf6e9');
-  paper.addColorStop(1, '#f1ead8');
-  ctx.fillStyle = paper;
-  ctx.fillRect(0, 0, PAPER_WIDTH, paperHeight);
+  ctx.fillStyle = paperStock(stock).color;
+  ctx.fillRect(0, 0, PAPER_WIDTH, height);
+  return ctx;
+}
 
-  const left = 34;
-  const right = 766;
-  const line = '#a1957f';
+function drawPaperMasthead(ctx, masthead, left, right, {date, issue, badge, note, section, column, mastInk = PRESS_RED}) {
   paperRule(ctx, left, 28, right, 28, '#544b3d');
-  paperText(ctx, chinesePaperDate(draft.date), left, 36, 14, 600);
-  paperTextRight(ctx, '总第 ' + String(draft.issue).padStart(3, '0') + ' 期', right, 37, 13);
-  paperRule(ctx, left, 59, right, 59, line);
-  const masthead = newspaperName(draft);
+  paperText(ctx, date, left, 36, 14, 600);
+  paperTextRight(ctx, issue, right, 37, 13);
+  paperRule(ctx, left, 59, right, 59, '#a1957f');
   const mastheadRule = 181;
   const ruleWidth = 3;
   const ruleTop = mastheadRule - ruleWidth / 2;
@@ -340,19 +462,46 @@ async function renderNewspaper(canvas, draft) {
     const ascent = metrics.actualBoundingBoxAscent ?? mastSize * .88;
     if (mastSize === 22 || (metrics.width <= 505 && ascent + mastDescent <= ruleTop - mastSize * .15 - 65)) break;
   }
-  paperText(ctx, masthead, left + 2, ruleTop - mastSize * .15 - mastDescent, mastSize, 900, PRESS_RED, PAPER_SERIF, 505);
+  paperText(ctx, masthead, left + 2, ruleTop - mastSize * .15 - mastDescent, mastSize, 900, mastInk, PAPER_SERIF, 505);
   ctx.textBaseline = 'top';
   paperFont(ctx, 18, 800);
-  const badgeWidth = ctx.measureText(draft.name).width + 20;
+  const badgeWidth = ctx.measureText(badge).width + 20;
   ctx.strokeStyle = '#ad574a';
   ctx.lineWidth = 1;
   ctx.strokeRect(right - badgeWidth, 115, badgeWidth, 34);
-  paperTextRight(ctx, draft.name, right - 10, 122, 18, 800, PRESS_RED);
-  paperTextRight(ctx, '每周六出版　零售价 0.50 元', right, 155, 12);
+  paperTextRight(ctx, badge, right - 10, 122, 18, 800, PRESS_RED);
+  paperTextRight(ctx, note, right, 155, 12);
   paperRule(ctx, left, mastheadRule, right, mastheadRule, PRESS_RED, ruleWidth);
-  paperText(ctx, '第一版　要闻', left, 192, 14, 800, PRESS_RED);
-  paperTextRight(ctx, draft.section, right, 192, 14, 800, PRESS_RED);
+  paperText(ctx, section, left, 192, 14, 800, PRESS_RED);
+  paperTextRight(ctx, column, right, 192, 14, 800, PRESS_RED);
   paperRule(ctx, left, 214, right, 214, PRESS_RED);
+}
+
+async function renderNewspaper(canvas, draft, stock) {
+  const version = (proofVersions.get(canvas) || 0) + 1;
+  proofVersions.set(canvas, version);
+  let photo = editionPhoto(draft);
+  let image = draft.cover ? await loadPaperImage(draft.cover) : null;
+  if (image) photo = {name:'自选头版照片', custom:true};
+  else if (photo) image = await photoAsset(photo.file || photo.image || 'scenes');
+  if (version !== proofVersions.get(canvas)) return false;
+
+  const ctx = paperCanvas(canvas, PAPER_HEIGHT + paperFlashHeight(draft), stock);
+  const left = 34;
+  const right = 766;
+  drawPaperMasthead(ctx, newspaperName(draft), left, right, {
+    mastInk:draft.equipment === 0 ? PRESS_INK : PRESS_RED, date:chinesePaperDate(draft.date), issue:'总第 ' + String(draft.issue).padStart(3, '0') + ' 期',
+    badge:draft.name, note:'每周六出版　零售价 0.50 元', section:'第一版　要闻', column:draft.section
+  });
+
+  if (draft.layout) {
+    const draw = draft.layout === 'photo' && !photo ? drawBalancedEdition : EDITION_DRAWERS[draft.layout];
+    draw(ctx, draft, photo, image, left, right, editionSideBlocks(draft));
+    drawPaperFlashes(ctx, draft, left, right, 985);
+    drawPaperReplies(ctx, draft, left, right, 985);
+    drawEditionFooter(ctx, draft, left, right, 989 + paperFlashHeight(draft));
+    return true;
+  }
 
   let titleSize = 58;
   paperFont(ctx, titleSize, 900);
@@ -363,6 +512,116 @@ async function renderNewspaper(canvas, draft) {
   paperText(ctx, draft.title, left, 230 + (58 - titleSize) / 2, titleSize, 900, PRESS_INK, PAPER_SERIF, right - left);
   const subtitle = paperParagraph(ctx, draft.subtitle, left, 305, right - left, {size: 17, leading: 20, maxLines: 1, weight: 650});
   const photoTop = draft.side.items.length ? subtitle + 15 : 309;
-  drawFullPaper(ctx, draft, image, photo, photoTop, left, right, line);
+  drawFullPaper(ctx, draft, image, photo, photoTop, left, right, '#a1957f');
   return true;
+}
+
+function renderAnnualPaper(canvas, data, stock, bestCanvas) {
+  const extra = data.annualFeedback;
+  const firstPageHeight = extra ? Math.max(1150, 1064 + 25 * Math.ceil(data.achievements.length / 2)) : 1150;
+  const extraHeight = extra ? 345 + 72 * Math.ceil(extra.clips.length / 13) : 0;
+  const roundupHeight = data.roundup ? 125 + data.roundup.lines.length * 28 + Math.max(238, data.roundup.timeline.length * 25) : 0;
+  const ctx = paperCanvas(canvas, firstPageHeight + extraHeight + roundupHeight, stock);
+  const left = 34;
+  const right = 766;
+  const {year, issueCount, title, review, stats, best, awardLines, achievements} = data;
+  drawPaperMasthead(ctx, newspaperName(data), left, right, {
+    date:year + ' 年度回顾', issue:'全年出刊 ' + issueCount + ' 期', badge:data.yearLabel || '年终特刊',
+    note:'本报编辑部 编印', section:'年终特刊　编辑部评述', column:'一年的报纸'
+  });
+  paperText(ctx, title, left, 226, 114, 900, PRESS_INK, PAPER_SERIF, right - left);
+  const reviewEnd = paperParagraph(ctx, review, left, 370, right - left,
+    {size:21, leading:31, maxLines:5});
+
+  const figuresTop = reviewEnd + 12;
+  const cellWidth = (right - left) / 3;
+  stats.forEach(([label, value], index) => {
+    const row = Math.floor(index / 3);
+    const x = left + (index % 3) * cellWidth;
+    const y = figuresTop + row * 68;
+    paperRule(ctx, x, y, x + cellWidth - 12, y, '#a1957f');
+    paperText(ctx, label, x, y + 8, 16, 750, PRESS_RED);
+    paperText(ctx, value, x, y + 30, 26, 800, PRESS_INK, PAPER_SANS, cellWidth - 12);
+  });
+
+  const featuresTop = figuresTop + 151;
+  paperRule(ctx, left, featuresTop, right, featuresTop, PRESS_RED, 2);
+  paperText(ctx, '年度最佳头版', left, featuresTop + 12, 23, 850);
+  const thumbWidth = 238;
+  if (best && bestCanvas) {
+    const thumbHeight = Math.min(314, thumbWidth * bestCanvas.height / bestCanvas.width);
+    ctx.drawImage(bestCanvas, left, featuresTop + 47, thumbHeight * bestCanvas.width / bestCanvas.height, thumbHeight);
+    paperText(ctx, '第 ' + best.issue + ' 期 · 实售 ' + best.soldLabel, left, featuresTop + thumbHeight + 55,
+      15, 650, PRESS_INK, PAPER_SERIF, thumbWidth);
+  } else paperText(ctx, '合订本暂无已签发的报纸。', left, featuresTop + 55, 16);
+
+  const featuresX = 302;
+  paperRule(ctx, featuresX - 15, featuresTop + 12, featuresX - 15, firstPageHeight - 53, '#a1957f');
+  paperText(ctx, '获奖与成就', featuresX, featuresTop + 12, 23, 850);
+  const columnWidth = right - featuresX;
+  let y = featuresTop + 50;
+  paperText(ctx, '省好新闻奖', featuresX, y, 17, 750, PRESS_RED);
+  y += 28;
+  for (const line of awardLines) {
+    y = paperParagraph(ctx, line, featuresX, y, columnWidth, {size:17, leading:25, maxLines:2}) + 3;
+  }
+  paperText(ctx, '报社成就', featuresX, y + 14, 17, 750, PRESS_RED);
+  y += 43;
+  achievements.forEach((achievement, index) => {
+    const x = featuresX + index % 2 * (columnWidth / 2);
+    paperText(ctx, achievement, x, y + Math.floor(index / 2) * 25, 17, 500, PRESS_INK, PAPER_SERIF, columnWidth / 2 - 7);
+  });
+  if (extra) drawAnnualFeedback(ctx, extra, left, right, firstPageHeight - 33);
+  if (data.roundup) {
+    const y = firstPageHeight + extraHeight - 38;
+    paperText(ctx,'编辑部年鉴',left,y,22,800,PRESS_RED);
+    data.roundup.lines.forEach((line,i) => paperText(ctx,line,left,y+34+i*28,16,600,PRESS_INK,PAPER_SERIF,right-left));
+    const mapTop = y + 45 + data.roundup.lines.length * 28;
+    const frame = data.roundup.frames.at(-1);
+    if (frame) {
+      paperText(ctx,'发行版图 · 第 ' + frame.issue + ' 期 · ' + frame.count + ' 格',left,mapTop,18,750,PRESS_RED);
+      ctx.save();
+      ctx.translate(left,mapTop+35);
+      ctx.scale(.45,.45);
+      drawCoverageFrame(ctx,frame);
+      ctx.restore();
+    }
+    paperText(ctx,'本报大事记',left+345,mapTop,19,750,PRESS_RED);
+    data.roundup.timeline.forEach((item,i) => paperText(ctx,'第 ' + item.issue + ' 期　' + item.text,left+345,mapTop+34+i*25,14,500,PRESS_INK,PAPER_SERIF,right-left-345));
+  }
+  drawEditionFooter(ctx, data, left, right, firstPageHeight + extraHeight + roundupHeight - 40);
+}
+
+function drawAnnualFeedback(ctx, extra, left, right, top) {
+  const width = right - left;
+  paperRule(ctx, left, top, right, top, PRESS_RED, 2);
+  paperText(ctx, '年度数据', left, top + 14, 27, 850);
+  let y = top + 56;
+  if (extra.titles.length) {
+    paperText(ctx, '附加称号：' + extra.titles.join(' · '), left, y, 16, 750, PRESS_RED);
+    y += 29;
+  }
+  for (const [index, [label, value]] of extra.figures.entries()) {
+    const x = left + index % 3 * width / 3;
+    const row = y + Math.floor(index / 3) * 51;
+    paperText(ctx, label, x, row, 14, 700, PRESS_RED);
+    paperText(ctx, value, x, row + 20, 19, 750, PRESS_INK, PAPER_SANS, width / 3 - 8);
+  }
+  y += 110;
+  for (const [label, value] of extra.notes) {
+    paperText(ctx, label, left, y, 15, 750, PRESS_RED);
+    paperText(ctx, value, left + 134, y, 15, 600, PRESS_INK, PAPER_SERIF, width - 134);
+    y += 24;
+  }
+  paperText(ctx, '全年剪报墙 · ' + extra.clips.length + ' 期', left, y + 5, 22, 850);
+  y += 38;
+  const cell = width / 13;
+  for (const [index, clip] of extra.clips.entries()) {
+    const x = left + index % 13 * cell;
+    const row = y + Math.floor(index / 13) * 72;
+    paperRule(ctx, x, row, x + cell - 4, row, clip.tags.length ? PRESS_RED : '#a1957f', 2);
+    paperText(ctx, '第 ' + String(clip.issue).padStart(3, '0') + ' 期', x, row + 7, 10, 650, PRESS_INK, PAPER_SANS);
+    paperParagraph(ctx, clip.title, x, row + 21, cell - 5, {size:10, leading:12, maxLines:2});
+    paperText(ctx, clip.grade + ' 级', x, row + 50, 11, 800, clip.tags.length ? PRESS_RED : PRESS_INK);
+  }
 }

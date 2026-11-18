@@ -2,12 +2,12 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#eeece5">
 <meta name="description" content="从 2000 年起，每周六出版一张地方小报。">
 <title>小城头条</title>
 <link rel="icon" type="image/x-icon" sizes="16x16 32x32 48x48 64x64" href="favicon.ico">
-<link rel="stylesheet" href="style.css?v=28febb2">
+<link rel="stylesheet" href="style.css">
 </head>
 <body class="game">
 <header class="appbar">
@@ -23,13 +23,21 @@
         <button type="button" data-view="staff">记者</button>
         <button type="button" data-view="finance">财务</button>
         <button type="button" data-view="archive">合订本</button>
+        <button type="button" data-view="data">报社数据</button>
+        <button type="button" data-view="influence">地图</button>
+        <button type="button" data-view="clippings">剪报墙</button>
       </nav>
     </div>
-    <button id="achievements-button" class="soft" type="button" data-action="open-achievements" aria-haspopup="dialog">成就 <strong id="points-total">0 分</strong></button>
+    <div class="appbar-actions">
+      <button id="achievements-button" class="soft" type="button" data-action="open-achievements" aria-haspopup="dialog">成就 <strong id="points-total">0 分</strong></button>
+      <button id="settings-button" class="soft" type="button" data-action="city" aria-haspopup="dialog">设置</button>
+    </div>
   </div>
 </header>
+<div id="kpi-strip" class="kpi-strip" role="region" aria-label="经营看板"></div>
 <main id="app" class="game-main"></main>
 <div class="feedback" id="announcer" role="status" aria-atomic="true"></div>
+<dialog id="press-dialog" aria-labelledby="press-title"></dialog>
 <dialog id="paper-dialog" aria-labelledby="paper-dialog-title">
   <header class="dialog-head">
     <h2 id="paper-dialog-title">头版大样</h2>
@@ -48,6 +56,14 @@
   </header>
   <div id="achievement-content" class="achievement-content"></div>
 </dialog>
+<dialog id="resume-dialog" aria-labelledby="resume-title">
+  <div class="restart-form">
+    <h2 id="resume-title">继续上一局</h2>
+    <p id="resume-copy"></p>
+    <div class="form-actions"><button type="button" data-action="restart">重新开始</button>
+      <button type="button" class="issue" data-action="resume" autofocus>继续上一局</button></div>
+  </div>
+</dialog>
 <dialog id="restart-dialog" aria-labelledby="restart-title">
   <form method="dialog" class="restart-form">
     <h2 id="restart-title">重新创刊</h2>
@@ -59,7 +75,7 @@
 <dialog id="city-dialog" aria-labelledby="city-title">
   <form id="city-form" class="restart-form">
     <h2 id="city-title" tabindex="-1" autofocus>给报纸和城市起名</h2>
-    <p>每周六发行一期，从创刊年份的第一个周六办到年底。</p>
+    <p id="founding-plan">每周六出报，三年共 156 期。每年最后一期编印年终特刊。</p>
     <label class="city-field">报名 <input id="paper-name" autocomplete="off" aria-describedby="paper-name-hint" required></label>
     <small id="paper-name-hint" class="field-hint">最多 18 字，按填写的名称登上报头。</small>
     <label class="city-field">城市名 <input id="city-name" maxlength="8" autocomplete="off" required></label>
@@ -67,8 +83,9 @@
     <small id="editor-name-hint" class="field-hint">选填，最多 18 字，署名印在头版下方。</small>
     <label class="city-field" id="year-field">创刊年份 <select id="campaign-year" required>
       <option value="2000">2000 年</option><option value="2001">2001 年</option>
-      <option value="2002">2002 年</option><option value="2003">2003 年</option>
     </select></label>
+    <fieldset class="paper-stock-field"><legend>报纸底色</legend><div id="paper-stock-options"></div></fieldset>
+    <label class="quick-press"><input id="quick-press" type="checkbox"> 快速出刊（跳过动画）</label>
     <span class="form-status" id="city-error" aria-live="polite"></span>
     <div class="form-actions"><button type="button" data-action="close-city">取消</button><button type="submit" id="city-submit" class="issue">创刊</button></div>
   </form>
@@ -80,7 +97,7 @@
       <label class="city-field">栏目 <select id="original-topic"></select></label>
       <label class="city-field">稿件标题 <input id="original-headline" autocomplete="off" required></label>
       <label class="city-field">正文 <textarea id="original-body" rows="8" aria-describedby="original-hint" required></textarea></label>
-      <small id="original-hint" class="field-hint">标题最多 28 字，正文最多 420 字、6 段。排为头版二条时正文最多 105 字。</small>
+      <small id="original-hint" class="field-hint">标题最多 28 字，正文最多 420 字、6 段。排为二条、三条时，只印标题和导语。</small>
       <span class="form-status" id="original-error" aria-live="polite"></span>
     </div>
     <div class="form-actions"><button class="soft delete-original" type="button" data-action="delete-original" hidden>删除草稿</button>
@@ -111,8 +128,18 @@
 <script src="editorial.js"></script>
 <script src="followups.js"></script>
 <script src="pressure.js"></script>
-<script src="model.js?v=28febb2"></script>
-<script src="paper.js?v=28febb2"></script>
-<script src="game.js?v=28febb2"></script>
+<script src="feedback-config.js"></script>
+<script src="street-voices.js"></script>
+<script src="reader-mail.js"></script>
+<script src="city-benchmark.js"></script>
+<script src="issue-feedback.js"></script>
+<script src="model.js"></script>
+<script src="paper.js"></script>
+<script src="feedback-view.js"></script>
+<script src="city-map.js"></script>
+<script src="dashboard.js"></script>
+<script src="save-archive.js"></script>
+<script src="newsroom-view.js"></script>
+<script src="game.js"></script>
 </body>
 </html>

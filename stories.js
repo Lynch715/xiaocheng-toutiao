@@ -1,6 +1,7 @@
 const STORIES = [
   {
     id:"millennium-square", section:"跨年", scene:"millennium", reach:"全国", date:"2000-01-01", weight:"中", publicationRisk:"无",
+    followUp:{"delayWeeks":3,"text":"广场值班室收到12张市民寄来的守岁照片，分别登记了拍摄人和底片去向，照片暂收在文化宫档案盒内。","type":"neutral","influence":0,"reputation":0},
     awardType:"其他",
     photoKeywords:["跨年倒数", "钟楼"],
     photoNumber:"001", photoLocation:"市民广场",
@@ -18,6 +19,7 @@ const STORIES = [
   },
   {
     id:"spring-ticket-windows", section:"交通", scene:"station", reach:"省内", date:"2000-01-29", weight:"中", publicationRisk:"无",
+    followUp:{"delayWeeks":2,"text":"车站收了三趟加班车的票根，另记有跑错窗口的改签数。节后增班窗口是否照旧，站务处尚未排定。","type":"neutral","influence":0,"reputation":0},
     awardType:"其他",
     photoKeywords:["春运", "客运班车"],
     photoNumber:"002", photoLocation:"客运站",
@@ -33,6 +35,7 @@ const STORIES = [
   },
   {
     id:"entrance-exam-clock", section:"教育", scene:"school", reach:"省内", date:"2000-07-08", weight:"中", publicationRisk:"无",
+    followUp:{"delayWeeks":3,"text":"考务组把步行用时写进下一轮考点通知。两所校名相近的学校收到各自的公交线路图。","type":"neutral","influence":0,"reputation":0},
     awardType:"其他",
     photoKeywords:["高考考点", "校门限行"],
     photoNumber:"003", photoLocation:"学校",
@@ -44,12 +47,13 @@ const STORIES = [
       "县中考点昨日7时30分按广播校准考点钟表，交警随后清理了停在校门口的车辆。记者先沿原下客点步行到校门，用时9分钟，之后从公交临时下客点重走，用时14分钟。通过东门牌楼后，考生需再走过一条巷子，路口已有交警引导。",
       "“平时还可以骑车到校门口，这次送到路口就得走进去。明早我得再提前十分钟。”昨日送女儿赴考的家长王华英说。",
       "县中门卫登记显示，昨日午前有6名家长来问考场，其中4人把县中与县中分校弄混。",
-      "“早上有家长跑到门口才发现走错。我让他把准考证递过来，发现他家孩子在分校考。”县中考务组刘老师说。校外修表铺的挂钟昨日经店主用广播比对，慢了约4分钟，不能用来判断考点进场时间。交警表示，考点门前今天仍实施临时管制，公交按改线后的站点停靠。家长需查询路线，可到校门外值班桌取示意图。"
+      "“早上有家长跑到门口才发现走错。我让他把准考证递过来，发现他家孩子在分校考。”县中考务组刘老师说。校外修表铺的挂钟昨日经店主用广播比对，慢了约4分钟，不能用来判断考点进场时间。交警表示，考点门前今天仍实施临时管制，公交按改线后的站点停靠。家长需查询路线，可到校门外值班桌取路线图。"
     ],
     short:"本报讯 全国高考昨日开考。临渡县中考点门前临时禁停，公交改在东门牌楼下客。记者从新下客点步行到考点用时约14分钟，比原路线多5分钟。今天仍按临时路线通行。县中与县中分校考点分设，考生须按准考证核对地点和入场时间。"
   },
   {
     id:"schoolbook-editions", section:"教育", scene:"school", reach:"本地", date:"2000-09-02", weight:"中", publicationRisk:"无",
+    followUp:{"delayWeeks":2,"text":"两校教务处用版权页核对了该学期的教材版本。书摊另记下一批旧书的印次，等待发行站回复。","type":"neutral","influence":0,"reputation":0},
     awardType:"其他",
     photoKeywords:["语文课本", "版本"],
     photoNumber:"004",
@@ -228,6 +232,7 @@ const STORIES = [
   },
   {
     id:"water-meter-front-door", section:"民生", scene:null, reach:"全国", weight:"中", publicationRisk:"低",
+    followUp:{"delayWeeks":3,"text":"表务所抄录了总表与三块分表的新读数，并把争议的40吨水单独列在复核单上。","type":"neutral","influence":0,"reputation":0},
     awardType:"社会矛盾",
     photoNumber:"015", photoBatch:2,
     photoKeywords:["楼栋水表"],
@@ -244,6 +249,7 @@ const STORIES = [
   },
   {
     id:"night-shift-hour-deduction", section:"民生", scene:"factory", reach:"全国", weight:"中", publicationRisk:"中",
+    followUp:{"delayWeeks":4,"text":"工资科补记了夜班交接工时。张师傅领钱后登门致谢，还带了一张注明补发月份的工资条。","type":"positive","influence":6,"reputation":1},
     awardType:"社会矛盾",
     photoNumber:"016", photoBatch:2,
     photoKeywords:["交接班", "工时"],
@@ -259,6 +265,7 @@ const STORIES = [
   },
   {
     id:"clinic-last-refund-window", section:"民生", scene:"street", reach:"全国", weight:"中", publicationRisk:"低",
+    followUp:{"delayWeeks":2,"text":"市二院在缴费厅留出午间退费窗。记者带着旧单据重走一遍，从排队到办完用时11分钟。","type":"positive","influence":5,"reputation":0},
     awardType:"社会矛盾",
     photoNumber:"017", photoBatch:2,
     photoKeywords:["医院退费"],
@@ -275,6 +282,7 @@ const STORIES = [
   },
   {
     id:"basket-three-prices", section:"消费", scene:"market", reach:"省内", weight:"中", publicationRisk:"无",
+    followUp:{"delayWeeks":2,"text":"三家菜场的同量菜篮再次比价，差距缩到5.2元；报亭把两期的比价栏贴在一起供人查看。","type":"neutral","influence":0,"reputation":0},
     awardType:"调查曝光",
     photoNumber:"018", photoBatch:2,
     photoKeywords:["菜摊", "鲜菜交易"],
@@ -307,6 +315,7 @@ const STORIES = [
   },
   {
     id:"printed-grain-permit", section:"消费", scene:"market", reach:"全国", weight:"中", publicationRisk:"低",
+    followUp:{"delayWeeks":2,"text":"粮店送来一份到货单，尚未写明下一批低价米的供应时辰。几位居民将先后两次排队的凭条留在编辑部。","type":"neutral","influence":0,"reputation":0},
     awardType:"其他",
     photoNumber:"020", photoBatch:2,
     photoKeywords:["粮店", "平价米"],
@@ -323,6 +332,7 @@ const STORIES = [
   },
   {
     id:"bench-between-phone-booths", section:"街巷", scene:"street", reach:"本地", weight:"中", publicationRisk:"无",
+    followUp:{"delayWeeks":3,"text":"老站口报亭交来一周的代接电话记录，其中傍晚的留言最多。站口邮电所正在清点剩余公话。","type":"neutral","influence":0,"reputation":0},
     awardType:"其他",
     photoNumber:"021", photoBatch:2,
     photoKeywords:["公用电话亭"],
@@ -355,6 +365,7 @@ const STORIES = [
   },
   {
     id:"instruction-sheet-bus-ramp", section:"交通", scene:"station", reach:"全国", weight:"中", publicationRisk:"中",
+    followUp:{"delayWeeks":5,"text":"市领导在转办单上批示先改三个难上轮椅的站。客运处完工后请轮椅使用者试走一遍，最陡处重铺。","type":"positive","influence":8,"reputation":1},
     awardType:"社会矛盾",
     photoNumber:"023", photoBatch:2,
     photoKeywords:["公交站", "轮椅坡道"],
@@ -482,6 +493,7 @@ const STORIES = [
   },
   {
     id:"south-lane-fire", section:"民生", scene:null, reach:"本地", weight:"重", publicationRisk:"无",
+    followUp:{"delayWeeks":3,"text":"社区把消防通道两端的铁链换为可从内侧打开的活动栏，夜间另设一人负责巡查。","type":"positive","influence":6,"reputation":1},
     awardType:"硬新闻",
     photoKeywords:["巷内火灾", "安置"],
     photoNumber:"031",
@@ -498,6 +510,7 @@ const STORIES = [
   },
   {
     id:"bus-rollover", section:"交通", scene:"station", reach:"省内", weight:"重", publicationRisk:"无",
+    followUp:{"delayWeeks":4,"text":"运管部门公布线路安全检查安排，先查事故班车所在公司的出车点验簿。","type":"neutral","influence":0,"reputation":0},
     awardType:"硬新闻",
     photoNumber:"032", photoBatch:2,
     photoKeywords:["客车侧翻"],
@@ -514,6 +527,7 @@ const STORIES = [
   },
   {
     id:"factory-roof", section:"民生", scene:"factory", reach:"本地", weight:"重", publicationRisk:"低",
+    followUp:{"delayWeeks":4,"text":"安监部门通知预制厂，停用车间的支撑件将逐件取样。厂门口的复工日期仍未填写。","type":"neutral","influence":0,"reputation":0},
     awardType:"硬新闻",
     photoKeywords:["厂房坍塌"],
     photoNumber:"033",
@@ -563,6 +577,7 @@ const STORIES = [
   },
   {
     id:"ferry-drift", section:"交通", scene:null, reach:"省内", weight:"重", publicationRisk:"低",
+    followUp:{"delayWeeks":3,"text":"轮渡公司交来漂航当日的机舱登记簿，两处停机时刻尚待同桥头值班记录比对。","type":"neutral","influence":0,"reputation":0},
     awardType:"硬新闻",
     photoKeywords:["客渡船", "救援"],
     photoNumber:"036",
@@ -578,6 +593,7 @@ const STORIES = [
   },
   {
     id:"falling-balcony", section:"民生", scene:null, reach:"本地", weight:"重", publicationRisk:"低",
+    followUp:{"delayWeeks":4,"text":"维修队完成阳台余件测量，暂离的18户已签收取物时段。修缮期限还须等房屋鉴定书。","type":"neutral","influence":0,"reputation":0},
     awardType:"硬新闻",
     photoNumber:"037", photoBatch:2,
     photoKeywords:["旧楼阳台"],
@@ -626,6 +642,7 @@ const STORIES = [
   },
   {
     id:"dock-demolition", section:"民生", scene:null, reach:"本地", weight:"中", publicationRisk:"高",
+    followUp:{"delayWeeks":4,"text":"拆迁经办方寄来异议函，称争议面积中含未登记搭棚，要求刊出逐户口径。编辑部将函件收入待核档。","type":"negative","influence":-4,"reputation":-1},
     awardType:"社会矛盾",
     photoNumber:"040", photoBatch:2,
     photoKeywords:["码头拆迁"],
@@ -643,6 +660,7 @@ const STORIES = [
   },
   {
     id:"unpaid-wages", section:"民生", scene:"factory", reach:"省内", weight:"中", publicationRisk:"中",
+    followUp:{"delayWeeks":4,"text":"68名工人分批领到拖欠工资。带头交表的老伍送来写着“工钱终于到手”的红纸，请编辑贴在值班桌边。","type":"positive","influence":7,"reputation":1},
     awardType:"社会矛盾",
     photoNumber:"041", photoBatch:2,
     photoKeywords:["工资表", "欠薪"],
@@ -659,6 +677,7 @@ const STORIES = [
   },
   {
     id:"stalled-lift", section:"民生", scene:null, reach:"本地", weight:"中", publicationRisk:"中",
+    followUp:{"delayWeeks":4,"text":"维修单位把检验单交给物业，几户居民对分摊数额仍有不同意见。电梯暂按原停用告示管理。","type":"neutral","influence":0,"reputation":0},
     awardType:"社会矛盾",
     photoNumber:"042", photoBatch:2,
     photoKeywords:["居民楼电梯"],
@@ -674,6 +693,7 @@ const STORIES = [
   },
   {
     id:"school-fee", section:"教育", scene:"school", reach:"省内", weight:"中", publicationRisk:"中",
+    followUp:{"delayWeeks":3,"text":"首批家长拿到退费，学校在校门口设了登记桌，可用缴费时留下的签名核对票据。","type":"positive","influence":6,"reputation":0},
     awardType:"社会矛盾",
     photoNumber:"043", photoBatch:2,
     photoKeywords:["中学资料费"],
@@ -698,7 +718,7 @@ const STORIES = [
     title:"全国人口普查展开，临渡宿舍补核52名住户",
     lead:"本报讯 昨日，临渡玻璃厂家属区核对第五次全国人口普查入户表，52名住在厂里却未出现在最初房号名单上的住户进入复访。厂方和普查组将按实际居住情况逐人确认。",
     body:[
-      "全国普查于11月1日开始，标准时点为当日0时。记者昨日下午随普查员进了玻璃厂旧宿舍，看到同一房号门口挂着两户人的电费单。一些床位转由在厂做零工的人使用，厂房管员手里的旧分房册没有改动。普查组昨日下午重新画了楼层和床位示意图。",
+      "全国普查于11月1日开始，标准时点为当日0时。记者昨日下午随普查员进了玻璃厂旧宿舍，看到同一房号门口挂着两户人的电费单。一些床位转由在厂做零工的人使用，厂房管员手里的旧分房册没有改动。普查组昨日下午重新画了楼层和床位分布图。",
       "“分房单上写的是我姐，我住进来半年了，普查员照着单子喊人，喊的是她的名字。”在厂附近摆摊的李瑞芳说。厂房管员袁成解释，旧册主要记录领房钥匙的人，去年起宿舍床位多次换用，收电费的人另有一册。",
       "“有人怕被当成来追房租的，隔着门不肯说话。前天找邻居领我去，才知道这层后头还有一户。”普查员陈小敏说。",
       "普查组已将房号册和用电名单分别保留，未见到本人或家人的条目另做复访。全国入户工作按原安排于11月10日结束。"
@@ -791,6 +811,7 @@ const STORIES = [
   },
   {
     id:"fake-discount", section:"消费", scene:"shops", reach:"省内", weight:"中", publicationRisk:"高",
+    followUp:{"delayWeeks":3,"text":"百货方要求更正一张票据的开具日期，称与现行促销不在同一轮。报社补登了票据日期。","type":"negative","influence":-3,"reputation":-1},
     awardType:"调查曝光",
     photoKeywords:["百货促销", "价签"],
     photoNumber:"050", photoLocation:"百货柜台",
@@ -808,6 +829,7 @@ const STORIES = [
   },
   {
     id:"hardhat-test", section:"民生", scene:"factory", reach:"省内", weight:"中", publicationRisk:"中",
+    followUp:{"delayWeeks":4,"text":"工地将首批送检帽的购货单和领用表交给检查组。另两批安全帽被分开封放，尚未发还。","type":"neutral","influence":0,"reputation":0},
     awardType:"调查曝光",
     photoNumber:"051", photoBatch:2,
     photoKeywords:["工地安全帽"],
@@ -824,6 +846,7 @@ const STORIES = [
   },
   {
     id:"cracked-floodwall", section:"民生", scene:null, reach:"省内", weight:"中", publicationRisk:"高",
+    followUp:{"delayWeeks":4,"text":"施工方就裂缝位置提出异议，称部分照片不在新建段内。编辑部公布照片拍摄点并补登说明。","type":"negative","influence":-4,"reputation":-1},
     awardType:"风险批评",
     photoKeywords:["防洪墙裂缝"],
     photoNumber:"052", photoLocation:"河堤",
@@ -858,6 +881,7 @@ const STORIES = [
   },
   {
     id:"confiscated-carts", section:"街巷", scene:"market", reach:"省内", weight:"中", publicationRisk:"高",
+    followUp:{"delayWeeks":3,"text":"11辆车按补开的收据逐一退还，夜市当事摊主带着手写谢条登门，并交来一张新的统一凭据样张。","type":"positive","influence":7,"reputation":1},
     awardType:"风险批评",
     photoKeywords:["夜市", "执法扣车"],
     photoNumber:"054",
@@ -972,6 +996,7 @@ const STORIES = [
   },
   {
     id:"cotton-fire", section:"民生", scene:null, reach:"本地", weight:"重", publicationRisk:"低",
+    followUp:{"delayWeeks":5,"text":"棉仓主管将夜班交接簿、进货单和库门钥匙登记交给调查组。邻巷暂时改从东头出入。","type":"neutral","influence":0,"reputation":0},
     awardType:"硬新闻",
     photoNumber:"061", photoBatch:2,
     photoKeywords:["失火棉仓"],
@@ -988,6 +1013,7 @@ const STORIES = [
   },
   {
     id:"rail-crossing", section:"交通", scene:null, reach:"省内", weight:"重", publicationRisk:"低",
+    followUp:{"delayWeeks":4,"text":"道口值守表收回核对，铁路养护员在岔口完成第一轮标高测量。改造方案待定。","type":"neutral","influence":0,"reputation":0},
     awardType:"硬新闻",
     photoKeywords:["铁路道口"],
     photoNumber:"062",
@@ -1003,6 +1029,7 @@ const STORIES = [
   },
   {
     id:"sand-pit", section:"民生", scene:null, reach:"本地", weight:"重", publicationRisk:"低",
+    followUp:{"delayWeeks":3,"text":"勘测队在取砂坑外插了三根标桩，村里把原来的取砂批件送交核对。往来货车暂绕村北。","type":"neutral","influence":0,"reputation":0},
     awardType:"硬新闻",
     photoNumber:"063", photoBatch:2,
     photoKeywords:["河滩砂坑"],
@@ -1034,6 +1061,7 @@ const STORIES = [
   },
   {
     id:"huai-river", section:"民生", scene:null, reach:"全国", date:"2003-07-05", weight:"重", publicationRisk:"无",
+    followUp:{"delayWeeks":4,"text":"赈灾被褥的第一张接收回单寄回编辑部，写明临时安置点收到的件数，捐赠簿已入档。","type":"neutral","influence":0,"reputation":0},
     awardType:"硬新闻",
     photoKeywords:["淮河", "分洪"],
     photoNumber:"065",
@@ -1051,6 +1079,7 @@ const STORIES = [
   },
   {
     id:"damaged-footbridge", section:"交通", scene:null, reach:"本地", weight:"中", publicationRisk:"无",
+    followUp:{"delayWeeks":3,"text":"河堤便桥扶正后重新钉紧踏板。学校门卫在桥头等了三天，直到原来绕行的学生都换回近路。","type":"positive","influence":6,"reputation":0},
     awardType:"硬新闻",
     photoNumber:"066", photoBatch:2,
     photoKeywords:["河堤便桥"],
@@ -1067,6 +1096,7 @@ const STORIES = [
   },
   {
     id:"falling-air-conditioner", section:"民生", scene:null, reach:"本地", weight:"重", publicationRisk:"低",
+    followUp:{"delayWeeks":3,"text":"涉事商铺将外机保修单送交检查。安装队、供货方和门面房主已分别登记情况，责任尚待认定。","type":"neutral","influence":0,"reputation":0},
     awardType:"硬新闻",
     photoNumber:"067", photoBatch:2,
     photoKeywords:["空调外机"],
@@ -1132,6 +1162,7 @@ const STORIES = [
   },
   {
     id:"cold-radiators", section:"民生", scene:null, reach:"本地", weight:"中", publicationRisk:"高",
+    followUp:{"delayWeeks":3,"text":"供热处递来投诉函，称名单上有门牌重复，要求重核428户。记者把重复数和实测温度另作说明。","type":"negative","influence":-3,"reputation":-1},
     awardType:"社会矛盾",
     photoNumber:"071", photoBatch:2,
     photoKeywords:["供热", "管道"],
@@ -1180,6 +1211,7 @@ const STORIES = [
   },
   {
     id:"closed-toilet", section:"街巷", scene:"street", reach:"本地", weight:"中", publicationRisk:"高",
+    followUp:{"delayWeeks":3,"text":"公厕的新时刻牌换成漆字，夜归工人照着表来已能进门。居委会从保洁经费里列支了晚班工钱。","type":"positive","influence":6,"reputation":0},
     awardType:"社会矛盾",
     photoNumber:"074", photoBatch:2,
     photoKeywords:["公厕", "夜间开放"],
@@ -1246,6 +1278,7 @@ const STORIES = [
   },
   {
     id:"riverside-waste", section:"民生", scene:null, reach:"省内", weight:"中", publicationRisk:"中",
+    followUp:{"delayWeeks":4,"text":"养护人员在渣土堆的边沿立桩测量。工程车的夜间进出登记已送交水务部门核查。","type":"neutral","influence":0,"reputation":0},
     awardType:"调查曝光",
     photoNumber:"078", photoBatch:2,
     photoKeywords:["河边渣土"],
@@ -1264,6 +1297,7 @@ const STORIES = [
   },
   {
     id:"job-training", section:"消费", scene:"street", reach:"省内", weight:"中", publicationRisk:"中",
+    followUp:{"delayWeeks":4,"text":"培训方来函称“包分配”只指推荐面谈，要求出示原招生单。值班编辑将原件、复印件分别封存。","type":"negative","influence":-2,"reputation":-1},
     awardType:"调查曝光",
     photoNumber:"079", photoBatch:2,
     photoKeywords:["就业培训", "收据"],
@@ -1280,6 +1314,7 @@ const STORIES = [
   },
   {
     id:"missing-gifts", section:"消费", scene:"shops", reach:"省内", weight:"中", publicationRisk:"高",
+    followUp:{"delayWeeks":3,"text":"百货柜台要求补登赠品领取期限，称部分读者已错过。编辑部核对旧宣传单后另开一栏说明。","type":"negative","influence":-3,"reputation":-1},
     awardType:"调查曝光",
     photoNumber:"080", photoBatch:2,
     photoKeywords:["百货赠品", "领取券"],
@@ -1315,6 +1350,7 @@ const STORIES = [
   },
   {
     id:"leaking-shelter", section:"民生", scene:null, reach:"省内", weight:"中", publicationRisk:"高",
+    followUp:{"delayWeeks":4,"text":"建设处和公交公司分别量了两段接缝，先用红漆在漏点作记号。返修日期要等施工队确认。","type":"neutral","influence":0,"reputation":0},
     awardType:"风险批评",
     photoNumber:"082", photoBatch:2,
     photoKeywords:["公交雨棚", "漏水"],
@@ -1332,6 +1368,7 @@ const STORIES = [
   },
   {
     id:"gift-expenses", section:"民生", scene:null, reach:"本地", weight:"中", publicationRisk:"高",
+    followUp:{"delayWeeks":4,"text":"区办要求撤掉礼盒图片，称部分礼品后来退回。财务处随后提供了一张退货单，报社刊出补充数字。","type":"negative","influence":-4,"reputation":-1},
     awardType:"风险批评",
     photoKeywords:["礼盒", "发票"],
     photoNumber:"083",
@@ -1350,6 +1387,7 @@ const STORIES = [
   },
   {
     id:"confiscated-tickets", section:"交通", scene:"station", reach:"省内", weight:"中", publicationRisk:"高",
+    followUp:{"delayWeeks":3,"text":"站务方对“扣住车票”的表述提出异议，要求区分查验与扣存。报社另登九张车票的归还时间表。","type":"negative","influence":-3,"reputation":-1},
     awardType:"风险批评",
     photoNumber:"084", photoBatch:2,
     photoKeywords:["车站", "执法扣票"],
@@ -1465,6 +1503,7 @@ const STORIES = [
   },
   {
     id:"east-water-switch", section:"民生", scene:null, reach:"本地", weight:"重", publicationRisk:"无",
+    followUp:{"delayWeeks":3,"text":"几栋楼的供水终于接稳。居民刘阿姨和两名楼长到报社送来一面锦旗，旗上写着“替街坊跑一趟”。","type":"positive","influence":8,"reputation":1},
     awardType:"硬新闻",
     photoNumber:"091", photoBatch:2,
     photoKeywords:["水厂", "送水车"],
@@ -1512,6 +1551,7 @@ const STORIES = [
   },
   {
     id:"north-embankment-lamps", section:"民生", scene:null, reach:"本地", weight:"中", publicationRisk:"无",
+    followUp:{"delayWeeks":2,"text":"夜班工人与家属共同写了张谢条，交给值班记者。路灯表上另添了两处夜里容易摸黑的拐角。","type":"positive","influence":6,"reputation":0},
     awardType:"其他",
     photoNumber:"094", photoBatch:2,
     photoKeywords:["河堤路灯", "照明"],
@@ -1529,6 +1569,7 @@ const STORIES = [
   },
   {
     id:"market-delivery-gate", section:"民生", scene:"market", reach:"本地", weight:"中", publicationRisk:"无",
+    followUp:{"delayWeeks":3,"text":"东门菜场统计第一周手车到场时辰，最集中的时段在清晨。市场办把记录带到商户会上讨论。","type":"neutral","influence":0,"reputation":0},
     awardType:"其他",
     photoNumber:"095", photoBatch:2,
     photoKeywords:["菜场改建", "卸货门"],
@@ -1545,6 +1586,7 @@ const STORIES = [
   },
   {
     id:"chemical-workshop-evacuation", section:"民生", scene:null, reach:"省内", weight:"重", publicationRisk:"低",
+    followUp:{"delayWeeks":4,"text":"送医的5人陆续结束留观。涉事车间仍停用一条管线，厂门口公布了街坊可以询问的值班电话。","type":"neutral","influence":0,"reputation":0},
     awardType:"硬新闻",
     photoNumber:"096", photoBatch:2,
     photoKeywords:["洗染车间", "临时警戒"],
@@ -1562,6 +1604,7 @@ const STORIES = [
   },
   {
     id:"course-rank-case", section:"民生", scene:null, reach:"省内", weight:"中", publicationRisk:"低",
+    followUp:{"delayWeeks":4,"text":"追回案款的第二批领款单张贴出来。不能到场的当事人可到办案点先核对名单与手续。","type":"neutral","influence":0,"reputation":0},
     awardType:"其他",
     photoNumber:"097", photoBatch:2,
     photoKeywords:["传销案款", "货站工友"],
@@ -1593,6 +1636,7 @@ const STORIES = [
   },
   {
     id:"college-expansion-practice-rooms", section:"民生", scene:"school", reach:"省内", weight:"中", publicationRisk:"无",
+    followUp:{"delayWeeks":3,"text":"师专再排了一周上机和实验的轮值表。教务处收了两班的借用单，下月学时将在月底核对。","type":"neutral","influence":0,"reputation":0},
     awardType:"其他",
     photoNumber:"099", photoBatch:2,
     photoKeywords:["师专扩招", "实验座"],
@@ -1693,6 +1737,7 @@ const STORIES = [
   },
   {
     id:"new-estate-passage", section:"民生", scene:null, reach:"本地", weight:"中", publicationRisk:"中",
+    followUp:{"delayWeeks":4,"text":"开发方拿来两张东门图纸，一张有便道、一张未画便道。街道准备召集两边的住户在门口逐处核对。","type":"neutral","influence":0,"reputation":0},
     awardType:"社会矛盾",
     photoNumber:"105", photoBatch:2,
     photoKeywords:["新楼盘", "穿巷便道"],
@@ -1757,6 +1802,7 @@ const STORIES = [
   },
   {
     id:"public-toilet-queue", section:"街巷", scene:"street", reach:"本地", weight:"中", publicationRisk:"高",
+    followUp:{"delayWeeks":4,"text":"管护方投诉报道拍在赶集日，要求说明并非天天排11人。编辑部补登一个平日与两个集日的排队数。","type":"negative","influence":-2,"reputation":-1},
     awardType:"社会矛盾",
     photoNumber:"109", photoBatch:2,
     photoKeywords:["公厕改建", "女厕排队"],
@@ -1843,17 +1889,17 @@ const STORIES = [
     id:"sms-extra-service", section:"科技", scene:null, reach:"省内", weight:"中", publicationRisk:"中",
     awardType:"调查曝光",
     photoNumber:"114", photoBatch:2,
-    photoKeywords:["手机短信", "话费详单"],
+    photoKeywords:["移动电话短信", "话费详单"],
     salesFactor:85, newsValue:84,
     title:"发一次短信查天气，话费账上又扣3笔",
-    lead:"本报讯 临渡3名手机用户各发短信查过一次天气，此后各被扣了3笔信息费。记者昨日查询后，信息服务商已暂停收费，旧账是否退还尚无答复。",
+    lead:"本报讯 临渡3名移动电话用户各发短信查过一次天气，此后各被扣了3笔信息费。记者昨日查询后，信息服务商已暂停收费，旧账是否退还尚无答复。",
     body:[
       "广告页上写的是查一次1元。营业厅找出3名用户的详单，首次查询各扣1元。此后的扣款在固定日子发生，每笔3元，都由同一家信息服务商收取。记者请厅里查询订阅记录，发现开通时间和首次查询一样，确认栏为空。",
       "“那一块我认。后来这几回，我连天气都没见着，它倒记得往我账上扣钱。”开货车的用户朱国强说。他在外地跑车途中查过一次天气，回临渡交话费才发现多出的扣款。发出那条短信以后，他再没向同一个号码发过消息。",
       "营业厅把详单转给信息服务商。用户提出应先把几笔钱退回。服务商表示还要查记录，营业厅也未给出退款时间。记者昨晚再问，查询界面上的收费项目已暂停。",
       "“停扣可以。前几笔是不是该退，我还得看原来的账，今天定不了。”信息服务商客服主管刘国庆说。"
     ],
-    short:"本报讯 临渡3名手机用户发短信查一次天气后，各被追加扣除3笔信息费。记者查阅话费详单和订阅记录，首次查询与开通时间一致，确认栏为空。信息服务商已停止相关扣费，先前款项是否退还尚无答复。"
+    short:"本报讯 临渡3名移动电话用户发短信查一次天气后，各被追加扣除3笔信息费。记者查阅话费详单和订阅记录，首次查询与开通时间一致，确认栏为空。信息服务商已停止相关扣费，先前款项是否退还尚无答复。"
   },
   {
     id:"demonstrator-cars-sold", section:"消费", scene:null, reach:"省内", weight:"中", publicationRisk:"中",
@@ -1937,6 +1983,7 @@ const STORIES = [
   },
   {
     id:"market-drain-outlet", section:"街巷", scene:"market", reach:"省内", weight:"中", publicationRisk:"中",
+    followUp:{"delayWeeks":4,"text":"后巷下水试通，两次冲洗没有再漫过门槛。菜场另留一桶沙在出口，以便溢水时先挡一道。","type":"positive","influence":6,"reputation":0},
     awardType:"调查曝光",
     photoKeywords:["菜场排水", "街沟"],
     photoNumber:"120", photoBatch:2,
@@ -1953,6 +2000,7 @@ const STORIES = [
   },
   {
     id:"repeated-road-opening", section:"交通", scene:"street", reach:"本地", weight:"中", publicationRisk:"高",
+    followUp:{"delayWeeks":5,"text":"市领导批示将水、电、话务线的施工时间列在同一张表上。临街铺主在街道看到了下一段围挡的起止日期。","type":"positive","influence":8,"reputation":1},
     awardType:"风险批评",
     photoNumber:"121", photoBatch:2,
     photoKeywords:["道路开挖", "占道批单"],
@@ -1970,6 +2018,7 @@ const STORIES = [
   },
   {
     id:"lamp-patrol-blind-segment", section:"街巷", scene:"street", reach:"本地", weight:"中", publicationRisk:"高",
+    followUp:{"delayWeeks":3,"text":"养护部门指巡查簿写的是主路，要求更正故障灯编号。报社重走一次槐树路，补登分段号码。","type":"negative","influence":-3,"reputation":-1},
     awardType:"风险批评",
     photoNumber:"122", photoBatch:2,
     photoKeywords:["路灯巡查", "值班簿"],
@@ -1986,6 +2035,7 @@ const STORIES = [
   },
   {
     id:"internet-cafe-check-list", section:"民生", scene:null, reach:"本地", weight:"中", publicationRisk:"高",
+    followUp:{"delayWeeks":3,"text":"网吧业主来信，称名单把一家已停业的铺子也算进去。文化局和报社分别补出了核对后的店名。","type":"negative","influence":-3,"reputation":-1},
     awardType:"风险批评",
     photoNumber:"123", photoBatch:2,
     photoKeywords:["网吧整治", "经营许可名册"],
@@ -2002,6 +2052,7 @@ const STORIES = [
   },
   {
     id:"vendor-license-photo-shop", section:"街巷", scene:null, reach:"本地", weight:"中", publicationRisk:"高",
+    followUp:{"delayWeeks":4,"text":"换证窗口重新贴出照相规格，各家照相铺的合格照片均可交件。两名原来退过件的摊主到编辑部道谢。","type":"positive","influence":7,"reputation":0},
     awardType:"风险批评",
     photoNumber:"124", photoBatch:2,
     photoKeywords:["摊贩换证", "照相回单"],
@@ -2018,6 +2069,7 @@ const STORIES = [
   },
   {
     id:"public-toilet-double-fee", section:"街巷", scene:"street", reach:"本地", weight:"中", publicationRisk:"高",
+    followUp:{"delayWeeks":3,"text":"收费方来函称五角钱为临时看管费，要求报社登出其收款口径。编辑部另附管护费拨付单的出处。","type":"negative","influence":-3,"reputation":-1},
     awardType:"风险批评",
     photoNumber:"125", photoBatch:2,
     photoKeywords:["公厕托管", "管护费"],
@@ -2035,6 +2087,7 @@ const STORIES = [
   },
   {
     id:"west-greenhouse-fire", section:"民生", scene:null, reach:"省内", weight:"重", publicationRisk:"无",
+    followUp:{"delayWeeks":4,"text":"村里逐棚登记了受损薄膜和棚架，收来的单子分发给三家供货点核价，补贴标准还没有定。","type":"neutral","influence":0,"reputation":0},
     awardType:"硬新闻",
     photoNumber:"126", photoBatch:2,
     photoKeywords:["菜棚火灾", "消防勘查"],
@@ -2068,14 +2121,14 @@ const STORIES = [
   {
     id:"sms-grandfather-reply", section:"奇闻", scene:null, reach:"本地", weight:"轻", publicationRisk:"无",
     awardType:"其他",
-    photoKeywords:["手机短信", "句号"],
+    photoKeywords:["移动电话短信", "句号"],
     photoNumber:"128", photoBatch:2,
     salesFactor:81, newsValue:58,
     title:"外公发来一个句号",
-    lead:"本报讯 临渡退休木模工周建国昨日头一回用手机回短信，只发出一个句号。外孙马明误以为老人身体有事，当晚跑去打长途。",
+    lead:"本报讯 临渡退休木模工周建国昨日头一回用移动电话回短信，只发出一个句号。外孙马明误以为老人身体有事，当晚跑去打长途。",
     body:[
-      "“我打了半天的收字。找不着，就挑了个圆的。我还嫌它写得小。”周建国说。手机是女儿换下来给他的。接电话已经会了，回短信还是头一回。他原想回一句我收到了，按了几次又回到开头，最后只从标点里挑出一个句号。",
-      "马明当天问外公最近腿还疼不疼。晚饭后，他看到手机里来了条新消息。一个小点孤零零地留在空白处。他等了一阵，以为老人会接着发。一直等到宿舍快关门，他忍不住跑到校门外，借公用电话打回临渡，没等外公说完喂，就先问是不是摔着了。",
+      "“我打了半天的收字。找不着，就挑了个圆的。我还嫌它写得小。”周建国说。移动电话是女儿换下来给他的。接电话已经会了，回短信还是头一回。他原想回一句我收到了，按了几次又回到开头，最后只从标点里挑出一个句号。",
+      "马明当天问外公最近腿还疼不疼。晚饭后，他看到移动电话里来了条新消息。一个小点孤零零地留在空白处。他等了一阵，以为老人会接着发。一直等到宿舍快关门，他忍不住跑到校门外，借公用电话打回临渡，没等外公说完喂，就先问是不是摔着了。",
       "周建国当时正在看球赛，接起电话先问外孙怎么还没睡。弄清那条短信的来历后，祖孙二人在通话中另约好，以后看见句号就算收到了。",
       "“我跑过去花了一块多，就为了问清一个点。今晚我倒是敢睡了。”外孙马明说。"
     ],
@@ -2083,6 +2136,7 @@ const STORIES = [
   },
   {
     id:"fog-bridge-collision", section:"交通", scene:null, reach:"省内", weight:"重", publicationRisk:"无",
+    followUp:{"delayWeeks":3,"text":"省道事故组调取了养护车巡线簿。团雾时段是否加开警示灯，负责路段的两家单位还在会商。","type":"neutral","influence":0,"reputation":0},
     awardType:"硬新闻",
     photoNumber:"129", photoBatch:2,
     photoKeywords:["省道团雾", "多车相撞"],
@@ -2100,6 +2154,7 @@ const STORIES = [
   },
   {
     id:"inn-carbon-monoxide", section:"民生", scene:null, reach:"本地", weight:"重", publicationRisk:"低",
+    followUp:{"delayWeeks":3,"text":"卫生部门对招待所余下客房补做通风检查。旅客遗留物品由前台代收，家属可以凭登记单领取。","type":"neutral","influence":0,"reputation":0},
     awardType:"硬新闻",
     photoNumber:"130", photoBatch:2,
     photoKeywords:["招待所", "一氧化碳中毒"],
@@ -2179,6 +2234,7 @@ const STORIES = [
   },
   {
     id:"north-slope-houses-collapse", section:"民生", scene:null, reach:"本地", weight:"重", publicationRisk:"无",
+    followUp:{"delayWeeks":5,"text":"暂住亲友家的住户搬进过渡房，施工队清点了北坡临近土屋。遇雨时，巷口增设值守棚。","type":"positive","influence":7,"reputation":1},
     awardType:"硬新闻",
     photoNumber:"135", photoBatch:2,
     photoKeywords:["土屋垮塌", "临时转移"],
@@ -2213,6 +2269,7 @@ const STORIES = [
   },
   {
     id:"irrigation-canal-drowning", section:"民生", scene:null, reach:"本地", weight:"重", publicationRisk:"无",
+    followUp:{"delayWeeks":4,"text":"灌渠靠校一侧补齐一段护栏，学校另将原来贴着渠边的放学路线移到机耕道。","type":"positive","influence":7,"reputation":0},
     awardType:"硬新闻",
     photoNumber:"137", photoBatch:2,
     photoKeywords:["灌渠", "落水"],
@@ -2228,6 +2285,7 @@ const STORIES = [
   },
   {
     id:"wedding-food-poisoning", section:"民生", scene:null, reach:"省内", weight:"重", publicationRisk:"中",
+    followUp:{"delayWeeks":4,"text":"宴席承办方来函，要求把“初判食物中毒”与尚待鉴定的责任分开表述。编辑部补登了检测进度。","type":"negative","influence":-3,"reputation":-1},
     awardType:"硬新闻",
     photoNumber:"138", photoBatch:2,
     photoKeywords:["婚宴食物中毒", "卫生调查"],
@@ -2371,6 +2429,7 @@ const STORIES = [
   },
   {
     id:"bathhouse-boiler-blast", section:"民生", scene:null, reach:"省内", weight:"重", publicationRisk:"低",
+    followUp:{"delayWeeks":3,"text":"调查组抽走三家浴室的锅炉运行登记表核对，事故浴室仍闭门，窗口留有物品认领时辰。","type":"neutral","influence":0,"reputation":0},
     awardType:"硬新闻",
     photoNumber:"147", photoBatch:2,
     photoKeywords:["浴室", "锅炉房爆炸"],
@@ -2388,6 +2447,7 @@ const STORIES = [
   },
   {
     id:"stone-gate-landslide", section:"民生", scene:null, reach:"省内", weight:"重", publicationRisk:"无",
+    followUp:{"delayWeeks":4,"text":"地质队在滑坡体两侧设观察桩，准备在下一场雨后复测。山口暂以木牌注明绕行线路。","type":"neutral","influence":0,"reputation":0},
     awardType:"硬新闻",
     photoNumber:"148", photoBatch:2,
     photoKeywords:["山体滑坡", "封路"],
@@ -2436,6 +2496,7 @@ const STORIES = [
   },
   {
     id:"laid-off-sewing-buttons", section:"街巷", scene:"street", reach:"本地", weight:"轻", publicationRisk:"无",
+    followUp:{"delayWeeks":4,"text":"配扣铺接到裁缝组的一单旧衫配扣生意，两位女工在铺里加摆一盒洗好的旧纽扣，留给只缺一颗的街坊。","type":"positive","influence":4,"reputation":0},
     awardType:"其他",
     photoKeywords:["下岗再就业", "配扣铺"],
     photoNumber:"151", photoBatch:2,
@@ -2470,6 +2531,7 @@ const STORIES = [
   },
   {
     id:"village-cinema-granary-wall", section:"文娱", scene:null, reach:"本地", weight:"轻", publicationRisk:"无",
+    followUp:{"delayWeeks":3,"text":"放映员把粮站白墙的尺寸和插座位置写进下月踏勘表，哪一天再来要等新的片单。","type":"neutral","influence":0,"reputation":0},
     awardType:"其他",
     photoKeywords:["电影下乡", "粮站白墙"],
     photoNumber:"153", photoBatch:2,
@@ -2566,6 +2628,597 @@ const STORIES = [
     short:"本报讯 临渡张湾村返乡木工何大成昨日把半米高的楼梯小样摆进院子，让准备翻修的村民试着看楼梯拐向。六户村民来看样，其中一户已约好下周上门丈量。有孩子把袖珍楼梯当成小凳，问大人做完能否留下。"
   }
 ];
+
+// 三年地方采访簿。同一跑口共用街区背景与采访记录，每条消息的标题、现场发现独立编写。
+const DISTRICT_WIRES = `@交通|0|西河轮渡|重|中|硬新闻|渡口连续三天调整两岸船班，航班簿上每天往返通勤的乘客有1800余人。|渡工吴福顺|一船到岸才翻一次黑板，两岸手表走得快慢也得对齐。|送货员郑兰|我两头都要赶车，差五分钟，就得在江边再等一班。
+轮渡首班提前12分钟|船上售票员把第一张票的时刻写在存根上，岸边小巴能多等一船人了。|船上的木格分早晚两列，领班把原时刻用红铅笔划掉，在旁边写上新的离岸时刻。西岸小巴司机带着自己的行车簿来问，约好以跳板收起为开船。
+西岸两只船钟走差7分钟|记者与码头校时员各站一岸，同时听整点报时，修表铺午前换好了慢钟的电池。|记者从西岸看得到东岸钟面，秒针走了一大圈，那边还停在前一格。钟修好后，两岸各派一人守着公用电话，同时拨通报时台对表。
+过江自行车改走下层跳板|验票员将推车队伍与步行乘客分开，雨棚下空出了半条通道。|一名送奶工带着两只铝罐推车试走。换道后他可以直接靠到舱壁边，也不必先请坐凳上的人起身，船员把自行车标志漆在跳板扶手上。
+夜渡最后一班给晚班工人留灯|纺织车间改交接时刻，汽笛吹过后还有一趟小船接下班人。|记者在厂门守到交接，等末班船的几名工人还穿着围裙。从机台走到渡口够一刻钟，轮渡把夜班票价贴到售票窗外，免得下班人另打电话。
+一沓返程票补上了靠岸方向|旧票只写票价，首次过江的人到了南岸又排进出城的队伍，售票员给票背盖了蓝章。|记者持票来回走过候船棚，两个方向的存根原来都是一张白纸。盖章以后，由西往东的蓝圈在票面左上角，检票员晃一下就能看见。
+码头挪走鱼筐腾出候船道|装鱼的小板车改在西门候船，上学的孩子不用再从挑担之间挤过。|上岸时扁担容易顺势横过来，两个挑鱼人曾在护栏边互相等让。鱼筐改在背风侧集中候装，第一筐上了船，这一边才开步行门。
+驳船让航时间写进早班表|记者跟了两趟早船，两班都在航标前停等货驳，站方已把等候时间计入预计到岸时间。|两份旧表只把航行分钟相加，没列货驳通过时的小轮避让。船长在水道口记下一周相让次数，先把经常出现的一段空白印进早班表。
+轮渡月票换证延至晚班靠岸|白天在对岸做工的居民可以带旧卡到夜班窗口贴照片，首日办完62张。|窗口前贴了两张大小一样的照片，供乘客现场比照尺寸。旧卡盖章后仍可坐回对岸，让工人不用为第一次贴照片另买一张单票。
+北岸新增两面水位标尺|船头调转时看不清码头旧尺，船员在新尺旁给下船踏板画了三条停靠线。|常水位时，两条线刚好齐平。记者到东岸又看了一回，发现岸边台阶上的旧标线已经磨浅，船员把新标尺位置告诉了接替晚班的同事。
+20路末车等到渡船靠稳|调度员在车门前核了三晚人数，等船的末班车保留对岸最后一趟的座位。|站务员把末班公交车号记在船尾小黑板上。船若晚靠，码头先打值班电话，正在车上等的人也能知道还要等多少分钟。
+@民生|0|槐树里自来水站|重|高|调查曝光|供水所移管要分段关阀，沿线六个宿舍院共住着2300多人。记者沿总管从泵房走到末端，把停水告示的时刻抄在一张图上。|泵房值班员陈波|阀门在这一头，末端见水总要慢一阵。|住户罗文英|要我几点留人在家接水，楼下得先有张准信。
+高处三幢楼晚来水了2小时|泵房簿上写着复供，最高一排的厨房龙头还在出气，补水车下午停到坡顶。|三幢楼底层最早出水，四楼龙头到傍晚才不再断续。通知改分泵房开阀和末端正常两栏，住户接到通知后可先到楼下试水。
+四块停水牌漏写了后街|住户拿着水桶找到工地，工长带人补看岔管，发现后街与主巷共用一只阀门。|告示上列的旧巷名在新门牌上已看不见，几家小店因此没有蓄水。工长在现场把连着这只阀门的门牌逐个抄在工票背面。
+换水表的钱该由谁出|记者核对工料清单和三张收据，其中两户没有自主报修，水站同意先退预收款。|一张票是整套水表费用，一张只写安装工钱。服务站请住户先把原件带回，窗口只留复印件，免得领取退费时手里反而没有凭据。
+临时接水点水桶压坏了路肩|运水车头一回贴着土边停，居民提空桶得走进车道，现改靠旧粮库院墙。|记者提着半桶水从原停车处走到楼口，中间要横过三轮车道。挪位后落桶的位置在旧粮库院内，居民可沿院墙回家。
+一条旧管接着两个门牌号|维修队按旧号找了半天才关住渗漏，房管员拿来新旧门牌对照册。|旧地址写东巷后门，新门牌写桥边里。水站把两种叫法抄上同一张维修图，并请住户画出平日取水要绕过的那面短墙。
+供水热线中午响了39次|记者守在听筒旁核过来电簿，一半人在问同一处何时复水，水站把答复贴到公共食堂。|来电话的老人说，楼上邻居已恢复供水就不敢再催。值班员请住户报清楼层，把末端未恢复与整院停水的来电分列。
+楼顶水箱洗完为何还有锈水|检修单显示箱体已经清洗，入楼支管尚未冲刷，下午先拆开末端两个放水嘴。|水箱内壁的清洁照片有日期，支管阀门的工票却还没有签完。服务站暂未确认锈水成因，先留两瓶出水样分别注明楼号与时间。
+消防取水口前摆满了煤饼|运水车到场转了两回弯，仓库当班人挪开堆货，划出的空位交两班轮看。|煤饼移开后，运水车司机试着倒车到铁盖旁，出水接头才不必横穿车道。留空的位置重新刷上黄色边线，晚班保安接班时一并查看。
+同一停水通知出现两个日期|印发告示时误把完工日当成关阀日，水站收回旧单逐栋重贴。|第一批告示左下角小字写的是开工日，标题里的大字却用了竣工日。替换时按张点数，仍没入户的住户由片区值班员上门说明。
+临时水管过巷给推车留了桥|卖豆腐的小车头天被管卡住，修管班用两块防滑板铺出一道斜坡。|卖豆腐人的车轮比送煤车窄，师傅给两道木板之间又嵌入一条窄板。铺好以后，请他推着空车来回试了一次。
+@教育|0|南城联合学区|重|高|风险批评|片区四所学校有2100多名学生，新学期要共用一处食堂和运动场。记者取得四校教务室盖章的借用清单，逐项核对到校时间。|教务员郑雪|我把四张课表拼在一块儿，哪一节撞了，一眼就能看出来。|家长陈梅|我家孩子记不住四张表，通知里就圈他自己班那一行。
+联校操场周三排进了两个年级|两位体育老师同时带队到门口，查原件发现其中一份沿用旧表，第二节已互换。|教务员在两份表上圈出相同的星期和节次。原先要借操场的班级当天先上室内课，把没有上的活动课留到下周同一节。
+春游车费有两张不同收据|合乘的两校按座位预收，实到人数有变，财务室同意把未发车的一趟结余退给家长。|两校最初约了相同的汽车座数，一校临出发少了半班。家长拿到的是按满座预估的通知，退差额时须凭学生姓名核对原交费人。
+食堂饭票换色漏了寄宿班|晚自习前旧票一度无法打饭，值班老师记下名字，让孩子先端碗再换票。|几名寄宿生的饭票周末由生活老师代领，统一换票时袋子仍在办公室。餐台先把旧票分别收好，避免孩子第二次交饭钱。
+校门口黄线挪出一条人行道|记者量过最窄处，接送车停满时只余半米，学校把等候位置移到转角外。|两辆自行车对向经过时原来要上下马路牙。新线画好后，值日老师在早晨接送最密的十分钟守在转角，观察有没有车轮越线。
+三所学校共用一份体检名单|医务室在两列同名学生旁补写班级，退还给另一校的三份通知重新封好。|体检表背面有原班印章，正面只剩学生姓名。医务室给两校分别装袋，通知领表人在走廊按班级点数后再带回学校。
+校车站牌写着已经搬走的门房|记者依图走到旧门房，新校门还隔一条沟，学区重印路线单。|两处门房间还隔一道上锁的小铁门，地图画出的直线不能步行通过。教师带着校工重走一遍，在复印底图上标了第一个可过街的路口。
+借桌椅押金该找哪一校退|支教点撤回后收款人换了岗位，联合办对上当时的借条，集中开设返款窗口。|孩子手里的收条只写了课桌数量，没有写该去哪里领钱。联合办保留借用人原来那联，让来人只签一次退款条。
+广播体操铃响在午休中间|两校相邻原用同一只喇叭，新课表休息时刻不同，电工把线路分开。|一块电铃从两所学校的共墙上穿线，以前总以早开课的一边为准。分线后老师守在两头值班室试听，第二声已经听不到对校的铃响。
+联校图书证漏印了还书地点|几名学生走到原校吃了闭门羹，借书处把两处值班时间印上借阅袋。|一处可借可还，一处只在午休收还书。图书员把印好的纸条贴在卡套背面，孩子还书前翻个面就能查看。
+四校试卷车拆掉了两把旧锁|卷库钥匙分别由两校保管，每次开门须等人到齐，学区改由双人押送交接。|库房封条由两校老师同时签过，换锁并未取消双人开箱。新的押运本给两位交接人各留一处签名，下次转运便能查到确切时刻。
+@交通|0|东环公共汽车调度室|重|高|调查曝光|东环干线每天约有3200人次乘车，绕行表须执行到下周。记者持票乘过全程，并与调度室保存的出车时刻逐一比对。|调度员张培|能不能赶上，要从车门打开那一刻往下算。|售票员何芳|乘客哪晓得我们的车号，他只认站牌上的地名。
+绕行3站还要不要补票|两名乘客拿出不同票价的同程票，调度员按临时票价表退还多收的区段费。|记者同乘两段绕行路，车票上没有另列附加段。调度室在改道有效期内沿用原票价，并把退款窗口设在原来上下车的终点。
+双向站牌画成同一个箭头|清晨赶车人在路西等了两班才发现弄错，养护班下午调转背面的铁牌。|西面站头清早还落着薄露，有人在雨棚下写了一张问路条。工人转过牌子后，原先背街的一排时刻数字也一起朝向候车人。
+末班车提前收班单上少了8分钟|记者到终点核对进场签字，发现司机按夏季空车表回库，已恢复载客末班。|司机进场先在门口小屋签字，调度室再另抄一次日班汇总表。两处记录都留了原件，经对照，早进场的并非误抄一项尾数。
+换乘票背面漏印了一站|原可换乘的客人被要求重新买票，售票组同意凭旧票在终点窗口领回票款。|新票印出来以前，原有车票还可正常使用。记者拿着同一张票在首末站分别询问，两处售票员都指向盖在日期旁的蓝戳。
+公交跑完全程多出4公里|绕路临时增加行车时间，旧表挤掉中间休息，司机提出分开列出折返时刻。|司机摊开旧班次表，往返之间的间隔只够加一次水。新表把绕行路段算足，首班出车不变，午间折返的两趟相应推后。
+环线车不再穿过粮站内院|大门开闭会把一车乘客堵在院内，调度把临时站移到粮站外侧。|院门下班就落锁，夜车乘客曾要请司机鸣笛等人开门。新站点设在粮站门外靠右的一排树下，装卸车仍从原院门出入。
+候车凳装反乘客背对来车|维修工拆下四只螺栓，转过横凳后让候车的老人试坐了一次。|原来背靠街面坐着，看见车来须先站起再往后看。工人把木凳暂时转向，请等车的三名老人坐下试腿边通行宽度后才拧螺丝。
+学生月票跨区多付一角|旧区间表与票背印的不一致，售票员在分界站记下了当天的14笔退补。|分界站设在桥头，从桥另一头上车的学生容易按站名误判。售票员向两所学校送去新的区间单，标明往返各自的起算站。
+两块同名站牌相距400米|记者步行量了两个路口，听来电才知道一个是临时站，一个是厂车等候点。|记者从第一块站牌往前走，两处中间隔着低桥和一个街角。从此进厂的班车只在厂门联络处挂木牌，公共汽车站牌统一漆成白底。
+夜班车到站先报回城方向|修路使两路公交临时共用站头，司机停稳后开前门先喊方向，避免乘客坐反。|售票员先喊开往车站还是开往河堤，再把手写的小牌朝外放好。两路车同到时，站台上的人也能在挤到车门前就辨认方向。
+@消费|0|江南粮油供应社|重|中|社会矛盾|临渡七处粮油供应点共用一座仓库，换仓期间连续一周调整提货。经办簿上涉及1500多户，记者分别核过门店进货单和柜台价牌。|仓管员唐金树|货在后门卸，前门什么时候卖，要看单子跟没跟过来。|购粮人梅玉霞|袋子我拎得走，哪一笔该算我的，我得问明白。
+8家合购的大米少了一张交货单|仓库只按车次记账，一笔分送的粮款被两门店同时记入，复核后冲回一笔。|二联单的一联随车到仓，一联分到收货门店。八家人拿来的批条号码都相同，重新配单后，每家领走多少在余量栏逐次扣减。
+柜台价含袋钱仓库价不含|同批籼米出现两种标价，记者买下两袋逐项核算，差数来自可退的布袋押金。|记者当场交还空袋，掌柜按票上记的数目退回押金。摊位牌保留含袋价，同时写明顾客自带口袋时该付多少。
+换仓后旧粮票换领不再跑两趟|柜台此前只收不换，供销社会计带空白领条到门店当面核销。|先前兑换点只在工作日早上开门，跑晚班的工人常只能托人去办。新加的临时兑换柜仍收原来那张票，盖过戳才算结清。
+一车散油分进两种价签|进货单注明同一批号，两个柜组各用一块旧牌，供销社改由验收员统一挂牌。|旧价牌标的是小桶，新价牌给散装顾客，两批货并非等级不同。供销社让进货时负责封样的人在牌背写上仓单号再挂出。
+合订粮册上的楼号颠倒了|送货师傅沿错地址走了两条街，发现一份老名单把六幢与九幢写反。|记者拿着两本互相颠倒的送货栏去问，一处九号在老门洞里，一处新牌正对着马路。送货员现在先看楼号，再问住房户主。
+米袋上的出厂日被提货章盖住|供货员重新誊写批号贴在袋口旁，顾客可直接与仓单上的日期对照。|布袋缝口原有小签，提货人盖章时通常把小签压在下面。仓库在料单上另抄原装日期，不再用重新分袋的一天代替原日。
+仓库口车队为何不按号进|排队号与装卸号用了两种编号，最早到的板车反倒最后过磅，两张牌改用不同颜色。|后门按进场次序叫号，仓内则按货车停在哪一侧安排装袋。两张牌一个管进门、一个管出货，各加了一行用途免得司机空等。
+粮站给空袋退回单留了存根|顾客交袋后凭口头约定领钱容易漏账，收袋员从昨日开始逐张撕回执。|原来收袋员只把退回个数写进一本大账，换班时顾客很难查到自己那笔。新回执留给还袋人一半，月底有疑问可到仓门查。
+3个门店调匀两种规格面粉|小袋卖完时柜面只剩大袋，仓库根据售出的票根把下批小袋改送家属区。|整袋面粉尚未售完，一些年轻住户却转身去别家找小包。商店看过近两天退回的提货票，只调整袋数，不更动两种货的单价。
+一批糯米上错柜卖作粳米|记者请仓管员比对缝口色线和调拨单，尚未拆封的17袋已换回原柜。|记者随仓管员拆看一袋，米粒外形与柜上展示的粳米不同。原票留着的顾客可带余粮到售点，由验收员核实分装批号。
+@民生|0|城北供电修缮班|重|高|调查曝光|北干线改接覆盖两个市场和四片居民楼，2200余户按分段表轮流停电。抢修班开出工作票后，记者沿线逐处核查现场公示。|线路员杜建平|同一条街也会分两段，不能看着对门亮就说全修好了。|电器铺顾红|哪天哪半天得关冰柜，我得先把那页日历折过来。
+供电公告漏列背街两排铺面|主街已按时停电，背街冰柜也同时停转，班组追查到合用的旧接线箱。|一家小铺只在后门看见居民院的通知，沿街正门的停电时间另写一套。班组沿分线后将属于同一段的门牌逐个勾出，重新张贴。
+两份停电单相差半个下午|变更工期写进工作票却未发到社区，记者陪值班员逐点收回原通知。|居民留下的两份纸一份油印、一份手抄，最下方的发出时间相差半天。值班人说明日后变更通知将写上替代哪一日发出的原单。
+临时照明线缠在居民晾衣杆上|值班电工收线时发现走廊共用铁杆导线松垂，改从独立线架引出。|线路末端悬着一盏临时灯，过巷时有人用衣架把松线挑高。施工员当即拆下衣架固定，检查整段线路后再送照明电。
+电表封印号为何对不上账簿|换表组换了新表没填末三位，核对拆下的旧表后逐户补录。|封号与表号分别印在两栏，住户抄来的是新封号，簿上仍是旧表数。校过原缴款卡，累计用电读数本身没有改变。
+楼道公灯电费收了两遍|住户的缴款卡和物业月单同时列了公灯，收费处核过同一表号后退回。|记者把两张缴款单并排放在窗台，公灯一项不但金额相同，抄表日期也一致。退费时按本楼实际缴过钱的人出示的票据一户户核实。
+巷口报修台提前收走一小时|铁路家属院的通知写到18时，现场却按内部交班表17时撤台，次日延时补办。|本来准备下班后办手续的几名工人只赶上空桌。班组就近借了社区门卫的桌子，重开的值守时段从醒目的厂门公告栏一同发布。
+听力不便住户没听见复电广播|单元值班人改用入户纸条告知，送达时让家人一并检查楼梯照明。|住户家里未装门铃，单靠广播或电话都难通知到。值班人上门时约好，傍晚由同层邻居陪他一起照看恢复供电的插座与照明。
+32家小铺两种电价从何而来|商业总表已分开，几个分表仍沿用摊位旧费率，收费室开出重算清单。|记者核过摊位旧图和新铺面租契，原来有一排迁走的摊档并未从旧清册划下。重算后新价按正确抄表日开始，不追到搬入之前。
+临时配电箱堵住了送煤门|三轮车绕到另一个街口倒运，施工队把箱体移出门扇开启的范围。|施工箱底面尺寸刚好挡到门向外开的半扇。拉煤工用粉笔在地上画出车轮通常走的线，班组依线挪位后让他推一趟空车。
+修线结束还有一排路灯不亮|试送电只验了主路，巡线员沿旧院墙查出未合上的支路开关。|巡线员先确认住家灯已经恢复，再依次打开背巷灯箱。支线不亮的报修单另编一个号码，住户可单问路灯进度。
+@街巷|0|永庆巷缝补铺|轻|无|其他|老铺门前有一把脚踏缝纫机，客人带来的零布头按深浅分装在玻璃罐里。|裁缝苏巧云|衣服翻过来才看得准，光看正面可不行。|街坊吴长生|我坐这张矮凳，不碍她脚底下踩轮子。
+父女两件褂子共用一寸旧布|父亲拆下内袋补女儿的书包，剩下的一角又缝回自己的袖口。|父亲在袖底翻出原来折进去的一小块蓝布，和书包背带上磨白的那一块恰好同色。孩子背上书包去照镜子时，父亲自己那件衣服还摊在裁缝腿上。
+一排暗扣藏起演出服的两套领子|文化馆两出戏之间换装时间短，裁缝让演员当场试了三次转身。|两件戏服的领口本有同样的金边，台下分不出前后两个人物。演员试装时背过身，只在耳后轻轻一掀，红领便换成素白。
+蓝工装补丁里露出一行小字|退休钳工拆开袖底，才看见师傅多年前写在布背的工位号。|那行小字不是后来绣上的。从袖管里看，蓝线沿着几个数字的边缘绕过，当年替他缝衣服的人显然也看见过。老师傅把这一角留在原位。
+修伞坐垫摊开像朵向日葵|八片不能成伞的旧黄布拼成了圆垫，来取伞的小孩先数起扇面。|师傅沿伞骨旧眼各走一道线，坐垫中央留下硬币大小的圆孔。原主拿它垫在竹椅上，发现这个孔提起来正好能穿进晾衣绳。
+书包带子不再磨小学生脖子|孩子背着装满的课本试走半条街，肩带内侧多加了一层棉布。|孩子空着书包来试觉得并不磨，裁缝请他回家把课本装齐。等他再走到巷口，原先在脖子边的针脚已经落到肩窝外面。
+送煤人的手套只换两只掌心|厚线手套总先磨穿手掌，裁缝照车把弯度裁了两块旧帆布。|帆布先浸过水，晒干才敢贴住掌心缝。车主握紧车把，再张开手，原来硌人的接缝被挪到了小指外边。
+台布烧出圆洞绣成一枚果子|摊主舍不得扔旧台布，让师傅沿洞口配线，补好后邻铺也来找同色线。|裁缝在洗剩的一块旧布上先配过颜色，洗一次仍能认出果子的轮廓。饭桌主人说往后客人想找杯碟就认这颗果子所在的一角。
+一套娃娃衣穿在店里的热水瓶上|玩具褂太小没人认领，老师傅给走线的地方添了一个提手。|店员把空瓶装满水，试提三次才敢交出去。小褂下沿两处系带还可解开，换瓶时不用剪掉原来的花扣。
+给盲人师傅的钱袋缝三道棱|三个夹层缝了不同线头，师傅摸一摸就能把进货钱和找零分开。|师傅把钱袋交给客人时没说哪一格是什么，只请他闭着袋口摸。三道棱都摸出来后，再把夹层的开口分别定在最顺手的位置。
+旧校服换袖后多出一截刻度|妈妈想记孩子个头，把原来袖口的折痕用绣线留在里子上。|孩子三次卷起袖子，母亲都在旧折线旁留一小针红线。裁缝量好新袖后按原距离把三处红点转到里襟，旧布留给母亲带走。
+@奇闻|0|上河木器合作社|轻|无|其他|木器铺贴着河堤，屋檐下总有一篮巴掌大的边角木料。做活的人在这里把剩下的料分给来学手艺的街坊。|木工陆安|那块料还能派什么用场，先摆桌上看两天。|邻居夏云|我从窗口先听见刨子的响动，才知道他们又做了东西。
+小板凳的四只脚各穿一只鞋|师傅照地砖凹痕削出四只可替换脚垫，幼儿园从此不必往桌脚塞纸。|四条凳腿量起来一般长，挪进新教室却总有一腿悬空。老师在教室试坐时给每块垫片标了角，搬回原位只须对上记号。
+修秤老人的鸟笼多了一扇门|为了不惊动窝里的雏鸟，笼底另装一扇抽门清扫。|从前要掀开整个笼盖才能清扫，鸟一听金属响便扑向笼壁。新门沿竹轨滑动，抽出的木屉在门外即可倒干净。
+木鱼里掉出一粒玻璃弹子|学徒把旧木鱼拆开重胶，原来独特的尾音来自几十年前滚进去的小球。|木鱼旧裂缝刚好比玻璃球大一点，老人说小时候总好奇里面是什么。学徒把弹子交给原主人，合口前让他再听了一次空腔的声音。
+一块砧板翻面成了棋盘|食堂换下的榆木板仍平整，退休棋手在反面烙上楚河汉界。|最深的刀痕留在棋盘背面，翻过来正面仍平整。两位老棋友各选一子在四角试走，看准棋子放得稳才请木工落最后一条墨线。
+河蚌壳给玩具帆船当了舵|孩子们试船时总向左拐，木工在壳尖打小孔，让尾舵能够转动。|孩子先把蚌壳绑死，船只会往一个方向绕。细铁丝改成活轴后，用手一推壳尖能转弯，学校水槽两次试航都没碰壁。
+不倒的烟囱原来藏着一截线轴|镇小学演皮影戏，台上的房子一掀屋顶烟囱仍立着，后台有人轻拉棉线。|剧场原先只用一根铁丝撑烟囱，房顶一掀就歪。师傅把线轴嵌进底座使细线绷直，台下望去仍是一座寻常小屋。
+木鸭走下斜板自己摇头|两只脚板切出不同弧度，师傅把作品借到小学讲摩擦力。|小木鸭两脚的木纹方向相反，师傅削薄一边再放到斜板上。走到一半它歪向桌边，孩子用粉笔圈出第一次歪头的位置。
+一只抽屉站在墙上当信箱|药店换柜台，留下的浅抽屉配上旧铜把手，街坊写的送药条从侧边投进去。|信箱底留着旧抽屉的蓝纸，投药条时能听见纸落在木板上一声轻响。店里在墙边放铅笔，外地的病人也能把约定取药日期留清楚。
+钟匠修柜门先借了个铅坠|老宅地面倾斜，按地面修铰链仍会自开，沿垂线调整后轻手也能关稳。|铅坠的细线从门楣垂下来，恰好与旧铰链差开一指宽。老师傅把垫木夹在铰链和门框间，试关时锁舌终于与锁眼居中。
+门环上的鱼尾朝里翘|老宅门背总被铁环磕出坑，主人翻转旧木鱼尾，刚好托住门环。|鱼尾原本钉在旧窗棂上，拆窗后放在柜里。木匠把鱼头换向门内，锯下的小半段鱼身又被孩子要去做铅笔挡。
+@文娱|0|长虹戏园|轻|无|其他|戏园小台正对木座，两侧过道直通后台。白日排戏时附近街坊常坐末排帮忙听台词。|场务张发|好不好用，得等演员穿上行头走一遍。|票友胡秀琴|我坐末排听，哪一句听岔了就给他们记下来。
+戏台上的马蹄声来自两只空碗|场务先用木块试音太脆，换成碗口扣在湿沙上，后排隔着帘子也能听清。|小碗扣在干沙上有点发脆，场务洒了半勺水后边走边敲，马忽快忽慢的节拍才与演员上台的步子对上。
+新做的长水袖借给孩子量步|演员把下摆收短四指，孩子再转身时终于没有踩到袖口。|原来的样袖从成年演员戏服上拆来，孩子一转圈就拖到地上。老师改用两处活扣，可随扮演者身高把袖口再收短一截。
+一把红纸伞换了三回主人|两出折子戏共用一把道具伞，换场的脚夫把三位演员的名字写在伞柄里侧。|脚夫把写人名的小纸贴在伞骨内面，前台看不见。交接时两位演员互指一下名字，就不必再从两套红伞中逐把试开。
+戏票背面的座次图印反了|老票友拿两张现场实票对位置，票房在余票盖好左右门的更正戳。|票房留了两张原始样票，一张印在纸正面，一张从背面透出来。工作人员在大厅按实座翻转图纸，才查清是印版装反。
+门外卖茶人唱准了落幕那一句|他十年守在后门，昨天客串只有一句词的小角色，响板一敲便接上了。|卖茶人的铺子离后门约十步，每天总听到演员最后两句。排到第三遍，乐师故意少打一下板，他仍等准了原先的停顿才开口。
+后台窗纱绣出一串音符|二胡手按弓序把休止处缝上小点，新学徒翻谱时有了记号。|过去换页时两位伴奏常要一人停弓去扶谱。老伴奏在谱纸空白处留下可摸的点，徒弟手不离弓也能请旁边的人翻到对页。
+一条布景巷子搬进小学礼堂|戏园把卸下来的景片锯成可折叠三段，板车一次运走，孩子们下午就能排练。|大幕搬走后景片摊在小学地上仍太长。美术老师把接缝藏在画出的门框边，合拢时从最后一排看几乎不露线。
+十张连座票留给看不见台的客人|导戏员在换景时低声讲解台上动作，最后一排安静得能听见衣料响。|散场后有位听众问，第二场推门的人到底进屋没有。负责讲解的老师把这个问题记下来，下次要给静默的动作留出一句话的时间。
+鼓师在桌沿写了四个姓|四位新角嗓音相像，鼓师为各自的出场锣点贴上姓名，开演后都对上了。|几个姓写在鼓师抬眼就看得见的桌沿，观众看不见。新角从背幕后伸脚那一刻，他只要扫一眼就知道该给谁留慢板。
+屏风后那双布鞋等到谢幕|演婆婆的老演员曾在台下教徒弟走小步，排戏的人把她的旧鞋留在过场处。|旧鞋鞋尖的布补过两次，徒弟试穿时不敢把脚伸到底。谢幕后老师把鞋收回鞋袋，说下一次排戏还要用它作样。
+@教育|0|育才小学阅览室|中|无|其他|阅览室由两间旧教室打通，低年级的书放在靠窗矮架上。借阅员用纸卡记录孩子找到的页码与书号。|借阅员程兰|孩子找一本书，从哪排走进去我看得见。|学生赵方|能让我自己挑，我愿意在这儿多坐一会儿。
+借书卡把同名同学分开|两名叫张涛的孩子先前共用一个卡袋，老师在姓名旁加上班级和一枚小图章。|新卡袋取自废地图册，一面印山、一面印河。两名同学各自挑了图案，下次只报名字也能马上认出自己借的那一本。
+一本昆虫书多出了蜻蜓翅纹图|孩子把操场捡到的蜻蜓照实描在透明纸上，夹在相应章节供同学对照。|那张翅纹图没有粘牢在书页上，借阅员只在角上套一个小纸框。以后若有同学画出不同蜻蜓，还能抽出旧张并排比较。
+没到放学阅览桌先来了家长|接低年级孩子的家长可在最后一节课到阅览室等候，靠墙六个座改作成人座。|试行第一天，两名等候的家长带来要补扣的童装。图书员把靠门一桌留给临时做事的人，使孩子在里排读书不受穿行打扰。
+字典盖了37个借阅戳|最常被借走的字典书脊已松，装订师傅用旧课桌上拆下的帆布条加固。|借阅戳叠得太密，最早一枚月份几乎认不出来。修书时工人先给原卡裹上薄纸，新卡放在后面，前面留下这学期来过的痕迹。
+故事会给不会拼音的孩子留座|高年级同学轮流带读，一页一停，让一年级孩子自己把结局讲出来。|带读的高年级学生从开头一直读到角色要作决定的地方才停下来。孩子们争着把下一句讲完，老师最后翻开原书给他们核对猜想。
+一张借书单牵出三所山村小学|调来的旧书里留着原借书单，三个不同校章见证了同一册书的辗转。|三枚印章颜色深浅不同，一枚还压在旧书价标签上。老师们交换了借阅卡片的复印件，原来的卡继续留在书中，方便后来人辨认来源。
+每月少交一张纸也能还书|原还书条需另填书目，图书员在旧卡背面预留盖章处，孩子排队时间缩短。|借书员把按书名开票和按卡盖章分别试了一个下课时段。改卡后窗口仍核对归还人，只是不用孩子对着封面一个字一个字重抄。
+阅览角的挂钟挂低了两格|小学生抬头只能看见钟下沿，老师把钟挂到矮架侧面，翻书间隙能直接看时间。|矮架旁原留着钉身高表的小孔，校工不用重新打洞便挂好钟。孩子坐在第三张桌前试认了几点几分，老师才把椅子挪回原处。
+修补破页先用铅笔圈住页码|学生修书队曾把页码糊住，老师请他们先拓下页边再拼合残口。|修破的地方接近地图，糊白纸会吃掉图上的县名。孩子把旧页放在玻璃上朝光看，先描出缺的线再粘护边。
+借出的星图傍晚才归架|天文小组要对着星星辨方位，值班老师把归还时间延至校门关灯前。|傍晚领星图的学生须在卡上注明回家经过哪条街。老师留一张副图，等他们回来能边翻边听，校对东南方向到底认了哪颗星。
+@科技|0|振兴无线电修理部|中|低|其他|修理柜旁摆着万用表、烙铁和一排装旧零件的火柴盒。顾客留下的机子各系一张手写故障纸条。|修理工唐友明|我得先听原来那一声，再动螺丝刀。|顾客郑玉|是哪个钮出的毛病，我在家试了好几回。
+双卡录音机慢半拍找到了皮带|记者拿同一盘广播报时带先后试播，换上紧皮带后节拍与收音机对齐。|老板保留了拆下来的旧皮带，套在铅笔上轻轻拉动，比新件松出半圈。客人认出带子上原来的裂纹，才把录音机领走。
+收音机夜里叫原是定时钮没回位|开关磨掉一道齿口，师傅用废旧钟芯配好弹片，无须整块换板。|收音机在柜里放一夜，师傅没拔电池，次早仍安安静静。零件换好后由顾客自己拨一次定时钮，针走到底会清楚地弹回来。
+磁带底噪多收了谁的维修钱|收据列着两次清洗磁头，同一工位簿只记一次，柜台把重复那笔退给客人。|维修簿同一行有两个盖章，原以为是两次上机，旧油印章压着新章却没有第二个日期。结账时按原票退掉后一项。
+电视遥控器对着灯泡才灵|修理员拆下发射头外的脏塑片，擦净后从门口也能换台。|顾客原先以为是家里灯泡干扰，师傅借邻铺另一盏灯反复切换，确认清洁发射窗后才有改善。柜上的测试电池随即拆回电池盒。
+旧收音机装上了布提手|盲人顾客想边走边听天气预报，师傅把粗布带固定在原来的背孔上。|提手选布带而没有上细绳，客人说握紧时手指比较舒服。他亲手套上风衣试提，还能从两指之间摸到调音旋钮。
+公用扩音器改插头少绕两层楼|校广播室和礼堂一直轮用一套话筒，新转接线放在礼堂门卫抽屉里。|原线要绕过楼梯扶手才接得上，放学时常绊到扫地的学生。转接头归还时挂在话筒线尾的环上，存放位置写进借用条。
+一捆喇叭线贴出两种长度|修理员把商店配来的余线铺上地砖复量，两张价签所指单位不同。|两家店一处按市尺、一处按米报价；拆箱时都把数字写成相同的大字。复量结果贴在柜边，让买一米与买一卷的客人各自算价。
+修机单添上自带电池一栏|取收音机时有人把别人的电池认成自己的，收机员开单时请客人先试再记。|纸条原只记电池有无，几只同款旧电池外皮又磨掉了字。店主请送修人自己在纸圈签一笔，维修时纸圈一直跟着零件盘。
+短波电台听不清先移开风扇|记者把收音机移出电机旁，噪音随即变轻，原来顾客不必换天线。|记者站到里屋、走廊和门口分别收听同一频率，开关电扇时都有不同程度的变化。客人决定先回家换位置试听，再决定是否送修。
+石英钟走到八点就停住|分针背面擦到微翘的钟面，师傅轻轻垫平，修后挂墙试走一昼夜。|分针离开八点后与表面还差一张薄纸的空隙，店员把钟挂在墙上观察了一天。到交件那时，主人又等它朝八点走了一次。
+@体育|0|工人俱乐部篮球场|中|无|其他|夜场由几家厂队轮用，记分台旁钉有队名木牌。临时换人和借器材都在两队领队签字后才算数。|裁判员吉明|让大家站到各自的位置，再解释怎么判。|厂队后卫陶敏|我们都是下班赶来，能把这一节踏实打完就高兴。
+两块记分板昨晚只认一块|客队把练习局的比分也翻了进去，裁判照记录本逐节还原，比赛在第三节重开。|翻错的数用铅笔记在原记录纸边缘，旁边写明是哪一节的练球分。裁判请两队领队同时确认，再叫计时员把第三节剩下的分钟拨回去。
+女工队第一次借到黄金时段|夜班女工多年在天亮后练球，机修队让出星期五的晚场，两队换用休息日。|一份换场条只改了这周，没动各班组原来整月的排班。女队领队让两名最晚下工的队员先试着走一回，看能否赶上热身。
+边线往里收了半只球鞋|记者和裁判用卷尺重画两侧安全带，原本守在墙脚的球童有了退让的位置。|粉笔画出的安全带紧贴墙脚有一段排水槽，开球第一晚先不撤线。社员约好边线球从标记里侧发，场边不再堆放换下的外套。
+水泥地裂缝先用粉笔圈出|后卫变向时球弹向边线，管理员在维修水泥干透前封起半边球场。|最深的裂缝正好跨过三分区一角。管理员用废球滚球试过，弹起的高度明显不同，才安排维修工先来补这块最影响比赛的地方。
+旧球网被换下成了奖品|这副网伴厂队打完十个赛季，退休中锋带来洗净的球衣，与队员互留纪念。|老中锋找回的球衣号码已经换过两次，他翻出旧队刊照片，与球网上打的同色结对照。两件纪念品将在俱乐部玻璃柜展出一周。
+场边换人牌刻上凸点|灯光暗时工作人员摸着也能认出号码，替补队员再不用隔着人群喊号。|木牌背面还刻有上下方向的小箭头，拿倒时指腹很容易碰出。替补念到名字就拿起木牌举到记录台旁，确认后才从边线入场。
+两队同穿蓝衣临时借上围裙|食堂拿出十条白围裙，裁短系带当作罩衣，首节比赛准点开球。|两队自带的上衣蓝白条纹几乎一样，灯一开更难辨。食堂收回围裙前先让客队把姓名写在一张纸上，比赛照片还能对得上人。
+暂停时裁判吹响自行车铃|裁判的铜哨丢在车棚，备用哨送到前，两队商定敲车铃只用于叫停。|自行车铃只有短促一声，两次连响才算双方共同认可的中断。新哨从厂门口送到以后，裁判特意先试吹给双方听了一回。
+计时钟重新挂回罚球线侧面|原挂钟被篮架遮住，两个底角的队员都看不全，挪位后四角可见。|记者从四个底角分别看过旧钟，要跨进场内一步才能望见分针。挪过来以后，罚球区和边线的人无须同时转身看同一个方向。
+半场休息开了两分钟投篮课|厂队中锋用一只小球示范压腕，场边孩子排队试投，铃响后把篮下让还主队。|中锋示范时不让孩子跑动，只让他们从近处把球按进筐。两分钟一到，两个刚学会的小孩帮忙把没用上的球逐个抱回边线。
+@消费|0|青石路自行车行|中|低|社会矛盾|自行车行一边卖整车，一边替顾客换链条、车铃和辐条。店员把拆下来的旧件放进铁盘，请车主当面认领。|修车师傅杨成|车好骑不好骑，上坡和捏闸要各试一回。|骑车人白春|我每天过两座桥，车上哪个地方有响声，脚底下先知道。
+旧车折价差在前轮一只圈|两家门店给同一辆车估价相差18元，记者拆看前轮，发现一店另算了变形圈的工钱。|师傅当面卸下前轮，把轮圈沿固定粉笔尖轻轻转了一周，擦过的白痕只在一小段。车主看清要换的是哪一件，选择先校圈再估价。
+换内胎报价漏写气门芯|客人结账时才知道需添钱，柜台把整套零件拆分列价供选择。|顾客原以为新胎应该带齐小零件，店里样胎偏偏装着一只旧气门芯。店主把陈列件拆开摆成两列，已经装上的外胎照原报价交付。
+儿童车辅助轮分左右|一名家长自己装车后总向一边倒，修车员按螺孔方向对调，孩子绕院试了一圈。|原厂包装图只有整车侧面照，看不到支杆向里还是向外。修车工把前后两边的离地距离写给家长，约孩子下一周回来复量一次。
+三种锁哪把钥匙好认|车棚管理员用纸袋装起同厂锁钥匙请车主辨认，最后在易混的钥匙柄上配了色环。|三把钥匙的齿口不同，取车时却常先摸错一把。管理员把锁挂成一排，请几位戴厚手套的车主试过哪种小环最容易摸准。
+刹车线紧还是车圈偏|记者扶车架起空转，原以为磨坏的皮块尚可再用，校正车圈后异响消失。|记者用粉笔在车圈边擦一圈，慢转到总擦痕的那一段，刹皮的两侧其实尚有余量。维修单最后只列校圈工时，没有换新胶块。
+新轮胎外膜下还有旧补丁|一名买家留下实物和收据，店员查到是返修品误放在新胎架上，已按购价退换。|从外面看新膜包得齐整，开包后胎壁上能摸到一小块凸起。当事顾客付的是新胎价，门店把同车到货的余件取下来逐条验看。
+车座升高一格不另收费|价牌写着调车收费，实际只收拆装后的工钱，柜台把免费的小调整另贴一张纸。|张贴的收费牌上原来只有调校二字，车主不知道调一个螺帽与拆开龙头是不是一价。新牌把扳手可当场完成的项目先列在上边。
+雨衣挡住车灯能否换货|同一尺码前襟有长有短，店员让顾客推车试穿后，换了一件前片较短的。|记者在车前方蹲下看过，雨衣前片刚好遮住灯罩的上半截。换来的衣服在车篮边有一道扎带，收紧后迎风也不再垂下来。
+车篮改靠架子承重|卖早点的车主一载货龙头就往下沉，师傅给篮底配两根撑杆，转向时少晃许多。|撑杆不直接压在薄篮底，而是顶在两个焊牢的角上。师傅请早点铺老板装进原来那只饭桶试骑，进巷拐弯时脚仍碰不到支架。
+租车押金单写上退还时刻|两个夜班工人还车赶上关门，店主同意和附近修鞋铺共用晚班交接簿。|旧押金条只有租车时刻，夜间取车位置全靠口头记。商量后的回车条写两处可交地点，隔壁代收人和车主当面看一遍车闸。
+@民生|0|沿河房管服务站|中|高|调查曝光|老街房契、维修单和各院自筹的材料票装在不同的档案袋里。记者对照房号找过现场，也向经手人核过收据的日期。|房管员章新|这条巷子改过门牌，光报个号不好找。|住户柳红|我把票根用报纸包着，等到修好那天再拆。
+修屋面为何收了两回上楼费|两支工班合用一副脚手架却分别开票，服务站查到同一进场号决定合并结算。|脚手架出巷时看门人只写过一次放行，两笔安装费单上却各列全额。房管站重新请两组工人写明合用的时段，在原账旁注明调整金额。
+空关房的门锁被算进公摊|原房主早已迁走，换锁误列公共修理费，账页补上了接收人的签名。|单子写的是配锁，门房的钥匙簿却找不到交回记录。收费员把楼上几家的票逐张核对，空房那笔另入接管维修，住户的交费记录留存。
+二楼漏水是一楼住户买的瓦|垫钱的老人等不到收据，施工班在材料簿找到了他亲手按下的指印。|老人只说得清送瓦那天院里摆了两张矮桌。发料人找到了同日另两户的领料签名，对照红砖厂的送货清单才补开垫款回单。
+送到门口的砂石少去一车|车辆到另一处工地卸料，原单写的是两处共收，服务站分别开了实收清单。|同车砂袋有的送去修台阶，有的留在后院补墙，两处各拿一联手写条。货主照司机当日路线回访，给两处分别写下实际卸下的袋数。
+新刷的楼号把退信送回老巷|邮差拿退信来核号，发现施工照着旧图刷字，两个院门当天换上正牌。|邮差手里的退件均有相同门牌，姓名却来自另一个院落。重新刷字前，工人临时用纸把旧号完整遮住，让当天的信先投到单元信箱。
+门厅照明换灯还收脚手架费|住户拍下的是一把木梯，服务站向工班核验后撤销了该项收费。|记者查过工班领用簿，那日脚手架没有出库，现场用的是住户自家木梯。结算时保留灯泡和电工工时，另开一张差额退还小票。
+阁楼钥匙应交哪位管房人|钥匙随旧管理员调走，屋顶检修推迟半日，交班簿新增一项公用门钥匙编号。|原主管搬走时把整串钥匙一起交给新单位门卫，阁楼这一枚没有文字标签。收回后在钥匙牌刻上楼栋号，备用钥匙分装另存。
+外墙粉刷的平方怎样量|报价含窗洞，验收却按净面积，双方在现场用粉笔逐段标注，重开最终单。|窗洞两侧还有一圈窄边应当计入粉刷，拿整面墙减整窗也不准确。工人把剩余边线另量一次，在新单背面画出各段尺寸。
+楼梯扶手修到半层停了|材料按整层领，转角处需另做弯头，记者见到木工已据旧样制作替换件。|扶手末端暂时用软布包住，住户上下楼能看出尚未完工。木工带来一个预制弯头比对，确认两段角度不同，改用旧件照样刻制。
+住户拿着两年的报修回条|登记册按街道分过两次，回条号码没带过去，查到原件后恢复等修顺序。|老人保存的回条已有一道折痕，印戳年份仍清楚。补录时新旧登记号并列写在原条背面，他不必另开一项再从最后排队等。
+@文娱|0|红星电影院|中|低|其他|影院大厅里还摆着手写场次牌。放映间的机号、片盘和交接时刻，由放映员用蓝墨水记在窄本上。|放映员葛平|开灯以后观众能看到的东西，我们在小窗里早得试一遍。|观众方蕙|我买票先看散场几点，好知道回去能否赶上车。
+加映场票面漏印结束时刻|影院补贴预计散场时间，临近末班车的观众可提前去窗口换场。|散场估时含片间休息，和正片分钟数并不相同。记者在前厅见到，拿着原票想改早场的观众可先在旧票背面批注，再到座位栏挑余座。
+夹在胶片盒里的旧节目单|放映员送回外借拷贝时发现一张手刻节目单，两地影院核对印章后找到原主。|片盘上的旧铅笔字已辨不清，节目单角落仍有原来放映厅的紫色圆戳。两地馆员互寄节目单影印件，原纸另用薄纸包好。
+儿童专场把前两排空下来|孩子仰头看得累，售票员从第三排开始排座，前排改放折叠车。|前排空座没有卖给成人，保持小观众上下场通道通畅。教师带着两个个子最矮的孩子坐到第三排试过，能看见银幕下方完整字幕。
+银幕边上一道光查到了来处|放映间熄灯后光还在，值班员发现侧门闭门弹簧松动，换件后重试。|开门时细长的光从门底出去，关门后还剩针尖大的一点。师傅换完弹簧又调合页，放映员坐到过道边确认银幕右角不再发白。
+影院海报上的女主角换了围巾|画工为两部连映片另画服饰，观众从街口就能分清片名。|海报画工把两幅图挂到同一盏门灯下，从对面茶摊看过再选颜色。认人的观众说脸画得像，认片子的人则先看女主角围巾的花。
+原声片加印一张人物表|两位演员译名相近，俱乐部把角色关系印成小纸条，入场时自取。|角色表用半张旧传单背面印，每个译名旁写了一件第一次出场时携带的东西。看完的观众可把表交还给下一场，也能随票带走。
+最后一卷胶片差半小时送到|相邻两院串片用的自行车掉链，首场提前告知换票，下午改从另一影院借车。|胶片盒外各留着送出和接收两处时间，记者沿路问到自行车在哪一段停下过。换场票维持原座次，需要赶车的人可直接退款。
+露天电影的坐垫垫起了音箱|小广场后排听不见对白，放映组先用木箱抬高喇叭再调音量。|音箱原来摆在第一排椅脚边，前排听得响，后排反而只闻风声。放映员请最后一排的居民举手示意，试听清楚才开始正片。
+团体票拆开仍可单人入场|工会发了连号票，有人分班未能同行，影院在票背加盖分发章。|以前有单位拿整本票到门口点名，这次几个工友倒了班没办法同行。每人分到的一联都有原票号，进场后仍对应最初的座位。
+片尾字幕放完才开侧门|电影散场开门早，外边叫卖声盖过最后一句对白，值班员改听放映铃再开门。|值班员等字幕走尽再把门推开半扇，外边等下一场的人不挤进来。首轮试行后，清场时间只比以往多了片尾曲的最后半段。
+@教育|0|工人夜校|中|无|硬新闻|夜校借用技校两层楼，开课铃通常在工厂第二班下班后响。墙上的课表有早晚两列，旁边别着请假学员领讲义的空袋。|教员刘玉森|白班和倒班的人落下的课不一样，我都分开放。|学员曹小芬|我进教室先擦手，车床油别蹭到笔记本上。
+学珠算先用菜市场账单|教师请几位学员带来当天的零买收据，一边拨算盘一边核丝毫和角分。|账单上保留着店家手写的斤、两，老师先请学员换成相同单位再拨珠。一名学员拿出了自己卖菜用的小算盘，和教学大珠盘在黑板前对算。
+夜校绘图桌让出左手位|两名左手写字的钳工换到过道边，宽幅图纸铺开后不再碰邻座胳膊。|两位左手学员把丁字尺反向靠住桌沿，原来被相邻凳子挡住的左臂可以展开。换座并未调班，老师把图纸夹位置一并换向。
+识字班写下第一个自己的地址|原先只会写名字的工人学会填包裹单，邮递员当堂讲解哪一栏留给投递局。|邮差带来的是用过但盖住姓名的包裹单，先问每个人收件地址该填在哪一面。最后一名学员认出自己工厂的门牌号，主动上台抄了一遍。
+焊工把试题画在肥皂盒上|下班后没有大桌面，他把常用尺寸记在盒盖，老师找来废薄板让大家压线练习。|老师请他把皂盒打开，只留底面，把尺寸线从两边往中间连接。学员随后在废板上照样画线，第一次画满一面而没漏掉方向箭头。
+半夜散课楼梯灯晚熄一刻钟|值日员原按日校时间拉闸，夜校与校工交接最后一把教室钥匙再关灯。|校工值班室的原电源表只列白日末节课，最后离班的学员拿着手电下过楼。两处楼梯现以最后一班老师交还钥匙的时刻关灯。
+车间广播替学员播五分钟听写|外语班学员倒班无法参加晚听写，厂里午休允许班长借一次扩音室。|厂广播原用来放午间音乐，小组只借节目后的一小段。听写纸交到门口信箱，晚课老师改好后再放回分班袋里。
+一张欠条写进会计入门课|教师撕掉欠款人的名字，请大家核对日期和签字，新学员一眼看出大写金额漏了字。|欠条上把元角混写，老学员说这类错误到领款那天最难解释。老师要求先在原处用铅笔圈出问题，留下原数供全班一同核算。
+夜校结业照分两班拍|生产线不能同时停机，摄影师保留同一块黑板布景，先后把早晚班摄进照片。|两班拍照时把黑板、椅子和相机位置都用粉笔标好。最后合订的纪念册并排印两张照片，下边分别写白班与夜班，不必合成一幅。
+一本练习册装订了两位同桌的功课|两人轮流带回家辅导孩子，老师在封面左右各留一栏，方便归还。|册子左边留给在机床上早班的学员，右边属于晚班同桌。老师给每人多发一张薄纸供抄错题，带回家后仍看得出是谁的笔迹。
+旁听席留给准备换岗的人|班组长介绍三名准备转岗的学徒旁听识图课，暂用旧讲义，待补班时再领整套教材。|三名学徒没有生产图纸基础，先从看懂一枚螺栓的方向开始。试听结束后填写要补的节次，并把借来的旧讲义还给晚班学员。
+@体育|0|河堤乒乓协会|轻|无|其他|河堤上的水泥球台没有顶棚，社员把球拍和记分夹借放在堤口食杂店。天晴时一把卷尺便能重新挂好球网。|社员毛松|先用球碰一下台面，水迹干透了才敢发球。|小选手秦磊|我在这儿学的第一件事，是捡球得看脚底的石缝。
+乒乓球被风吹进一只空篓|老队员给球篓套上软网，沿堤捡回的球不用再从苇丛里逐个去摸。|捡回的球在浅水里滚过，孩子先用干布擦净再试弹。篓口的网松松搭着，人伸手能取，河风再起时也卷不走刚收下的一筐球。
+直拍小将借左手师傅教发球|两人隔网镜面演示，孩子终于分清侧旋时拍面该朝哪边。|师傅原来站在孩子身后讲，左右手相反总显得别扭。这回他站到球台对面，让孩子不看自己的手，只跟着他的拍面转向。
+水泥球台印出十只手掌|补台时留下的掌纹影响弹跳，师傅磨平台面，把原印子留在侧沿供孩子认。|教授美术的社员先用薄纸拓下一枚完整掌纹，拿给当初补台的老人认。磨去鼓起的水泥后，手掌样式仍可在侧沿的小牌上看见。
+双打抽签抽到了祖孙俩|祖父守近台，孙子跑两边，二人先赢一局，休息时在沙地画下次接发的站位。|祖父总想让孩子跑遍全场，孙子却说有几个短球爷爷伸手更快。两人把下场谁站哪半边写在掌心，开局时互相摊手对过。
+报废球拍做成借拍牌|社员把破拍锯成半月形，借走好拍时留一块同号码木牌。|原来借还只凭口头，散场时总有一两只拍子寄在别人家里。木牌、胶皮柄、回收架上都留同一数字，食杂店按数清点后再关门。
+谁找到了滚下堤的黄球|一名赶鹅老人用竹竿把球兜回，孩子们在落球多的缺口挂起一截渔网。|堤口的竹竿平日用来挑起盖菜的帘子，老人先系上一圈细铁丝，才兜住漂在苇叶间的球。孩子把找到的头一个黄球留下给他作纪念。
+计分员头顶两把遮阳帽|纸夹被河风吹起，球员把闲帽借给他压住两侧分数纸。|记分夹原靠两块小石压着，球飞到附近时容易撞桌。计分员把帽檐勾进桌角，让两页纸都翻得过去又不能被风掀起。
+胶皮拍晒出一道浅白印|球友把湿拍靠墙暴晒，胶面一半变硬，协会在小店申请一处通风阴凉的搁架。|泛白的胶皮有半面仍软，新手误当成两种球拍。老社员拿同一滴水在两侧比过，才指给他看外晒的那一边表面更粗。
+邻桌比赛共用一个裁判哨|两场同时开球造成误听，第二张台改用举起白板作为暂停提示。|两个裁判员各在自己的台边试吹，观众也分不清远近哪一声属于哪张桌。白板一举比赛即停，比分仍由记分员向两名球员分别报出。
+磨平的边角补回了白线|孩子总把擦边球判丢，协会用细绳拉出直线重漆，漆干前在石桌上练发球。|白线原来只照旧漆往上涂，最薄处比另一侧窄了一指。协会先从两角量交叉线，确定桌边平直再给两边同时上漆。
+@街巷|0|东门邮政支局|中|无|社会矛盾|邮局柜台背后摆着一排分拣木格，小巷的别名写在格口内侧。包裹单、取款条和退信袋在交接前分别点数。|投递员林全|有的弄堂换过叫法，同一封信我得绕到两头问。|居民周芳|他骑车过来先捏一下铃，我在灶边也听得见。
+邮包落款只有一家理发店|投递员按寄件人口音问了三条巷子，在老照相馆隔壁找到退休店主。|包裹上只写某师傅收，没有住址。投递员见外纸盖着印床厂旧章，先问老厂的人，当晚从一个理发工具匣上的字认准店主姓名。
+两条同音街把信送错十年|邮局请两街居民在门牌下补写所属街道，给异地亲友回信附上写法。|两条路各有一家粮店，寄信人常在地址后只加粮店旁三个字。新牌补的是所属辖区，周围住户把正确写法抄给外地子女。
+集邮客排起自带邮戳的队伍|有人把纪念章误认作邮票，柜台给爱好者留一角盖纪念戳，另讲明正常资费。|纪念戳不能代替邮资，售票员另拿一封贴足邮票的样信，给第一次集邮的学生分别指出邮资与纪念图样的位置。
+一把公秤改在柜台朝外摆|寄包人自己能看见指针，包装绳和纸箱的重量分别写进资费单。|记者先把空纸箱放上秤再装入书本，两个读数的差值恰是内件重量。办寄件的人站在黄线外也能看清指针落在第几格。
+信封糨糊碗多了一支竹片|顾客用手沾糨糊容易蹭花地址，柜上把削好的竹片固定在小木座中。|胶水碗原有一根短笔，忙起来常被糨糊糊住。竹片削出圆角，不会划坏薄信封，用后插回木座尖端朝下，桌面也少留一圈白印。
+老人补寄一份毛衣袖样|外地女儿试织的新毛衣窄了，母亲拆下旧袖口另寄，柜员教她补上内件清单。|老人拿着纸样在柜台比过袖口一圈的尺寸，再用软纸把针线包紧。包裹单写上毛衣样袖一件，免得接收人误会寄来的是一整件衣服。
+晚班收信车停在了学校门口|学生写给山区笔友的信太多塞满筒，投递员提前收一袋再投放新邮袋。|原来等下午一次收件，邮筒口已有两封信卡在翻盖边。学生帮忙维持单列队伍，投递员收妥第一袋、锁好筒门才继续让后排投递。
+五线谱写上了信封背面|一封寄给县艺校的信没有写姓名，课堂老师认出谱子里的练习曲找到收件孩子。|那几小节乐句正是艺校老师上月让三名学生改编的题目。老师逐个询问后，收件孩子说清信里还夹的另一首练习曲，柜台才完成交接。
+存局候领邮件多了到期回条|常跑外地的木匠错过领取时限，支局给来留址的人抄下最迟领取日期。|货运木匠出差有时不知哪天回来，回条写明可请谁代领以及需带什么证件。包裹仍放在原柜，不随普通投递送进无人居住的房间。
+拆迁户信箱迁到修鞋摊旁|老院已封门，邮递员与街道商定在旧门牌附近设临时交接点，登记后凭证领信。|临时信箱上没有住户姓名，只有原院号和代办人值班时间。门牌迁走前寄出的信先分存在支局，认领人须报出原单元和寄件地。
+@消费|0|南门菜市场|中|低|社会矛盾|菜场开门前，批发户先在后门卸货，零售摊手抄当日菜价贴上木板。记者选了同一把青菜、同一块豆腐分别询价。|摊主叶春生|我把能拣的菜摆在外边，整筐卖的留在后头。|买菜人范群|我买一顿饭的菜，也想知道根和叶怎么算。
+泡发木耳的水要不要算进秤盘|摊主把漏勺搁在案上，沥水再称和连水上秤的价差写在两张牌子上。|记者买下两份相同价的干货，一份当场捞起，一份等勺底不再滴水。摊主见两份实重不同，同意把浸泡货改用固定沥水时间。
+一笼鸡蛋分出三种日期|壳色近似，送货单却隔两日，摊主以竹条分格，便于顾客按批次挑选。|同一个批发商在清晨和中午各送一车，蛋筐翻过来才看得见粉笔记号。摊主把记号誊到分格牌上，旧货优先从左边一格出售。
+豆腐摊的半斤刀有多准|记者用邻摊公秤核了六刀，师傅把容易碎的边角单列零卖。|师傅自用的切刀在木案上用了多年，整块厚薄不同，不能靠每刀同宽保证同重。买半斤的不足时当面添足，易碎边角另行标价。
+红纸写的大字菜价指哪一把|门边写的是带根价，里排摆的是净菜，经过询问，价签移到对应筐沿。|记者站在离摊两步处，只能看见最大的鲜菜二字。挪牌后带根菜和择净菜分别摆在牌下，顾客挑完一筐不必再退回另一筐。
+小葱一把一卖也能拼着买|单身工人用不完一束，四个摊位约定隔日轮流卖散葱。|摊主每次拆开大束都担心剩下的葱失水。四摊轮流拆束、一次只开一把，邻居拼买时也可把零钱分开付，不必找人整把带走。
+买活鱼先付塑料袋钱吗|盛水的袋子与盛菜袋费用不同，市场要求摊主在装袋前告知能否自带鱼桶。|摊主把同样大小的鱼分别装在带水与不带水的袋里，示范两种提法。自带桶的客人先在空桶里装水，不必为同一条鱼另买包装。
+卤肉带汤一包价有了注明|一位顾客带饭盒买卤菜，发现比原先多出半勺汤，摊主答应先称肉再添汁。|有位老人把肉和汤倒进碗里，发现账单原来将汤勺重量也并入估价。市场管理员让摊主把空盘放稳，指针归零以后再放肉。
+摊主的粉笔价牌多出一行产地|同名黄瓜早晚两车来自不同村，买菜人能按脆嫩程度分别询价。|价签上的村名由送货单抄来，不能只看瓜皮上的刺。记者留意到下午换货时有人暂时扣住旧牌，等新单放进夹子才翻过来。
+新货未到白菜先换了招牌|门口写着今日鲜货，来车单却是前一晚，摊主改用实际到货日期标牌。|隔夜菜原本也可出售，老人介意的是是否刚刚运到。摊主加上的到货栏写明日期与上午或下午，让顾客自己决定买嫩菜还是买便宜的余菜。
+刚进场的竹篮能否换回押金|摊主说竹篮只租不卖，顾客拿票根可在收市前到后门归还。|竹篮的押金与菜钱曾合写成一笔，收市时买菜人很难说清自己应退多少。门卫给新篮绑上号牌，号与退押单相同即可原处交回。
+@民生|0|石桥劳务介绍所|中|中|调查曝光|橱窗里张贴的招工启事由不同用工单位送来，门口设有公用电话。记者把来信附上的工钱单与仍在张贴的启事逐项对照。|经办员孙如海|先把招人的单位和干活的地方都写清楚，再请人过去。|求职者王惠|来回车票都要钱，我最好走之前就问明白。
+招搬运工启事漏写夜里装车|求职者到了货场才知半夜上岗，介绍所联系招工人补全班次。|招聘人原称装货一班，指的是夜里装满一车，并非白天固定八小时。介绍员给先前留电话的几个人补打了电话，来不来再由本人决定。
+试工三天为何只领到两天钱|点工单漏掉培训当日，工头和带班工人共同核签后重开了结算条。|工人第一天在旁跟班搬过空筐，领班以学习为由没有盖戳。带班人回忆他也卸过一批实货，对回当天的交接记录后补签。
+同一份短工启事连贴四个月|招工方已结清那次工程，介绍所巡查橱窗后取下过期单。|橱窗那张纸被新启事压住一角，进来看工的人只看见高处写着招人的大字。经办员把张贴日和撤下日并列印在新底纸上。
+介绍费收据抬头是一家饭店|柜台用完票本临时借票开款，介绍所追回原票并换开正式收据。|介绍费退票与饭店就餐流水原记在两个本里。负责人把几张借开的票号抄到统一登记页，请来人换票时核对姓名和付款日期。
+招收缝纫工写的机器型号不对|车间用的是平缝机，有人按包缝经验来应聘，现场核对后改了启事。|记者到车间看机头铭牌，确有部分旧设备已搬走，经理贴在门口的是上年前的工种表。应聘人可先在交接班时看过样机再试工。
+找工作先交被褥钱能否取回|招聘启事没有列宿舍条件，双方协商让未入住的人按原收条领款。|装被褥用的袋子仍封着口，求职人也没有领到床号。招工人当场剪开袋口清点，给退还款另开收据，而非从将来的工资里相抵。
+一天三趟接工车少了最后一班|门卫的乘车表与厂车实际车次不符，介绍所逐户电话通知已约好的应聘人。|最后一班本只在周末加开，门卫照着上周时刻抄成了每天都有。厂方给现行车次另写生效日期，已到站的人分乘当天仍可发车的班次。
+过秤装煤按车算还是按吨算|临时工账单一栏写车一栏写吨，双方拿磅票重算，补出两车尾数。|三张磅票上记的是毛重，劳务账单列每卸一吨的单价。双方按净重重新划出计酬栏，免得还把空车的重量记作装煤量。
+两家厂都认领同一条用工广告|联系号码漏写一位，介绍所重印两张不同颜色的启事，分别注明车间门口。|两个号码的后三位完全相同，原稿页折进一角，把区号后头一个数字遮住。重印的纸现在分开保管，用工方各自确认自己的那张。
+体检费能否直接交医院|工人手中有代缴条却没有医院收据，用工方同意改由应聘人自行缴费取票。|体检机构收取的项目与招工时预收的不全相同。求职者保留医院原票，只把结果交给用工人，过去已经垫过的可按原收条核验。
+@文娱|0|河东照相馆|轻|无|其他|店里的玻璃柜摆着三脚架和一架老式放大机，底片袋按拍摄日期收在木抽屉里。|摄影师苏放|我总让客人先瞧样片，哪里认不出来就明说。|街坊严秀|我家照片都留着边，翻背面才知道那天是谁来了。
+用一面小镜子拍出全家福|带队的父亲也要入镜，摄影师把定时器位置映给站在最后排的他看。|镜子侧放在遮光布边缘，照片里不会拍到镜框。父亲看到快门灯亮，才从相机后快步回到最后一排，两张试拍都没有遮住孩子。
+毕业照后排高了一本字典|个头小的老师站到最后仍被挡住，孩子从办公室抱来厚字典垫在矮凳上。|孩子原来给女老师让出前排，她说还想和最后一届同班学生站在一起。摄影师试过取景，把字典包进旧报纸，拍好后送还办公室书柜。
+褪色的红领巾借来冲洗师的铅笔|旧彩照上的红色几乎看不见，师傅先在废样上试着上色，请原主人选定深浅。|哥哥说是深红，妹妹仍记得那条围巾边上有一道白痕。师傅先不在原照上落笔，洗两张同样的样片，让两人看哪一种更接近家里留的围巾。
+一卷底片记着两户人家的年夜饭|两家借用同一部相机，店员按桌边台历和碗盘花样分出照片。|掌镜人家用的是细花瓷碗，另一家桌上则有一只写着双喜的暖壶。相馆把样片分成两叠，请两家各认一回才按约定的数量加洗。
+照着合影找到了走失的铜号|乐队少了一件乐器，照片上最后一位号手把号靠在后台衣柜旁，众人依图寻回。|场务原把借来的号和自家旧号混在一起，从照片上能看见靠柜门的那把系了白布条。队员顺着布条搁过的位置，在备用谱架后找到了铜号。
+旧照片里两兄弟换了衣领|弟弟看着衣服说那是自己的，姐姐翻出同日另一张照片，发现拍第二次前两人换过上衣。|姐姐把另一张照片反扣在桌上，让两位弟弟先说当天谁坐在哪一边。两人说衣领时争执，说到弟弟手腕上的绷带，事情便对上了。
+证件照的小木尺改靠墙放|站姿不同会把身高拍出误差，摄影师在背布旁固定一把木尺供客人校正。|木尺留在背景边缘，正式照片裁切时不保留。摄影师请客人先放平肩膀再抬头，量身尺能不能读数由客人自己决定，不另收加印钱。
+一张夜景照片保留了卖馄饨的灯|顾客原想让师傅裁掉街角灯光，家人认出是外公的摊位，决定洗全幅。|一家人把原片拿到门口，隔着几个巷口仍能找到当年灯架靠着的墙角。相馆保留一张小样，其他洗印仍按顾客最后确认的全幅交付。
+邮票大小的合影认出旧班长|放大时先只见一排白衬衣，一位同学认出领口缝的黑线，才把人名补齐。|人物的眼睛很难再放清晰，领口线条反倒比脸容易认。老同学带来旧校篮球队名单，在八个名字旁分别写下确有把握的那几位。
+红布景拉开露出三十年前的店号|修滑轨时发现墙上还留着旧商号，店主请老师傅回来靠着旧字补拍一张。|那行老店号一直贴着灰泥，最右边一个字已看不明白。请来的老师傅用手掌挡去侧面的光，从凸起处认出缺的是他亲手写的照字。
+@体育|0|城东游泳池|中|低|其他|泳池边有浅水区标绳、换衣柜和救生台。晨场与午场之间工作人员需查水深刻度、救生圈和更衣柜钥匙。|救生员许青|我站在这个台上，得一直能看见那条绳。|晨泳人杨光|我每天从同一个梯子下水，有什么变化总能先看出来。
+深水线往外偏了两块砖|管理员沿池底接缝重拉标绳，原来浮标被旁边训练组的固定线带偏了。|池壁深度数字由上方往下看比较清楚，浮标轻轻一推却能偏出半臂。救生员请两名教练守在浅端，看他逐段重新系牢以后再开放。
+游泳月票到期日能否顺延|池子停水检修两天，售票处同意在月票背后补盖开放日期。|柜台只查这两天对应的有效月票，未启用的空白券仍按首次进场计日。晨泳老人把门外两张停水告示的日期抄在自己的票夹内侧。
+儿童浅池少了一截扶手|孩子跨过进水口时够不到原有铁杆，管理所添上一根小手能握住的横杆。|新横杆先用临时卡具固住，请带孩子的家长左右各试一次。扶手离水面太近时容易被脚蹭到，讨论后向梯子内侧收了半拳。
+晨泳队给听障泳员换了开场信号|领队在池边举黄色手旗，大家看到旗落再下水，不必都挤在广播旁。|黄旗平时别在救生台左侧，与示警用的红旗隔开。听障泳员第一次看到旗落便完成出发，教练提醒旁边的人无需替他拍背。
+检修单未到泳池为何先收票|柜员按原定时刻放人，现场仍在紧固跳台，首批客人可换下一场或退票。|记者到池边看到工具仍摆在跳台下。站方把已经撕开的一联门票合好，家长可带着孩子先去休息区等，也可当场取回票钱。
+更衣柜两把钥匙都标十三号|同排柜门换锁留下旧牌，值班员逐柜试开，收回配错的一枚牌。|十三号柜原锁拆下来以后，旧钥匙环仍挂在窗口。试开时未碰顾客物品，管理员先请正在使用该柜的人到场才更换了牌环。
+池边饮水杯移到阴凉处|不锈钢杯白天晒得烫手，水房把杯架和开水桶一起挪进走廊。|师傅用手背试过两处搁杯架，一处热得握不住，一处只是微温。饮用水仍在原水房烧开，家长带自己的杯子也能沿通道接水。
+救生圈挂在了够不到的钩上|换班演练时矮个救生员需踮脚，管理员把钩位下调16厘米。|矮个救生员试取时先要垫脚，身后学游泳的孩子还会擦过他的胳膊。挂钩移位后能单手取圈，同时保留向前迈步的空地。
+游泳课借走的浮板归哪一架|多个教练混放，最后一堂只剩成人规格，器材组给儿童浮板绑上蓝布条。|尺寸最小的一批浮板边沿有浅凹口，但叠放在下层时看不见。绑上色带以后，保管员从侧面便能清点每台课所需数量。
+水温牌多留一栏测量时刻|晨泳人误把午后的水温当成早场，值班员将早晚两次读数分栏填写。|新闻窗边留着全天两张测温纸，不再把午后看上去舒服的数字盖在清早那栏。晨泳班约定每次活动前先由值日队员核对实测时刻。
+@交通|0|北郊货运站|中|中|社会矛盾|货场把大小件分两个窗口登记，发运标签一面写目的地、一面记货主。记者在装货棚与收货窗口之间核验交接联。|理货员朱竹|车一开走，只剩下手里的这联纸能找。|货主祝信|我送一箱也得留一张凭条，否则到那头谁替我说话。
+一箱茶叶为何绕到邻县|托运标签将西桥写成新桥，货场依货主留下的电话改发下一班车。|西桥与新桥的货运章都是蓝色，写快了第一个字更难辨。货主请收货人在真正目的站等第二趟班车，把误走的那联标签一同留存。
+装卸费按件再按斤收了两遍|一件笨重木柜被两个柜组分别开票，理货员当面合并两张收据。|木柜依规定应先量体积再商定重件装卸，第二个柜组误把它当另一件到货。车厢里的货签仅一个号码，两名开单人分别划销旧账。
+鲜花托运把朝上二字写在底面|花筐险些横放，装卸工请货主补画两侧箭头并当场查看包装。|花籐从筐顶探出来，标签被几片叶子压住后只能看见底面。货主把两侧箭头补齐，又将筐放在下一趟车靠边的位置，便于中途交货。
+木箱钉头划破同车布匹|过秤时只查了封条，货场决定增加摸边查钉工序，布行正在清点损失。|货场工人先摸到一处不平，拆开的布包在相应高度有一道刮痕。余下同批木箱尚未发车，收货员用平头锤把外露的小钉挨个敲进箱板。
+快件窗口排进普通件队伍|两队在工棚转角相交，站方用一根粗麻绳把排队方向分清楚。|快件行李要在指定车次开出前封箱，普通件则另行点数。两队分开后，窗口前保留一处可横过的缺口供搬货工人推空车。
+到站取货通知送错了厂名|老厂分家后简称相同，货运员联系发货人，补写车间与街门号。|老厂的牌子还没有拆下，新厂则已启用另一处收发室。托运人说清收货员的全名，站方才开具更改通知，没有让两个厂都派车来等。
+自带板车能否免交进场费|收费牌没有区分装卸车辆与取货板车，站方核对门岗单后作出说明。|记者在门口等过两辆板车，进门章都是一个式样，其中一辆却没有装卸货物。站方先划清只是找货号的步行通道，再单独标明车辆收费项目。
+等零担凑整车究竟要几天|托运单上只写了班次没写最迟发车日，窗口将拼装期限补在副联上。|货主问到节前最后一车能否赶到时，只听见柜台答复凑满就走。新的补充条款把最迟发运日写在手里可带走的副联上，一眼便能查问。
+同一包竹椅出现两个重量|货场把托盘计入毛重，竹器社按净重填单，双方在票上分别列出。|装车工给整包竹椅的托盘写了编号，再单把空盘放上磅秤记录重量。单上同时列货物净重与运输毛重，两头经办人可以各取所需。
+司机返程顺带来一扇错发的门|家装门板发往邻镇，返程货车腾出一格固定架，由原签收人核对门把手归还。|门背面的铅笔字是收货人自己写的楼层和进门方向。司机返程时把错发标签贴在同一面，请正确收货人先看门把手位置再签字。
+@文娱|0|建设路文化馆|中|无|其他|文化馆把旧厂房改成排练厅，合唱队、曲艺社和少年舞蹈队各在木柜里占一格。墙上的用房牌由各队自行翻面。|馆员齐明|我最后一个锁门，谁忘了什么，总能在门槛边瞧见。|琴师马岚|我们带来的谱页不一样，坐到一起先合一遍开头。
+排演名单补上了拉幕的人|演出照中小演员全到齐，家长却提醒了背后的小场务，馆方让三名拉幕的孩子也上台鞠躬。|旧节目单按登台先后排列，这次在曲目后另给道具和幕布写了名字。谢幕的孩子没穿戏服，仍拿着原来拉幕时用的那副布手套。
+两种方言给同一段快板配了音|两位县里来的演员各录一遍乡音，老师把押韵不同的三句留给学员自己挑。|两盘带子用了相同的起始板音，学生可以倒回到同一处反复辨音。原先以为两种说法押不上韵的人，在最后一拍听出了尾音相合。
+礼堂关了风扇反而听清一排笛子|风扇正朝谱架吹，竹笛低音被扇叶声遮住，排练班把台扇移到演员身后。|笛手原以为自己吹得太轻，曾想换一支高音的笛子。场务请末排听众先背过身判断再开关风扇，几个人都指出了相同的变化。
+墙上刻度记下十届舞蹈队|孩子长高时要重新调把杆，老师把历年来的铅笔线用一块玻璃盖好。|刻度中间有一年的线格外密，恰好是两支不同年龄队共用练功房。馆员照旧节目册核清年份，没有把所有刻痕误当成同一个孩子长高。
+文化馆借出第一盏手提追光灯|旧放映机灯泡装进木框，手柄上加防烫护套，县剧团上山演出多了一件行头。|灯框后来加上一个小挡片，抬高时不会直晃台下人的眼睛。借用的技师在单上画出接线和散热位置，回馆时需先让灯泡冷透。
+没有钢琴的教室搭好纸键盘|报名学琴的孩子先在足尺纸键盘上认指位，周末分组到馆内用真琴试弹。|纸键盘只有黑白两色，宽度按馆里那架旧钢琴实量。坐到真琴前，孩子才第一次听出自己熟悉的几组指位原来是什么音高。
+口琴队加了一名打手势的指挥|队员含着口琴无法喊拍，原来翻谱的女孩站到前排，用两根铅笔给大家起头。|女孩第一次举两根铅笔时，后排有人把它误作翻谱信号。排练重来一遍，全队先约定笔尖朝上只起拍，交叉才翻页。
+八张戏凳托起一幅长卷|长卷上的老桥须摊开才看得全，馆员把课桌连成展线，为参观人留出绕行处。|有一段河岸景物落在长卷两端，站在中间看不到全貌。参观者从凳子外侧转过来，竟在两头分别找到了同一家人旧住处的门楼。
+照顾孩子的妈妈坐上评委席|童谣比赛请三名接孩子的家长各投一票，得票理由写在节目单背面现场宣读。|三位临时评委并未改动教师打的音准分，只把自己听懂或想再听的句子抄在节目单上。有孩子看完意见，又重新念了一遍没念清的地名。
+排练厅地板上的红线不再用油漆|下场角度因节目而变，场务改用可收拢的棉绳标位置，散场后沿舞台边卷走。|棉绳下先加一层布，演员转身时鞋跟不会勾住。最后一组散场后，工作人员卷绳看地板，原来几道擦不掉的油漆印从此可以逐渐磨去。
+@科技|0|人民南路电话营业厅|中|中|风险批评|营业厅的用户服务台保存当月装机派工单，柜上另有通话明细申请样张。记者获用户同意核验了隐去号码的单据。|营业员周红|用户带过来的那一联要和我们这联对上，少一个字也得查。|住户钱海|我出门前把纸条折进衣袋，到了柜上就不用凭记性讲。
+电话装到隔壁同姓人家|两份装机单地址相差一个单元，经办人查出工程队只按姓氏问门卫，当晚已调换线对。|两户人家的电话机一红一黑。工程师请两位主人先后拨同一处值班室报门牌，再抄下显示的号码，与两张装机单逐字核对。
+长途话单上印着没人上班的星期天|原用户搬家时号码被收回，计费截止日没跟着改，前后两家分清了通话时段。|旧住户拿来的钥匙交割收条上有准确日期。话务员按这一天把长途明细划成两段，请新住户也带旧收条来确认接手后的第一通来电。
+同一条线为何响起两家的铃声|检修班沿老楼墙角查到拆机遗留的一路并线，用户可申请查验此间的话单。|师傅把两家的分机都摘下来，请一户先拨号、另一户留意听筒。新找出的那段旧线剪开前后，双方都在现场做了一次试拨。
+公话代收传呼费有没有凭条|报亭经营人把叫人接听另列费用，营业厅答复需预先明码标价并由使用者自选。|送货的姑娘说，她只在门口等着接电话，并没有托人上楼去喊。经营人把等候与代为跑腿另写两行，今后接单前由客人自己指选。
+移机通知寄到了新装的空房|施工员联系不到房主，才发现邮寄地址照抄了待装地址，预约改留常住收件处。|新房门锁上落着一层灰，门房保管的待转邮件里已有两封给同一位房主。重新开预约单时，窗口把约见地点和收信地址分两格填写。
+号码本印错了医院夜间值班号|护士站连续接到找药房的电话，营业厅备好更正纸条随新发的号码簿送出。|药房和值夜护士的工作台隔一条长廊，来回转告常要耽误几分钟。两部值班电话分别试拨成功，营业员才把新纸条贴到号码牌旁。
+磁卡公话余额卡在一角钱|站旁试机时发现通话中断后能退卡却不能再拨短号，维护员带读卡器逐部复核。|检修员给好机和待检的机器各做一个纸记号，号码卡也分袋存放。当天试完的营业员在维护簿上另写了本机最后一次读出的余额。
+两份初装费收据写的是同一台座机|单位垫付款与个人补交碰在一起，财务查到同一竣工号，通知其中一方领款。|旧收据背面有单位出纳的领款签字，个人那一联则夹在使用说明书里。窗口核清开票先后，请双方只带原票取回自己实交的一份。
+修理期间座机月租怎样折算|一份停话记录跨了两个结算月，窗口同意抄录各月起止时间分别核算。|顾客从挂号维修的那天逐格抄了日历，修复单又记着通话恢复的具体时刻。收费员把这两个数写在两张月账旁，让他添注后再签名。
+电话簿扉页补上乡村公话的开门时间|乡镇几处代办点夜里落锁，查号台把能接晚间来电的点另作记号。|最先提供时间的是乡里供销社和卫生院两处值班室。查号员夜间各打去一次，确认哪家是有人守候、哪家只是门外还能听见铃响。
+@消费|0|双桥家具市场|中|中|调查曝光|市场内木器铺和成品柜并排营业，送货常由几家摊主合用一辆小货车。交货单、订金条和家具背面的铅笔记号都是核验线索。|木匠叶江|尺寸量到哪一边，得让买卖两边都用手指一下。|顾客纪英|搬进门才算到家，放在楼下我还是得找人抬。
+同一张餐桌算了两次上楼钱|配送单注明包入户，抬工却另开白条，商家查看存根后退还重复工钱。|家具城的老送货员拿来随车登记簿，那天抬桌上楼的两个人都签了收活。门市请买主把额外给的那张白条交回，盖上退款戳。
+衣柜到门口才发现深了3厘米|下单写的是柜体，量门框时却连把手算在内，双方现场拆把手搬进门。|房主用报纸照门框剪了个纸样，家具店则带来一段突出的样品把手。两边一比，短的恰好就差把手凸起的这几厘米。
+沙发样品的海绵厚度和到货不同|买家保留了柜台试坐时的小样，商家核对两种批次标签，同意换回同批坐垫。|买主在两块海绵角上都做过小记号，免得试坐时又弄混。把同一只靠垫分别放上去，店员坐了一回也认出回弹快慢不同。
+四把椅子送来了三种木纹|店里按深浅拼作一套却没注明，顾客可先在仓库选齐同色再安排发货。|商场把四把椅子搬到门口的自然光下，两把偏红，一把木纹带弯。买主在要留下的两把底下贴上纸签，其余等下次到货再挑。
+买床附送的床板为何短一掌|样床架用了内嵌支条，送来的板按旧型号裁切，工人量过净宽后重配。|安装工量的不是床架最宽处，而是两条支撑木之间的净距。按这个数试上一块新裁的板，两边落下的位置才都贴紧。
+新柜门关不上怪地板还是合页|记者把柜子挪到水泥平地复测，发现一只合页装歪，安装工原地校正。|维修人先把两扇门都松开试关，再给歪的合页重新钻孔。靠墙的门缝现在从顶到底宽窄相同，屋主不必在一只柜脚下垫木片了。
+木桌泡水保修条款写在哪儿|摊主与顾客各拿一张印字不同的保修卡，市场按成交日确认适用条款。|市场管理员查看了当周保存的订货册，册上附着一张与顾客留存相同的旧卡。双方随后约定先请木工查清受潮部位，再商谈修整。
+家具价签写整墙实际只卖半组|陈列时将两组书架并在一起，标牌改成每组宽度和件数同时列明。|店员把两组书架之间腾出一条手指宽的缝，原来被挡住的两块侧板便显出来。每张新签都写清层数，单买一组也能算价。
+旧床抵价迟迟没有上门收|账单扣了折价，旧床仍占过道，运输队补开回收约定并留下司机电话。|运床的工人到场先看拆下来的部件，在收回单上把床头和支条分别点齐。房主把靠墙放了好几天的床垫挪回屋里，楼道才通。
+组合柜藏着一把开不了门的钥匙|几组柜锁共用同色吊牌，仓库照锁芯刻号重新配对，现场逐门试开。|仓库师傅不再按纸牌花色挑钥匙，先摸到锁孔旁边的小刻号。领货的顾客把三扇门各开关两遍，确认都能转到底才收钥匙串。
+@教育|0|青槐街少年宫|中|低|其他|少年宫的课时和教室写在进门的大黑板上。每堂课结束后，带班老师在学员手册盖一枚小印，供家长查看。|教员华静|孩子把东西做出来捧在手里，我才好问他哪里还卡着。|家长赵明|他上过什么课我不全懂，回家看他自己的作品最清楚。
+泥塑班缺料的那堂课如何补|材料车迟到后孩子改画轮廓，少年宫公布补烧时间，不另收一次窑费。|第一堂没用成的泥料后来自行风干了一层，老师削去外皮另拌。来上补课的孩子仍可照先前捏下的小样重新做，不必另选题。
+学二胡的孩子带错了弓|五把同型号琴都用黑布袋，老师在弓杆缠上可拆的彩线逐一认领。|辨认时有个孩子指出自己常握的位置磨出了亮印。老师没急着系线，让五个人坐回原座试一试各自的弓，最后才登记颜色。
+儿童画展请观众从矮处看|孩子把画挂到自己眼睛的高度，原先站着观看的大人改在木凳上坐下来。|坐下以后，一位父亲才发现女儿在画角添了三只极小的猫。他说先前站在高处，只看清屋顶，根本没想到孩子把心思花在那里。
+航模飞机为什么总朝窗子飞|老师用粉笔标出室内风向，孩子关上侧窗重新放飞，模型落回桌前。|孩子们把同一架纸飞机留到第三轮才换手放飞，免得把风向和手劲混成一件事。教室门外那张最长的轨迹表，尾端终于没撞进窗框里。
+棋班分组不再按年级排|会下棋的低年级学生可先参加试盘，老师根据棋局另配相近的对手。|一个四年级孩子先输了头盘，第二盘却靠官子追回来。老师没给输赢贴红花，让他在盘边写下一处最不想急着落子的地方。
+合唱报名单少写了换气课|家长以为全程练唱，教务员把发声、听音和休息各占多少时间补写出来。|家长进教室听了头一节课，发现休息那几分钟也留给孩子喝水记谱。新报名单把整堂课起止时刻保留下来，试听后仍可决定报名。
+书法少年把印章刻成反字|原来试刻的是白纸上的正稿，老师教他把描好的薄纸翻过去贴石面。|刻完的小石章先在废纸上印了三次，孩子把第一次的反字也留下了。他说带回去给父亲看，两张排在一块，刻章要倒着看就忘不了。
+周末画室借了一排旧围裙|颜料容易沾到冬衣，隔壁食堂把淘汰的围裙洗净改短让儿童轮用。|厨师送来的旧围裙有两条长过膝盖，老师用活动扣改短肩带。放学后清点，十几条围裙可以叠进一个脸盆，送洗时不再逐人找。
+珠算比赛加设一张验算桌|评卷员与家长常为进位争辩，比赛把原始题单与答案一起留到赛后供复核。|一名学生对着原题发现自己漏拨了一档，亲手把验算纸夹进卷后。组织者把前三名的两张纸一同留到闭场，便于后来的人查核。
+未用完的课时券能给弟弟吗|报名简章没有规定转班，校方允许同一家庭先登记，再按孩子年龄安排试听。|姐姐原来报的是进阶班，弟弟刚刚入门。学校让两人先后在各自名单上签字，已用过的课时划掉，能转的是剩下的那几格。
+@民生|0|城南缝纫合作组|中|低|社会矛盾|合作组替几家商店包做布袋与袖套，每批样品用棉线缝在工票背面。交活人凭签收联核对件数和工钱。|领班庞月|样子就别在这里，做出来拿两件一比就明白。|女工赵桂|我得认我自己那张工票，上头有第一针和最后一针。
+交了80件袖套只记到78件|两件样衣被留在检验桌没入工票，领班找出封样条后补记酬劳。|检验桌下的两只袖套一只缝蓝线、一只缝白线，原本给两班人比较针脚。库管员按缝线认出两名做工的人，工票也分别补给个人。
+布袋提手加长却没加裁料|新样要求绕手两圈，原配布只够一圈半，工人按新样重算用料才开工。|女工从料卷上剪了一条纸样，绕手腕试给采购员看，最后一寸原来还要折回压线。供货方改按折回后的长度重新发料。
+夜班计件工票盖错白班章|月底核算加班时两组争认同一筐货，查出出入库时刻后分清交班。|两张工票上盖的章颜色相同，工人却记得出库时天已黑。传达室登记到货的客车班次刚好能作中间一条时间证据。
+订单写单只还是一副|袖套收货人按副点数，作价单按只计算，定货双方把计价单位补写完整。|两边拿来各自的旧样簿，一个把两只袖套放进同一袋，一个逐只挂牌。新单据开头先留出每包数量一栏，双方点完再定总数。
+缝线颜色换了半面柜台|原样经灯光照射看成墨绿，移到窗边才发现是藏蓝，商店决定寄来线样。|记者看见两卷线在柜灯下几乎一色，移到窗边，一卷明显发灰。合作组在两端各缠一截白棉线，写好来货日子留作下一批比色。
+交货车没来成谁保管成品|雨天货车临时改线，成品被放在传达室，合作组加签临时保管清单再落锁。|传达室的托板低，雨鞋上带进的水容易溅到最底一包。大家把交货筐垫高两块木板，清单装进玻璃纸套，交班时带着钥匙一起点。
+短针脚能否按次品扣钱|工人把原样和成活摆在一块，商店承认未约定针距，先按原价收齐本批。|肩口最短的一段由商店验收员当场拆开重数。料边没有脱线，原样也没留定数，下一批才议好每寸大致的针数和抽看办法。
+工票编号重了一页|换领班时从旧票本中间继续开单，有两张号码相同，重编时都保留原签字。|旧编号有两张同时出现，另有一张号码从没开出去。财务不把原票抽走，只在存根旁分标先后两页，查具体人头仍找得到。
+样品上的钮扣可以自己带吗|小卖部指定式样一时缺货，合作组让供货方先取三种样扣确认后再采购。|厂家送来的三种扣子中有一粒边缘太尖，工人试缝后担心刮手。最后定下的样扣留在一只透明线盒里，两班领料都能对照。
+小组的油布袋改用可换的底|食堂师傅常提热饭盒，旧袋底先磨坏，女工做出能单独换底的一打样品。|最先试用的是一名带三层铝饭盒的守夜人。饭盒走路时总向右晃，师傅便把可拆底布的一角再加厚，准备一周后取回看磨痕。
+@街巷|0|三官巷早点铺|轻|无|其他|早点铺的笼屉挨着木窗，店主每晨用一只木夹把当天的蒸点牌挂出去。下夜班的工人常赶第一笼。|掌柜黄淑|笼子一掀开，前排后排都能看见今天包的什么。|老顾客谈峰|我下班会打个哈欠，闻见蒸汽味，人就醒了一半。
+馒头长出两只面耳朵|孩子说分不清甜馅和咸馅，师傅给甜包捏了圆耳朵，让隔壁托儿所自己认。|托儿所老师让孩子们伸手摸一摸，给个子最小的也认一遍。早餐送到时没开袋，摸到圆耳朵的那个就把甜包递给旁边的姐姐。
+豆浆碗底留着一串蓝号码|老客寄存的碗同样白瓷，店主烧窑时给碗底写下自选号码，方便用后取回。|店主拿来一个木托盘，把碗口倒扣着晾干，蓝号露在外头。熟客不用掀碗找记号，自己指给伙计看是哪一只即可。
+第一笼包子留给赶船的人|渡口开船时店里第二锅才出，店主把首锅小笼提前五分钟放上灶。|试蒸那天，乘首班渡船的一位邮递员先来取了两份。过河后他托返程船员捎话，说包子还热，纸包也没被蒸汽打湿。
+送早餐的小竹篮换了层棉套|宿舍楼离店有两条巷，冬天走到末户就凉，邻居拿旧棉袄做了可拆的篮套。|最远的那户在三楼拐角，送饭人到门口旋开棉套上的布扣，筐盖一揭仍有热气。棉套歇下来晾一会，次日还可以照用。
+一张赊账纸贴在了旧饭票背面|来吃早饭的老师退休后补齐上一笔，店主把多年前写的字条当面还给他。|老教师把字条展平后，才认出饭票背面还盖着旧厂食堂的章。他没把这张纸丢进垃圾筐，折好放进自己带来的小本子里。
+饺子摊旁多了一把矮凳|拄杖的老顾客每天端不稳汤碗，木工量了他的手肘高度给窗口做个小搁台。|小搁台一边贴着窗口，另一边留空给手杖落地。木工请老人连试两次端碗，发现第一次定的高度还得再降下两指。
+油条出锅先过一道竹架|沥油竹架原太短，后面一批挨着刚炸的，师傅把两批分架摆放让顾客自选。|两副竹架下面各放一只搪瓷盘，顾客挑走哪一批一眼便看得出。住在巷尾的老食客说，想拿回去泡汤的和边走边吃的正好分着买。
+葱花饼上留下半圈小黑点|掌勺人拿黑芝麻区分无葱的一半，晨练回来的常客不必再逐张揭开看。|师傅不往面团里掺芝麻，只在成饼后的一角轻轻一捏。一个不吃葱的孩子认出记号，隔着油纸指了指，还把同伴那张选对了。
+一台石磨又转上了|电磨送修，隔壁老人推来停用的石磨，头天试做的米浆分成两桶供顾客尝味。|老磨盘搬来前在院里晾了整夜，早上第一小桶浆留给邻居尝。店主请熟客在两只碗下各压一张白纸，吃完才揭开看碗里是哪一种。
+打更人把最后一声梆子挂在店门|老人歇班，把木梆借给早点铺招呼头锅，街坊一听就知道换了叫开门的人。|木梆没有钉死，套在铺门一段旧绳上，打过一声就能拿下来。头天试敲，邻居从窗里问是不是天还没亮，店主便改在开锅时敲。
+@交通|0|长途客运西站|中|中|硬新闻|西站的短途、长途与行李房共用一个前厅，各窗口每天在值班簿注明末班班次。记者拿着不同批次的票根找过检票口。|检票员金莉|找对了车还不算，票上的站名和车前头的要再比一比。|乘客钱远|我带孩子跑一回长途，行李和车票得分两手攥牢。
+西站的北门为何不能买西行票|北门窗口只售预售票，门口旧牌写着售票处，站方当天补上业务范围。|一位拎篮子的旅客在北门问到当日的车票，店员陪她绕过候车厅到新窗。两处窗台正好背靠背，门外却隔着一条绕行围栏。
+包裹与人同车却隔了一趟到|行李房把行包按车号装，临时对调车辆没更改票签，凭行李联补送到站。|后来那趟车的行包里有一件竹箱，提手上系着旅客自己染的蓝线。站方按行李联回电，收件人报出线的颜色，才把箱子拿出来。
+黑板上两趟同名班车走不同线路|直达车和沿途班隔十分钟发，售票员在站名后补写经停乡镇。|两趟车的票价也相差几角，黑板原先只列终点与发时。跑短程的一位旅客得知快车不停他家乡口，当即换回慢班。
+婴儿车折起后放在哪一格|行李箱最里格不便下客取车，司机划出靠门一处留给中途抱孩子的家长。|乘务员请家长到车边先试着折好一回，再给行李票夹了张红签。途中下客时他照着找，不必请其他乘客抬出大包挪位置。
+回程联少一枚检票孔|客运站为往返票另开查验台，比对发票号码后补盖回程戳。|开票窗口把旅客的两联票放到灯下比对，切边上的号码连续。车站另做登记，免得补过孔的返程票回到原窗又被当成新票。
+寄存柜收费从哪一刻算|柜门牌写按日收，收据却只印开柜日期，值班人同意补写次日最迟取包时刻。|值班员拿一只旧旅行袋给记者演示，从开柜到关柜分别指了指墙钟。后来来寄包的两名旅客都要求在自己的收据上写明取包时限。
+售票窗前的挡栏留出一道宽门|带行李车的人转不过直角，新装栏杆拆去一节，另加人排队维持出口。|重新开出的通道容得下带轮的小箱，原来挪到人行道上的排队尾也缩回了站内。车站答应周末人多时仍有专人在宽门前值守。
+广播念错了一个靠站地名|两处读音相近的乡名被抄在一起，站务员在播音底稿上加写沿途方向。|广播员先请原来跑这趟线的老售票员把两个乡名都念一遍，再向两处站点回拨电话。底稿边上分别画上桥和山口，免得翻页时再串行。
+开往乡下的班车装上自备药包|乘务员向站医务室学会记录乘客不适和停车位置，封口药包由专人保管。|乘务员在随车记事本的首页夹上医务室电话，沿途另列三处可以停车联系的站点。每次交车先点包的封口，再把登记本交给下班的人。
+客票背面的退票处已经搬家|持旧票的旅客一路走到封门的行李房，值班员放了一张双面引路牌指向新窗。|旧行李房门上的锁还没拆，牌子背面特意留出一支朝向候车厅的箭头。无论旅客从站前路还是旧停车场过来，都能看见相应的一面。
+@消费|0|红梅副食品门市|中|中|社会矛盾|门市按批发单开柜，分装与整包的货共用玻璃柜台。每批到货样袋和供货人留的票据在柜下保存至售完。|售货员熊蓉|人家带来的袋子要写清拿的是哪一批，拿空袋来问也找得着。|居民卢华|我给全家买，光看一眼颜色，不晓得里头是什么。
+礼盒糖果净重含不含铁盒|顾客拆盒后发现内袋标有另一重量，记者请门市把裸糖与空盒分别称给顾客看。|铁盒盖内还压着一层硬纸，店员先把硬纸也取出再称糖。价签原先只写一斤，重新上架后盒装总重和糖的净重各占一行。
+散装粉丝浸水后各有长短|同一货架的两批货配料不同，售货员从原包装抄完整配料表分栏摆放。|柜员按两种粉丝各取一小束，分别装进两个玻璃碗用相同的水泡开。粉丝标签后来一直留在碗边，询价的人可以看清是哪一桶。
+开封半罐的芝麻酱还能退吗|买家持收据称味道发苦，店主当场开同批留样对比，先收回余罐等供货人答复。|那只半罐芝麻酱由买主自己重新封口，店员在封条上注明余量，请他一同签字。供货方来取样时，另拿走了一整罐同日送到的货。
+同一种酱油两种价签|玻璃瓶可退押金，塑瓶一次销售，低价签没有写另收瓶钱，门市补印说明。|卖出时退瓶券另夹在收据后头，一位买塑瓶酱油的顾客原来误以为自己也有退瓶钱。店员让他对一眼两只空瓶的底部，再看两张新签。
+葡萄干的产地牌挪错一格|两只散货桶互换位置后未换标签，记者核对大袋标识与进货单请店员更正。|原来的两张产地牌只卡在桶口，没有挂绳，推车调位时很容易留在原地方。店员现在把牌穿进桶把，再用铅笔抄上大袋的批号。
+一箱罐头有两枚相同批号|包装更换时用了旧纸箱，店主请厂家回函核对，查清前暂时撤下整批货。|门市收回的箱上有厂印，箱内每只罐底又另压一行数字。店员把这两处各描了一遍随函寄出，等厂里解释，不凭纸箱一个号码重新分类。
+散茶能否按小秤试买|一位老人想先买一两而遭拒，供销部门检查价牌后商定按标示的最小计价单位零售。|老人的小铁盒刚装得下一两茶叶，柜员用空秤盘先去皮。试买的小包也另贴同批货签，下一回觉得合口味，还可以按原号多买。
+售货员把奶粉勺单独装袋|原随货勺混进试吃篮，门市改为从封装袋另配，每次交货由顾客点清。|两把勺子的长柄上印着不同的容量号，外观看起来却差不多。门市把尚未发走的几只另装在干净纸袋里，照各自货号和原封产品一起交付。
+买一包发糕粉多收了纸袋钱|柜台原称价内含包装，收银条却加收，经理比对当日票据后逐笔退回。|收银员把当天含纸袋钱的票根逐张查了一遍，找出三位留有送货地址的老顾客。其他顾客来问时，可凭票面日期在门市自查。
+退换柜台添一张商品留样表|旧登记只留顾客姓名，复核时找不到对应批号，新表对照柜下留样袋使用。|登记表右上方专留一小块贴原包装剪下来的号签。遇到顾客只带空袋来的人，先把号记下，等店里从同一批货中另取样留存。
+@教育|0|城南师范附小|中|无|其他|学校把一间闲置劳技教室留给兴趣小组。孩子轮流带来不起眼的旧物学习观察，老师把实物同他们手画的草图一起陈列。|科学老师胡彬|哪怕一只空盒子，也得先看它和别人的哪里不一样。|学生李青|我把昨天没看清的地方留在纸上，今天再画一次。
+小学气象角给温度计找了新家|旧表挂在西晒墙上比百叶箱读数多三度，学生把两周的观测纸送给老师。|西墙的日头落下后，两支表的读数又慢慢接近。老师把午后、傍晚的两张纸并排贴着，让学生自己说明为什么不能只看其中一回。
+一杯水教会三年级看弯月面|老师让孩子蹲到玻璃杯同一高度，从前按杯壁水印估算的两个小组重新读数。|孩子先站直读了一次，又侧身让眼睛与水面齐平，两次相差整整一小格。教室门口新贴的记录纸上，观察位置也要和读数一同写下。
+谁来给树木补上冬天的名字|叶子落尽后孩子难认树牌，他们沿树皮纹路画拓片，在标签背面添上枝芽图。|校工带学生先去摸榆树，再去摸旁边那株白蜡。有个孩子画错枝芽，索性把两张拓片都保留在树牌后，留下供同学来辨认的题目。
+小学算盘最大的用处是记雨天|窗台一档代表一周，值日生每天按天气拨珠，月末才把累计天数抄入本子。|有个星期三先落雨后放晴，班上的算盘拨了两遍。老师请两位值日生先核对各自观察时刻，再在账边写下一行这天的天气顺序。
+借来的小秤先量一块橡皮|同学交来的橡皮大小不一，老师让他们用已知重量砝码核秤后再分组试称。|三名学生都说白橡皮更重，却没人留意其中一块被削过一角。称完以后他们在观察纸上画下实物轮廓，才发现按颜色猜并不准。
+校工把缺口砖摆成了日影尺|固定午间的竿影曾被脚踩掉，校工借碎砖定位置，学生第二周找回原点。|碎砖围成的小圈只固定竿脚，不拿来圈住影子。学生每天走到同一位置，先看清校门口的钟，再在地上标当时影子的末端。
+五年级的纸桥架在两只饭盒间|作品限用同样大的纸，孩子一颗一颗加围棋子，自己记下最先弯的桥面。|有一组桥面先弯，压了更多棋子却没立刻塌。老师保留每次加子前后画出的三道弯线，让大家回头比较同样用纸的不同折法。
+穿过针孔的光把楼顶倒了个|手工暗箱原有两处漏光，封好布缝后学生第一次看全操场旗杆的倒影。|最后一块漏光处藏在盒盖的合页边。孩子用手挡住那边再请同桌看，旗杆上的绳结也出现了，才放心把黑布钉牢。
+收落叶的信封只写树名还不够|两组孩子采到同种树不同颜色的叶子，讨论后又补上朝阳面和背阴面。|一组学生把黄叶放进写着树名的纸袋，回到教室才发现同树另一面全是绿叶。第二趟他们带上铅笔，站在树下就写好取叶的方位。
+楼梯口装起一排小木耳|学生做听音筒试验，木工钻不同深度的孔，让大家分辨空心和实心的声音。|木工把一样长的三段木头留在课桌上，让学生蒙眼轻叩比较。答题纸上不写好坏，只写谁听出哪一块中间的回声更长。
+@科技|0|钟楼街打字复印社|中|低|其他|临街的小屋里一台电脑配针式打印机，常客多带手稿或软盘上门。排字样张由委托人自行圈改，交件时将原稿当面数齐。|打字员石霞|下机前我先让客人看一张，再多印就有数。|教师蒋红|多一个字少一个字，都要跟我带来的纸对得上。
+一张软盘为什么显示两份同名稿|文件名后多了一个空格，打字员调出修改日期请作者识别终稿。|作者没凭文件名挑，而是请店员翻到稿末，找到新添的一句署名。确定哪份要印以后，另一份仍另存原盘，没让店员顺手删掉。
+复印好的曲谱漏掉最下方一线|原纸比玻璃台长半寸，店员把五线谱缩小一档重新复印。|抄谱的老人把纸样摊到玻璃边，指着最末一排的低音记号。缩过以后五线全了，店员让他拿原谱和新样叠在亮处看一回再印。
+学生名册上的生僻字先请本人认|字库打不出一个姓，打字员空出位置贴手写字样再制版，名单主人当面点头。|那个姓在老户口簿上是木字旁，手写稿上却差点看成禾字旁。班主任请学生把家里写好的名字带到店里，作为最后制版的依据。
+老街店铺共印第一本送货电话簿|九家店各留一个送货号，校样上两家号码尾数相近，印前逐个拨过。|印样上有一家米店的号码只差一个尾数。校对时店员没有照着原纸抄，请米店来电话报出刚换的新号，另记了生效日期。
+横排通知竖贴后少了一句话|原稿边上有手写补记没打入正文，顾客带样张回来后，店员给余份补上小条。|手写补记说的是领取地点临时换门，恰好是来办事的人最要紧的一句。门房先在张贴的第一份旁添了一条手写指示，再等其余补印件。
+复印价格的大小纸分不清|复印社在价牌旁订两张实物纸样，请顾客比对所用纸幅再开机。|墙上两张样纸都写着单面印一份的钱。来复印作业的学生把本子摊开比了一下，主动要选小一档的纸，右边也还能留出空白。
+软盘里的表格到店少了一列|原电脑约定的打印宽度不同，店员先打印方格线对准纸张再录入合计数。|会计把原表末尾的合计数抄在便条上带到店里。试印少了一栏时总额看似还在，实际上那一栏的单位已挤到纸外，须重新分栏。
+打字社的取件号能摸出凹点|邻近盲人按摩师需要印名片，女店员在取件卡上打孔，帮助他辨认不同批次。|取件卡左上角的一孔与右边的两孔分别代表已印好的两种名片。按摩师带回铺里同搭档试过，隔着衣兜也能摸清是哪一批。
+针式打印机换色带又用了三月|原先以为机针损坏，拆下纸卷比对后发现只是旧带卡皱，维修人教店员定期清槽。|换下来的色带在磨破处翻了半圈，打印同一行数字时断续缺色。店员把两张试印纸夹在修理收据内，以后检查机器便有旧样可对。
+学生作文装订留宽了两指边|学生想在文集旁贴同学评语，店家按要求改了订口位置，试翻后才打孔。|订好的第一本由上课坐在最后排的女孩来试，她把厚评语纸塞在页边，连翻三页都没碰进订线。老师按样本最后定了全班的本数。
+@奇闻|0|高家巷旧货铺|轻|无|其他|旧货铺收来的零碎都用毛边纸写清来处，靠墙一排窄架专放暂时认不出用途的物件。|摊主张圭|有人认得，我就请他当场摆一次原来的用法。|退休工人唐庆|我干活时见过许多零件，换个地方摆有时竟不敢认。
+三把钥匙开的是同一架风琴|老师认出旧琴旁的金属柄，分别用来开谱架、踏板箱和下方检修盖。|老师先试着拉开谱架，发现钥匙上刻着的浅竖线和黄铜合页同宽。三把钥匙现在不再串作一长串，各挂在能打开的位置旁边。
+小瓷碟为何只有半边釉|老店东拿出另一片样碟拼拢，原来两半在炉边供学徒比较不同火候。|没有上釉的那一面保留着学徒划的小记号，拼起来正好成一个完整的炉印。老人把两块碟片同放一只浅盘供大家看，并没打算粘合。
+一只铁鞋装不进人的脚|隔壁车夫拎起来认出是马车轮的刹块，铁匠把木样拿来正好套住。|车夫让年轻伙计先看看弧形的磨痕，接着才从院里推来一只旧车轮。靠着轮缘一比，铁块最亮的那条正好贴在边上。
+五分钱买回一张旧借书证|小伙子在证件上认出父亲少年时的笔迹，回家翻出同校毕业册相互印证。|证件照片已经揭掉，只剩姓名两旁一轻一重的墨迹。小伙子请父亲别看姓名先认那一笔，老人一眼认出小时候常把末笔收得太短。
+旧柜顶的铜鸟会随风转头|鸟背有一道小暗槽，修表人清掉槽中旧油垢，木叶一动鸟头便转。|铜鸟原来用细杆牵着柜背的小叶片。修表师傅清理后请孩子在稍远处扇风，铜鸟只轻轻点了一下头，引得围着柜台的人都笑了。
+两只不同样的瓷杯盖严丝合缝|退休窑工量过杯口，解释早年同一作坊常用一根尺寸杆给几种杯子做盖。|当年量尺寸的竹杆已找不到，老师傅现场削了一根同宽的纸条作比。杯身上画的花不同，盖沿和杯口贴住的那一圈却合得严实。
+老算盘底下压着一份端午菜单|纸条记着去年早已关门的食堂当日菜价，老炊事员看见自己写错的鱼字笑了。|旧纸上写着当天要做的两素一荤，鱼字的最后四点挤到下一栏。老厨师给当年的徒弟打去电话，对方还记得那天小黑板写不下菜价。
+买旧镜框买回了自家门牌照|相纸垫在画背面，买主辨出祖父旧店外墙，回去拿房契上的门号比上了。|镜框原先挂在谁家，旧货铺按收货簿一路问回去。卖框的邻居认出照片角落那根晒衣竿，答应把空框背面留下的小纸条一同交给买主。
+圆木盒里躺着一副没镜腿的眼镜|眼镜靠细簧夹在鼻梁上，社区医生示范如何收回小盒，再交店主贴上说明。|镜片的皮套只有两个手指宽，展开时先托住鼻梁边的弹簧。师傅演给大家看完，往盒里添一层棉布，免得装回时磨到玻璃边。
+旧菜刀上有两排并不切菜的齿|老师傅指出那是补伞人改的竹篾刀，木炳旋下来，还藏着磨篾的小锉。|伞匠坐下把一小段竹篾从齿间拉过，细薄的刨花落在刀背。旧货摊原先当肉铺的锯骨刀挂着，价牌上的品名当天换成了竹篾刀。
+@民生|0|河东托儿所|中|低|社会矛盾|托儿所紧挨两家轮班厂，家长接送须在木牌上翻面，孩子的水杯与衣袋各用自己的图案。|保育员田群|孩子讲不清门牌，就指他杯子上的那棵树给我看。|家长殷春|我换班时接孩子容易晚，这里留下的每张纸我都留到月底。
+托儿费退半月如何数天数|家长以出勤日计算，托儿所以自然日计算，查原告知单后双方将两项数额并列核算。|收费员拿一张空白月历，请家长把入托、告假和退托的日子分别圈起来。两项费用原本混写一栏，这回各自标了开始计算的那一天。
+接孩子的小木牌多写了两个姓|父母分在不同厂轮班，委托姥姥来接，园方核过家长证后添上受托人姓名。|两位家长各在木牌背面留下一笔相同的接送约定。姥姥第一次来接时由母亲陪着认门，老师也让孩子当面叫了一声，再交还小书包。
+小饭盒能不能带进午睡房|孩子生病后想随身带粥，保育员与家长约定先交厨房保温，醒后由老师领取。|饭盒盖上写着孩子的小名，保育员在午睡记录边记下送入厨房的时刻。家长来接时先认空盒，再和老师核对下午实际吃了多少。
+儿童换季衣物挂串了柜|柜门两只小兔图案太相近，老师给其中一只兔子补画胡萝卜，和孩子当面认柜。|两个孩子先拿着自己的外套在教室外等，老师才重新打开柜门。一个看耳朵，一个认胡萝卜，当着家长的面各自挂回自己的格子。
+临时加开晚托要谁来关门|原定值班人还需送最后两名孩子回家，邻班老师分工负责查门窗与家长签收。|晚到的家长把接孩子的实际时刻写进值班本，不照原先约好的时间抄。隔壁老师锁门前拿小电筒过一遍走廊，再把门钥匙交还值夜门房。
+孩子用左手吃饭要换到哪侧|两位家长担心小饭桌位置太挤，老师把左手孩子安排在边座观察一周再调整。|老师记下了三次用餐碰到邻座的情况，其中两次是勺柄在桌边伸得太远。换座后仍用孩子自己的小勺，不要求他为省地方改换惯用手。
+小毛毯送洗后找不回原主|相同格纹的毯角绣了不同字母，洗衣房按送洗时照片逐件比对，找到最后两条。|相片拍的是孩子当时铺开的毯子，边角各有小小的补丁。比完字母再看补丁的方向，两位家长都找到了从家里带来的那一条。
+托儿所院门新锁让推车停在台阶上|家长得松手掏钥匙，门卫将呼叫铃下移，引导推车先进平地再核验。|门铃移到矮处后，门卫让最轻的一辆婴儿车先从坡边推过一回。家长可以先把两只车轮停到平面上，再空出手来拿接送牌。
+一份果餐费留下两种收法|当月中途入托是否按天计费没写清，收费员补贴计算表，之前多收的一并返还。|收费表注明每次果餐按份计，月中来的孩子只从实际入托日算。记者翻看退款单，家长领取时旁边另有当月的出勤天数可查。
+午睡的小床换了个方向|窗外分拣货物的声音正冲着床头，主管与货站商量错开时间，也把床头转向内墙。|第一次调换床位后，保育员仍坐在从前的床边听了一个午后。货站挪动手推车的声音变轻了，她才在给家长的交接纸上写下孩子醒来的钟点。
+@体育|0|沿江春潮足球队|中|无|其他|球队在旧粮库后面的平地集训，器材不够时向附近几家厂队借用。队务把比赛条件和球员出场次序写在一块翻面黑板上。|教练韩永|自家的场熟，借来的场也得走一遍边线。|队长邵松|把门架稳了，我才跟新队员讲怎么跑这个角。
+临时球门差了半只鞋的宽度|两队各从家里带一根测绳，核对中线后重定门柱，守门员才开始热身。|量过以后两队把同一根绳打了两个结，留在球场门房。下回再打友谊赛，先照结的位置放球门，比赛日便用不着重新向左右角旗借尺。
+客队找错粮库迟到一刻钟|两座旧仓边各有球场，队务带人到公交站接车，双方把下半场开球时间顺延。|客队行李上拴着粮库当年的旧门名，过路商贩看见后指向另一个院子。队务把两处球场各画一段临街围墙，贴在以后发出的邀请单上。
+足球鞋钉在水泥上磨平|青年队原在站台外练折返，教练把训练挪到煤渣道，让队员上场前再换鞋。|一名后卫把磨薄的鞋钉留给新队员看，左脚外缘磨得尤其厉害。后来训练散场，他把布鞋和比赛鞋一起装回袋里，鞋底分别朝外晾干。
+边裁的旗子用上了碎花布|纯色旗与观众的红上衣混在一起，两名边裁同时改用黑白方格，远端看得清楚。|边裁先站在两条边线尽头，分别对着光亮和背阴处举旗。球员从球门前都能看清动作后，志愿帮忙的裁缝才给两面旗缝牢边角。
+球网的破口挂上一条红绳|门道后是浅水沟，守门员把红绳系在网破处，比赛后大家循绳找针线补网。|比赛中不碰那处网眼，散场后守门员第一个提着小板凳过去。红绳挂得比其余网线长一截，天色暗下来仍能摸到该补的地方。
+训练日志写下了守门员的脚步|教练让每个人记录一项没进球也有效果的动作，守门员记下三次出击缩角。|后卫原先只记队里进了几个球。翻看守门员的本子才补上一项，这三回出击中有两次他正好挡住另一边，搭档的判断也该记一笔。
+夜场借来四盏工地照明灯|电工先在两侧空地支稳三脚架，检查电线不越过观众通道才让两队进场。|管理员把离场的一束灯留到最后才关，等看台下最后一个人走出通道。两家单位借灯的字条当天交回，灯绳也照来时的长短分别绕好。
+替补席下装进了两副担架杆|原担架放在另一头仓房，队员把折叠杆就近收好，赛前当众试抬空担架。|队务没有请人躺上去试抬，先将两只装毛巾的球袋放进空担架，查看四个接合处。合拢以后，担架杆从替补席外侧就能直接抽出。
+同一名球员两张报名表|青年队升到成年组，原校队的表仍保留名字，组委会核对后按本次出场名单登记。|同一名队员自己在两份名单上各指出了填写日期，成年队的那份更新。原队把旧表压在本届表后，保留以前参加校际赛的那场记录。
+球赛结束的合影请来场地师傅|挖沟排水的三位工人原本在边上收工具，队员把他们请进了中圈。|合照前有位工人坚持先把沾泥的胶鞋在场边蹭一蹭，队长把他往中间一拉，说今天那条排水沟就该和大家一起上相片。
+@体育|2001|市工人文化宫|轻|无|其他|悉尼奥运会散场后，文化宫收下街坊捐来的比赛录像、剪报和旧器材，腾出一间屋子办体育活动。|文化宫干事林亚华|只要肯带来，我们桌上就给它留个位置。|退休车工刘春生|在电视里光顾着喊好，到了跟前才认得出细节。
+剪报缺了半个球，原报从邮局找回来|文化宫收到的乒乓球决赛剪报少了右下角，集邮柜台职工借来去年的合订报，补上整幅横拍照片。|值班员把借来的整版和原剪报并排压在玻璃下，没有拿剪刀修新报。旧剪报翘起的那一角，正好指着当年剪下它的人留下的红铅笔圈。
+奥运录像借来七盒，封条上先写换边|七位居民借出悉尼比赛的家录带，值班员逐盒核对，在跳水和体操两场回放交界处重新标上起始数。|每盒带子正式借出前要先倒回片头。昨晚来取的一位教师说，过去找半天才能看见球台，如今照着贴纸上的数拨几下就到了。
+老木台上贴白线，孩子轮流做发球员|少年乒乓班新收了十八人，文化宫从厂里借来两张木桌，教练用白胶带贴出端线，按三人一组轮换发球。|削台角的是机器厂的退休木工。他最先磨平临近通道的两角，说孩子追着球跑，很少顾得上看桌沿。
+体操房多了一册手绘动作谱|临渡一名退休美术教师对着悉尼比赛录像画了二十幅动作，体操房把尺寸最小的八幅放大贴在扶手旁。|图的作者在每张纸背都写了动作起止处的录像读数。遇到画不明白的一处，他留下空白，请教练带学生对着原片补。
+门票背面的座次图，帮展柜找回朝向|曾到悉尼看比赛的职工借出一张票根，布展员依照票背座次图重排三张观众席照片，原先两张左右颠倒。|票主带来当时从看台边拍的一张相片，画面左端正有通向座位的栏杆。把票和照片摆在同一方向，那条通道就对上了。
+羽球拍先称后借，轻的一支留给小手|业余羽毛球班把十一支旧球拍逐一过秤，在柄上缠上三色棉线，第一次上场的孩子可以先试轻拍。|棉线上没写年级。教练请同一年龄的三个孩子逐支试过，发现有孩子喜欢长柄，有孩子却握不牢，约定借走前一定先挥两下。
+跳水回放停在起跳前，体育老师认脚步|老师在文化宫借到奥运跳水录像，把离台前的几个动作反复放给学生看，孩子数过才知道起跳也要分步。|第一排小姑娘数到一半举了手，请老师再放一遍。她这次没盯着水花，一直看着运动员的两只脚，把最后一步圈进本子。
+一卷旧胶片，洗出城里当年的举重架|工人寄来的一卷底片洗出五张临渡早年练举重的照片，文化宫请两名老队员辨认出架子的焊工和存放地。|老队员把厂房窗沿上一截斜铁认出来，确认举重架原先立在车间东墙。展牌上的位置从大门口改成了东墙内。
+两家人同借决赛录像，门房排了一本册|文化宫发现同一盘悉尼乒乓球决赛带连续三周末被人预约，门房改成周三晚加放，原借带人仍按登记领回。|一位夜班工人来登记时，先看册子上的散场时间。他说早上还要交班，能赶上头两局也好，管理员特地给他留了边座。
+红蓝记分牌换回木轴，一下翻出两位数|退休钳工给文化宫修好一副手动记分牌，少年球赛当天试翻几十次，比赛超过十分终于不用粉笔另记。|木轴装好时二十分那一页仍翻得慢。老钳工拿砂纸又蹭了几下，叫两个孩子各守一边，翻到二十一分，再倒着翻回来。
+@消费|2001|北门钟表百货柜|中|低|硬新闻|换上二〇〇一年的新货签后，北门百货把容易看错的价目、保修单和样品说明放到柜面，请顾客当场核对。|柜组长王桂凤|问到哪一项，我就把那张单子拿出来。|顾客秦阿姨|我宁肯在这儿多站一会儿，回家就省得再跑。
+表带报价写两头，缩一节另计多少钱|记者带同一块旧表问了三处钟表柜，两处截短表带收一元，另一处随新表带免费，三家都答应先报总价。|第一家报的价只含表带，第三家把拆旧带也算进去。记者请三家按同样的金属带和同样的节数写在小票背后，才凑齐一张可比的价目。
+一块电子表四只钮，柜台补画调历图|北门柜台收到六次关于电子表调日期的问询，售货员照当年新到的一款表画出四钮位置，卖走时装在纸套里。|小图上专门画了一道横线，提醒调好月份后还要按一次确认。售货员说，前两名回来问的顾客，按错的就是最后这一下。
+录音机标着能复读，顾客要试自己的带|临渡两家文具柜各取三台新到的复读机，记者拿同一盒旧磁带试录，发现其中一款只能重复机器刚记下的一小段。|试录带上原有一段学校广播。两台复读机会从带上截取声音，另一台须另外对着话筒念，柜台给后者添了一行手写说明。
+修理凭条落了表号，两只黑表靠刻痕分开|两块同样外壳的国产表修后险些装错纸袋，顾客用表底刻痕认领，柜台从当日下午起逐件写下表号。|年轻一点的主人先指着玻璃上的旧痕认表，老师傅让他翻过来，背面还有一条他三年前换电池时不小心留下的细印。
+钟表柜清点保修卡，盖章处换到正面|北门商场清点上一批石英钟的保修卡，发现三张印章落在折页背面，售后柜已同意凭售货票核对购买日期。|一位顾客担心已经买回家的旧卡还得跑一趟。柜组长看过她留下的收据号码，答应修理时由柜台查底账，当天便在账边签了字。
+手摇闹钟慢三分，老师傅拆出一根头发|住户送修一只新买的机械闹钟，师傅取出夹在摆轮边的一根头发，当场用柜台的石英钟对时记录两小时。|记者第二次进店时，两只指针已走过同一个整点。修钟师傅把两次读数都写在收条背面，让客人回家放正后再看一天。
+鞋油盒大的收音机，耳塞得另买|临渡两家百货店把袖珍收音机摆进年内新货柜，一款机器靠耳机线当天线，记者拆开纸盒才发现售价不含耳塞。|柜员先把样机的耳塞拔掉，声音立刻消失。价签上原写着可随身收听，补过以后连同耳塞的一套价也能直接看见。
+二手相机柜加盏灯，镜片划痕能看清|北门寄售柜把三部旧胶卷相机搬到台灯下，收货员请卖主分别标明机身和镜头的毛病，再写进一式两份的寄售单。|一位寄卖旧相机的工人看完登记单，又请柜员补上一处划痕。那痕在逆光时才显，他原先担心买主回家才看到，说不清来历。
+彩电价签排三行，底座价单独写|记者在临渡三处彩电柜记录同一尺寸机型的整套售价，附送底座和另买底座的差别，原本只写在价签背后。|镜面底座和普通木座的总价并不一样。记者逐柜问能否只买电视，得到肯定答复后，才把不配底座的价格列为一栏。
+七张修钟票补开收条，木匣仍归原主|修钟铺给七位寄修老挂钟的顾客补写木匣存放单，表芯送厂时木匣仍留在店里，双方按旧漆颜色分别签收。|其中一口钟匣侧面有孩子画的小人。修钟人录下木匣尺寸，却没把画擦去，约好顾客领钟时先认侧板再装回钟芯。
+@交通|2001|东桥公交修理场|中|低|硬新闻|今年新订的线路册换用街道新名，公交修理场同时收回旧站牌，请驾驶员和售票员补上沿路常用的老地名。|调度员周来福|牌子挂好之前，我们自己先走一趟。|售票员宋秀英|本地人叫了半辈子的地名，不能只在纸上一划。
+粮库改名储运站，两块站牌先并排|今年新版线路册把西粮库写成储运站，公交场在两向站柱各加一行旧称，沿线两处小站仍按原来的名字报站。|新告示贴出那天，老师傅仍先喊了一声西粮库，接着才报储运站。一位听见熟悉地名的老太太这才拎起竹篮下车。
+早班车多走半站，夜班交接赶得上|东桥机修厂把两条线的第一班到厂时间抄到同一张交接表，晚到七分钟的那班试着从修理场北门直接发车。|司机没有把每一班都改掉，只在登记本上给早班画了一个圈。厂里两名值班员连续三天站在门口记到岗时间，准备月底再对。
+新站棚开东口，推婴儿车少绕一道坎|公交队量过东桥站新棚两侧通道，把原定售票桌挪开半米，记者推着空童车从人行道一路进了候车处。|试车时棚内停了两辆自行车，一位推车的母亲仍要侧身。保养班在地上另画了停放线，第二次走时才没有碰到桌角。
+旧车门铃挪低，孩子伸手按得着|临渡公交收回一辆检修客车后，把后门电铃按键降低一掌高，又在旁边装上一圈护边防止乘客衣袖碰到。|按键的护边用的是车间剩下的一截胶圈，外侧磨圆。记者跟车看到，一个背书包的孩子用左手就按响了铃，司机从镜子里点头。
+车窗线路图补一折，北边两站才露全|两百张本年线路图刚装进塑料套，驾驶员发现最后两站被窗框遮住，修理工把折口换向后重新逐车检查。|退休驾驶员在补钉线路图时，把字最小的一站留给新来的售票员念。读到第三回，他把被折线压住的那个字往旁边挪了一点。
+下雨天站名掉颜色，刷牌师傅改用搪瓷片|东桥线路五块木牌上的墨字遇水发花，保养班先取回最难辨的一块试换搪瓷小片，其余站名仍可向售票员核对。|换下的木牌没有扔，留作调度室查旧站名的样本。保养班请邻摊帮忙，下一次落雨时再站到马路对面看看字清不清楚。
+终点站拾物箱，红绳和蓝绳分两层|一周内有三把相似的折伞送到东桥终点，值班室按收车时刻和伞柄系绳分架放置，领走前须说清伞面的花纹。|昨天下午一位女士来找黑折伞，先说柄上绕了红绳，又说伞里焊过一根细骨。值班员撑开核实后，才请她在领回栏签名。
+线路册留出空白，乘客自己记末班|二〇〇一年临渡公交小册首次在换乘图旁留了一条空栏，售票处借出铅笔，头十名取册乘客有八人先抄了末班时刻。|最先借笔的是一名住校生。他把周五和周日的末班车分别写在两行，又在换乘站下面划了一道，说那一站下错了得走很远。
+两站同叫桥头，临时牌加上河名|记者随电车到城东转乘，两处相隔四里的桥头站都有人候错车，公交队在两面临时牌上分别补了所跨河名。|站牌挂好后，调度员从桥北拨电话，请桥南的同事隔着线路册复述新称呼。两边都念清了河名，才在册口盖上更正章。
+班车换了新号码，老票袋留在调度室|东桥线路调整编号后收回六只旧售票袋，票务员从夹层找出一张旧里程表，拿它把新册里漏记的岔道补齐。|车队把旧票袋洗净装进资料柜。其中一只边上还别着安全针，老售票员说，以前最小的车票用到最后，总得靠它别住。
+@体育|2002|东门球场|轻|无|其他|中国男足上一年十月取得世界杯决赛圈资格后，临渡球场多了不少新面孔，连附近卖冷饮的摊主都来借过赛程册。|球场管理员方正明|来打球的也好，来看球的也好，把门留开就行。|球迷段红旗|我从前只记得谁进球，今年连替补的名字也想弄清。
+记分牌空出第三格，少年赛第一次用足|东门球场的孩子临时搭队比赛，管理员找来去年的旧记分盘补齐第三格，原本挤在一栏的队名与比分终于分开。|装牌时孩子们把队名也写成了活动纸签，开场换队只需抽出一张。管理员把两只备用夹子别在牌架背后，防着场边起风。
+国足出线的报纸，班里凑齐五家头版|临渡师范附中一班学生带来五家报纸报道国足出线的头版，体育课上把同一进球的五个观察角度贴在一排。|班主任把五张报上的射门位置描到透明纸上，五幅叠起来，竟有两幅画的朝向相反。学生又去找比赛照片，重新标了看台方向。
+五里河的门票，背面还留着香瓜籽|一位去过沈阳看出线之战的球迷带来票根，展出前才发现票套里夹着瓜籽，他另装纸袋写下当年座位号码。|球迷在纸袋上写了看台第几排，笑说那天忙着看比赛，带去的香瓜倒没吃完。管理员把票袋放上展架时，特意让观众能看见背面。
+旧队服改成训练背心，两个号码反着穿|临渡厂际联队收来二十件去年的旧队服，裁缝把缺袖的一批缝成双面背心，同一天约球的四队都能分清颜色。|一位妈妈送来的线偏细，裁缝就给最容易扯开的肩口多缝一趟。背心翻到另一面，缝线仍压在原来的接缝里。
+阅报栏装低一排，放得下小球迷画的图|四名小学生手绘世界杯赛场位置图，东门球场把阅报栏最下一格改做横幅面，个头最矮的孩子也能看全。|图上有两座城市的字挨在一起，最小的画图人自己蹲下看了一遍，回去把字另抄在两张纸条上，又用两根红线接回原处。
+一块旧球网，补过的地方先挂红线|临渡青年队把旧球网铺在地面，三名队员各拿一束红棉线标出破洞，管理员补到第十六个才把球门重新挂正。|补完球网，小守门员先把球抱到网后用手来回推，确认没有能够钻过去的空口。两小段剩线系在横梁边，留给下回来补。
+走哪边算越位，体育老师拿瓶盖摆给家长看|东门球场围墙外常有家长问越位，老师从饮料摊借来两色瓶盖和一张包装纸，摆出传球前后两种站位。|卖饮料的摊主临时给两只瓶盖涂上白点，好让围观的人分清哪个是守门员。课讲完以后，那张纸被一个小球员折好带回了家。
+球场借鞋有了左右两张牌|少年队把捐来的二十二只球鞋按左右和尺码重新配对，发现两双鞋码不同，管理员另贴纸条请试穿者各自登记。|有位家长问，差半码的球鞋能不能拆开借。管理员照孩子的试穿次序另开一栏，说两只都合脚，比看上去成双要紧。
+评球磁带分开收，末尾留五分钟给孩子|市工人俱乐部收到三卷国足出线当夜的广播录音，老球迷借出两台录音机，让孩子另录感想，没有盖掉原带。|学生中有个孩子的爷爷曾陪他听那场球。他没对着话筒说比分，只记了窗外是谁先放下碗筷跑到楼下去报喜。
+踢飞的球有了长网，沿街窗户敢开了|临渡东门球场在靠居民楼的一端试架高网，记者数过下半场的五次高球，四次落在网内，一次被门柱挡回。|网绳拴在独立支架上，没借沿街住户的窗钩。开茶铺的房东守着看完一场，把原先挡球用来盖住茶罐的木板收回后屋。
+@消费|2002|临渡百货外贸柜|中|低|硬新闻|我国去年十二月加入世界贸易组织以后，外贸柜收到更多关于产地、零配件和保修的询问，商店把进货单也备了一份在前台。|采购员赵海兰|名字印在正面，产地和修理地址要翻到背面找。|顾客朱顺安|家里添件大东西，我总得问清以后到哪儿配件。
+同一商标两种产地，熨斗柜补齐标签|临渡百货新到两批外壳相似的电熨斗，记者逐只翻看底板，发现厂址不同，柜台已把两批货的产地分栏登记。|柜员拿出的外箱有两串不同的交货号，货架却只写一个产地。两块新货签同时标上经销电话，购买者可按各自编号查询。
+进口电池价签按节写，小包装仍按板卖|外贸柜收到顾客询价后，把两节、四节装电池都折成每节价格贴出，记者在收银台核对到其中一款包装另附充电器。|收银票把赠送的充电器列作零元。记者拿票回到柜前，才发现两种电池一款写容量、一款只写型号，店员另找来原盒给顾客看。
+样机上的三孔插头，另买转接件才合用|临渡旧货市场一台外销收录机的样品配了转接件，未拆封的两台却没有，经营户改在品名后补记附件差别。|样机用的转接件原来是店员从家里带来的。店主问供货方要到适配件的单独报价，在货架边贴出，暂时无货的几天也照实标清。
+吹风机修理点换门牌，保修卡补盖小章|外贸柜清点库存吹风机，找到十八张仍印着旧门牌的保修卡，维修点派人持新地址章逐张补盖并留下值班电话。|纸箱不便逐只打开，店员便在箱外红笔注明凭售货票换新版保修卡。最先买走那台的住户打电话来问，当场记下了新门牌。
+商店柜门打开，两张产地纸条原来贴反|记者在临渡百货核对两批不锈钢水壶的箱单时发现，货柜后墙两张纸条曾在调位时贴反，商店当场换回。|装箱单上的品名只差一个字，柜台地板上原先画好的位置线却已经挪了方向。店主核过两摞标签，把箱号写到价牌背后。
+机芯用外件，挂钟还在本城装配|百货外贸柜请来钟厂保管员，向围柜的四位顾客展示送货单和机芯标记，将外购零件和整钟装配地分别写上价牌。|一位老人带着同样的挂钟来配电池。保管员给他打开后盖，指出机芯上的小标签，说明需要售后服务仍找本地组装厂。
+相机套装少一条带，样品改按清单摆|临渡两处摄影器材柜把同型照相机的套装拆给记者看，一盒另附背带和镜头布，另一盒只有机身及塑料盖。|两家商铺都同意让买主看清空盒里的附件再交钱。一名顾客直言家里已有背带，最后挑了附件少的一套，也少付一笔钱。
+挂烫机说明只印外文，商店补了一页用法|一批寄售的挂烫机引来二十多人询问，店员请供货方交来中文使用说明，试机时把水箱拆装顺序逐项核过。|补印的说明先给三名没用过这款机器的顾客试读。有人把装水口看成出汽口，店员请供货方重画箭头，留下修改前后的两张底稿。
+留存两联收据，顾客认出多收的包装钱|百货外贸柜收回一只破损礼盒时对照底单，发现本应随货附送的外包装另计了三元，当天按票给顾客退回。|记者看到那张礼单上原有一道手写圈，本来表示礼盒随货附送，收银时却误看成另外一件。柜台后来把赠品单独盖上蓝戳。
+订货册上添一栏，配不到的零件先说明|临渡三家寄售柜把收音机、充电器和理发推子逐件登记，七种货品暂时无本地配件，售前由经手人说明。|来问理发推子的顾客把旧刀头带在身上。换装后宽度仍差一点，店员没有硬装，把机身和刀头的两个型号都抄给了他。
+@科技|2002|邮电职校实习室|中|无|其他|欧元纸币和硬币在二〇〇二年元旦投入流通。邮电职校把新币的公开图样和旧日书信上的计价单位放进实习课。|实习教师蒋华|我让大家先看单位，再看那个数有几位。|学员马连英|原来把信封转过来，背面也有东西可学。
+欧元纸币图样上墙，学生先认桥和拱门|邮电职校在资料室贴出新纸币图样，学生沿着桥梁和拱门分辨面额，老师另用粗线标出图样四角，免得误当真钞。|图旁还夹着一张学生的素描，画的只有桥的轮廓。老师请大家先照图找面额，再看钱币流通地区，纸币上的桥并不是本城的景点。
+信封上的法郎，义卖摊保留原来的数|学校清点三十封法国友人从前寄来的信，准备义卖的是受赠邮票册，信封上以法郎写的旧邮资全部原样登记。|清点时有人提议把旧邮资换算成今天的数字，带信来的人没有同意。她说当年的工资和邮价都是照那两个字记的，留着才能讲清。
+两封家信相隔一年，邮资单位换了样|临渡邮政职校收到居民借出的两只欧洲来信封，实习生把一个旧单位和一个欧元单位分开抄，再请寄件人来校讲解。|实习生把两个信封贴在相同大小的衬纸上，一左一右，连邮戳也保留下来。给大家讲信的人看了一眼，就认出是女儿两年写的字。
+认币练习用大图，零钱行李牌做成两面|学校为出国探亲人员办了一堂识币课，学员用废行李牌写下欧元和欧分的换算，把最常忘的数写在背面。|发给老人们的纸卡只写一百欧分等于一欧元。带课教师把当天的练习一律当成算术题，没有拿固定汇率去套旧明信片上的数。
+德文商品册来两本，报价栏多了一行|外贸实习班借来同厂新旧商品册各一册，发现新版目录用欧元列价，学生按订货日期装订，没有把旧数当成新数。|新册子第一页有一段供货说明，教师先让学员把那页翻出，再看单价栏。两本册子上的交货月份不同，也不能只用一个数字比。
+纪念册先排共同面，再翻各国图案|临渡集邮小组买来一套欧元硬币图样，给小学生演示各枚硬币的两面，纸册按面值留出空格供参观者描画。|参观者问，图例中图案不同是不是就值不同的钱。学生把币值一栏露出来，让大家自己把相同面值放在一堆，再去找背面的不同。
+橱窗找回一张老价签，旁边贴上年份|邮电职校征集欧洲旧物做展览，一位归国探亲的居民送来旧面包价签，学生核对购物日记后才给展品补上年份。|老人还带来了当年住宿用的小记事本，头一页写着买面包的街名。布展人员把本子留在他手里，只誊抄了核对过的那一行日期。
+五张旧汇款单，教师裁去私人住址|实习室拿出五张用于对照计价单位的旧单据，教师先遮去收件人和地址，课堂只留日期、金额和币种三个栏。|教室门口专门留了一张空白样单供照着填写。下课后教师逐张收回纸样，说家里带来的信封也要先问过主人，再借去展览。
+夜校学员读小数点，算盘换成钱币卡|邮电职校夜班用剪成圆片的硬纸做欧分卡片，学员先凑出一欧元，再用自带算盘核对练习册里的三笔购物数。|一位夜班工人把最小的两枚纸卡放进同一格，算完才察觉多了个零。教师让他把卡片一张张念出来，最后用实物把差额摆出来。
+一张桌布大的新版图例，给老花眼留了座|临渡职校开放实习室那天，有老人嫌硬币图样太小，学生临时把影印件放大一倍，换到窗下光亮处供人辨认。|放大图放在靠窗矮柜上，没有再挂回高墙。一位眼花的老邮递员看清后，给学生指出原图边上其实还有一圈细小的点。
+@教育|2003|临渡县中教务处|中|无|硬新闻|二〇〇三年起，全国普通高考由七月提前到六月。县中把沿用多年的办事表重新校了一遍，师生手边仍能找到从前的七月日历。|教务员曹月娥|以前照旧表抄就行，今年我把月份挨个圈过。|高三教师吕国平|过道里说十遍，不如在学生天天翻的那一页写明白。
+新校历少了一截，复习讲义改装两册|县中教研室比对今年和去年的课表，把原先七月前才发的三章讲义提前合订，学生凭旧领书条可取两册。|第三章封面原印着七月字样。教研员用两张彩纸把上、下册分开，提醒学生先看班上新排的章节次序，别照旧页码找讲义。
+六块考点路牌，先刮去去年的月份|临渡县中仓库找出六块写着七月的旧路牌，木工刮掉年月改用可换纸槽，校门名称和箭头仍照原登记簿保留。|木工没有把印过旧日期的铁片扔掉，拿来垫紧指路牌的背面。记者摇过一次，牌面能抽换，底座还牢牢立着。
+教室背墙的倒数表换了写法|高三三个班从旧日历背面裁出小纸条，用日期和星期并列替代原先的七月倒数表，值日生每周核对一次。|一名临近讲台的学生说，他原先只顾着把大数减小，常常记错这一天到底是星期几。换表后班会上点名，终于叫对了值日小组。
+修表铺出了一张价目，调准表不必换电池|县中门口钟表铺接到多位家长询价，师傅把校时、换电池两项分写收费牌，师生带表到校广播室也能免费对时。|记者问过两位带表来的人，一位只花了几分钟拨正指针，另一位的旧表要送检。师傅在票上分写两项，没有让两人付同样的钱。
+考点册里两所中学同名，领取时要看街道|临渡县中教务员翻检本年印发的交通册，把县中本部和分校的两张简图贴在同一页，请领取者先核地址再问车。|分校门口值班员说，前一日接到家长跨街询问，电话里从报名的学校名字说起更绕。新册上改请考生把准考证的街道念给接电话的人。
+文具柜把单支铅笔摆到铅笔盒外头|县中附近三家文具柜清点本年学生用品，单支铅笔和橡皮改成单独标价，记者按同一张采购单逐家核了总数。|同种橡皮有散装和带塑料套两种，三处柜台给的总价相差几角。一名住校生挑了自己用惯的两样，其余东西仍装在旧笔袋里。
+窗帘挡住后排钟，校工给走廊钟挪了位|县中清点今年考试用教室时，请四名学生从最偏的座位看钟面，原来有两间钟被窗帘遮住半截，当天重新挂正。|调钟时一名校工站在走廊里报时，另一人进屋逐排转过身看。靠窗的那幅窗帘拉开和合上各试一次，最后才在墙上留了钉眼。
+一张四面的小纸，讲明丢了证件找谁|县中为本年办事手册附了一张折页，集中写明教务处、门卫和领证处的位置，学校请新转来的两名学生照图找了一遍。|小纸折好刚能夹进笔记本，没有印学生的家庭住址。教务员交代，若纸上电话一时打不通，先到学校的值班窗口登记。
+英语磁带多抄一份，原带封进木柜|临渡县中英语组核对本年复习进度，另录十二盘练习带供各班轮换，借用本上把母带和翻录带分成两栏。|原带上学生最容易听错的一句，被老师抄在盒内的小纸签背后，听力课散了再打开核对。空白磁带由各班轮流带来补录。
+旧七月横幅换一条布，六月日子另绣上|县中裁缝班接到修补旧横幅的活儿，把褪色的七月布条拆下，改做可更换日期的布套，原来的校名没有动针。|缝日期布套的两名学生先用白线试了一回，觉得远处看不清，又拆掉换成深蓝。横幅后来平放进布箱，不再沿旧月份折叠。
+@消费|2003|南街电脑配件市场|重|中|调查曝光|今年南街三家电脑柜台合租了一间维修铺。记者带着消费者的收据逐件核对样品、配件和报价，请商户把答复写进登记簿。|维修柜值班员石文才|您拿来的是什么型号，我先写下来再开价。|装配工卢静波|光把机器点亮还不够，票上的那一件也得对得上。
+标着新件的硬盘，保修号为何提前一年|记者把两块标作新货的硬盘序号抄给供货商，对方答复其中一块已在去年送修，南街柜台收回样品并登记购买者。|维修铺把送修登记上的机身号和顾客发票逐个抄出，两串号码能对上。记者问及同批其余机器，店里登记了三名顾客的回访次序。
+装机清单写十六速，遇到的却是八速盘|学生拿着刻录失败的光盘找回南街电脑柜，记者逐项对机型和空白盘包装，发现所附盘片只标八速，商户答应换盘。|柜员拿另外两袋同批空白盘试装，盘面印字清楚可见。店主请顾客带回一包按清单所列型号换取，失败的旧盘留作退货凭据。
+电脑维修收了两次上门钱，路单写的同一趟|一名居民保留了两张同日的上门修理收据，记者同送货记录核对，两项修理由一趟车完成，店方退回重复的车费。|两张收据所列零件不同，只有上门时刻和工人姓名完全一致。工人查过当日便条说，上午进了一次门，修完两件才收工具离开。
+同价墨盒不同容量，价目牌只写大盒|记者在南街三处耗材柜买下同型打印机适用的墨盒，外盒所标容量相差一倍，一处柜台的价签却没有分开。|记者把小号墨盒放在大号旁边，两件外包装的正面一样宽。翻到侧面能找见容量，柜员在新价签右下角把这行数字另抄了一遍。
+带皮秤电线，一米报价里混进木轴钱|临渡两户个体户向报社反映布线收费，记者带着进货单和剩线去过秤，发现其中一单按连轴重量计价，店主重新结算。|居民拿来的余线已绕在另一个小木轮上。店主先后称过余线和拆下的空轮，再把原计价单退给顾客看，商量按实际用线重算。
+二手显示器换纸箱，来路要从旧修单找|南街一家电脑柜把换过外壳的显示器放进新机箱出售，记者凭维修铺留存的收据核到原件日期，柜台已更改货签。|修理铺师傅只按机身号码认收件记录，没有用外壳颜色作凭据。读者提供的原销售小票上写着新机一台，商场为他开了换货证明。
+包装盒画着喇叭，拆开却只有插孔|居民拿来一张购买多媒体键盘的售票，记者对照样品、纸盒和供货清单，发现该批货只留接口，柜台已按要求退货。|盒外那幅图上，音箱用一条线连向键盘。店员在样品台摆回相同接线方式，让后来询价的人能看清哪件是盒里配的。
+只换一根排线，维修票却开成整块板|维修铺对照三份退回的修理单，发现有一单把更换排线写成换板，顾客拿回旧板当面核过，维修铺改票退回差额。|被拆下的旧排线还在工具托盘里，顾客领回时折痕依旧。店主请柜台把全板和排线分别列作项目，由经手维修人员签名确认。
+原配鼠标装进散包，套装票据少一项|记者带同型电脑套装在南街两柜比对，发现一处柜台把原配鼠标另装袋收钱，供货清单上这件附件已计在整套价格里。|供货箱底的装箱清单画着三件附件，鼠标排在第二件。店主划去当日账上分列的鼠标款，请第一位来领货的买主当面复核。
+空白光盘混了批次，买主凭外圈印字换货|临渡一所夜校买下的五十张空白盘包装相同，记者陪校工逐盒查看，坏盘外圈印字来自另一批，商店分拣后办理更换。|夜校留存的四张坏盘号段相连。经销员拿回去交给供应方，另外交付未开封的新盒，双方在更换单上分别记了盘外圈的字母。
+@街巷|2003|临渡老街照相馆|轻|无|其他|二〇〇三年，老街照相馆在冲洗胶卷的柜台旁添了一台读卡机。相纸挂在同样的竹夹上，新来的顾客却带着小小的存储卡。|照相师傅徐有根|没见过的卡我先看插口，不使劲往里推。|街坊黄素琴|原先等底片，现在先看图，拿到手里还是一张相片。
+相册背面留个口袋，装得下两种底片|一位母亲带来胶片和存储卡给女儿做生日相册，装订师傅在封底做了纸袋，分别留好底片条和刻录光盘的位置。|纸袋口用不同颜色的铅笔写上两位孩子的名字。母亲翻到最后一页时说，底片哪怕以后不常拿出来，也愿意和相册放在一个地方。
+门口黑板添了行字，数码照片也能洗|老街照相馆接下第一批来自居民相机存储卡的订单，把可接的卡型写在黑板上，不合插口的请顾客连相机一起带来。|开店后第二位顾客提来一台相机和说明书。师傅先照图找到插口，再用一张空卡试接，没有拿客人的家照去试陌生的机器。
+一张全家照洗出两种边，老人选了留门框的|徐师傅把同一张数码全家照按满纸和留边各试印一张，老太太指着原屋门框选了留边本，柜台把这个要求记进收条。|师傅在留边样片背面画了一个小门框，明天取相的人就算换成儿媳，也知道该挑哪张。两张试样都还给了老人。
+三十六张缩成一页，小饭馆先挑招牌照|面馆老板带来一张存储卡想挑门面照片，照相馆先印出带编号的小样，老板一眼认出刚换木招牌后的那一张。|这张小样没有压掉拍照顺序。看到倒数第二行，面馆老板才想起来当时下过一阵雨，他想洗出来的招牌照片正是在停雨后拍的。
+旧胶卷能照常交，竹帘后头亮起第二盏灯|老街照相馆增设读卡柜后，许多居民以为暗房已停用，记者跟随师傅进暗房查看，当天仍有十四卷胶片排队冲洗。|记者在两处柜台各等了二十分钟，一边交来的胶卷装进不透光袋，另一边的卡抄完文件就还给顾客，取相时间写在同一册簿上。
+照相馆不用再揭相框，旧照片先隔玻璃试拍|一户居民带着黏紧在镜框里的旧合照求翻印，师傅调整窗帘避开反光，试拍三次保住了照片右下角的手写日期。|在油亮玻璃上试拍最难的是躲过窗框的倒影。师傅请邻人举一块深色布往旁边移，等到照片里老父亲的眼镜重新看清才按快门。
+存储卡忘在柜上，店主按纸袋号寻回主人|照相馆收摊时发现一张未领取的存储卡，店主靠冲印单上存留的袋号找到送片人，未将私人照片放进橱窗招领。|失主来接时先说出照片袋的编号，又说清卡套上印着一块蓝色海浪。店主请她打开相机确认张数，双方才划掉滞领记录。
+孩子闭眼那张留下，另一张寄给远方爷爷|临渡一户人家拿同一场生日宴的两幅照片请师傅冲印，母亲留了孩子闭眼吹蜡烛的原样，寄信那张另挑了一幅。|小姑娘看着自己紧闭双眼的那张照片，也重做了一次吹蜡烛的样子。开快门的哥哥说，这个神情倒比端正坐着更像平日里的妹妹。
+十年前的巷口照，在同一块门槛重拍|老街理发员带来一张旧胶片印样，请师傅站在原来门槛用数码相机再拍一次，新旧两张并排挂进了理发店。|老人拿着两幅照片把老屋的檐角对在一起，认出今天的自行车摊原来是卖煤球的。新照片旁，他亲手写下自己的店名和本年年份。
+一摞蓝纸套换成两色，原片和样张不再装错|老街照相馆为数码来件另备红色纸套，底片继续用蓝套，记者从取件簿核对到，两笔相近姓氏的订单已分架收好。|红套给数码卡，蓝套给胶片条，顾客取走原物后还各留一张白色提货签。师傅把最容易相混的两笔订单分开压在台面的左右端。
+@奇闻|0|江岸旧物调剂行|轻|无|其他|调剂行兼办失物招领。顾客愿意讲清来路的，店主就给物件附一张小纸，原主来时先对纸上的细节。|店主孔德富|少一颗钉子也记上，有时候认东西就靠它。|常客陆晓琴|架上都是些旧东西，背后的事倒是头一回听。
+香樟箱肚里响了两天，原来夹层藏着跳棋子|邻居买回一口旧箱子，二人轻轻倾动箱身，听出夹层里有东西滚动。拆下松动的压条后，一枚绿色玻璃棋子落到掌心。|店主请来帮忙的人先把玻璃棋子放在白纸上，没有立刻把木条钉回去。旧主人听说后笑了，说当年丢了一枚，孩子还埋怨过同桌。
+给针线盒配锁的客人，只带来一枚纽扣|顾客说不清针线盒的尺寸，却记得盖上恰好放四枚大扣子。店主用他带来的旧纽扣比量，挑出的扣锁装回去刚好。|针线盒送来时，盒盖上果然一排能摆下四枚纽扣。客人试过合锁的地方，又请师傅把原先缀在扣头上的红绳穿回老孔里。
+两幅挂历拼到一起，瀑布才有了下半截|店主收来两幅没有月份的风景挂历，发现纸边的山石正好能对上。把它们并排夹起，路人认出是本地老照相师拍的长幅。|相片合上以后，右下方露出一小串未印全的字。邻近照相馆的老师傅拿来当年的底片袋认出编号，两幅旧画算是找回了拍摄人的名字。
+旧算盘十七档，最后一档留着红棉绳|一名退休粮站会计认出旧算盘边梁上刻的一笔小账。红绳原来用来提醒点过几袋米，女儿当场翻出粮站旧合照作证。|老人边说边在空中拨了一遍算盘，算珠撞木档的声音把正收拾柜台的学徒引了过来。最后他记下旧站的门牌，希望再去看一眼。
+一把小锁三个人来试钥匙|三位居民都说捡到的铜锁是自家的。店主让他们先在纸上画锁背图案，只有卖油条的老人画出被磨去一半的葵花。|卖油条的老人没有带钥匙，先说出锁孔外圈有一处旧锡补痕。店主拿手巾擦了擦，果然在画过葵花的另一端看见那一点银白。
+缝纫机抽屉的旧戏票找到同排的人|调剂行整理旧机头翻出一张戏票，票背写着两个人名。看店的理发师认出其中一人，邻居送来同场紧挨着的另一张。|两张票根上印的排数相同，一张靠过道，一张挨着柱子。理发师说那晚互相换过座，如今戏都唱完许多年，倒让票根把人找齐了。
+一只暖壶盖，扣上去才知道是碗|搬家的人送来一袋零碎壶盖，店主清洗时发现其中一个盖沿藏着小耳朵。老顾客赶来认出它原是孩子喝水的小碗。|碗口原先有条细花边，被煤烟熏得不显。水里一过，花边露出来，老顾客想起家里柜子深处还有一只同样的小碟，便回去找。
+鞋楦上画着一只鸟，巷尾师徒认了出来|店里收到七只老鞋楦，一只脚尖上有墨画的鸟。鞋匠师傅说这是学徒的记号，那位学徒如今就在两条街外修拉链。|鞋匠没有顺手取走旧楦，只拿薄纸把鸟样描了一份。他对老学徒说，年轻时画的翅膀短了点，可两道木纹还在，一点没变。
+迟到六年的包裹单，擦镜子时从框里掉出|邻居拿一面旧镜来换玻璃，店主从镜框背面取出早已办结的包裹单。收件人没换地方，听说后还拿来了当年寄到的蓝布。|旧主人把那段蓝布举到镜前比颜色，说裁工作罩衣时留下的布头正是这块。调剂行把原单还给他，镜框背面换上干净的硬纸。
+两张竹椅少一根撑杆，隔壁藤篮里正好多一根|店主给一对旧竹椅量尺寸时，卖篮子的摊主拿来一截刻花竹杆。两头的榫眼纹路对上，椅子原主人认出是搬家时拆的。|扶手上的花纹绕过榫头只差半笔，竹杆转了小半圈，两边的线条就接起来了。卖篮子的摊主说，总算知道这根竹子该送到谁家去。
+@节庆|0|老城喜庆行|轻|无|其他|老街的喜庆行除去卖纸花、红绳，也向办寿宴和婚宴的人家出借茶盘碗盏。每逢归还，柜台都按原来的花色一件件点。|喜庆行掌柜杨爱梅|来时多点一遍，走时大家心里都有数。|街坊许可儿|要是自己的名字写上去，这件事就总记得住。
+寿桌上的四只桃，原是孙女捏的米团|八旬老人家办寿借了四只白瓷盘，归还时送来一张合照。盘里红尖的小桃是孙女跟面点师学了两晚才捏成的。|四只米桃里最小的一只压歪了花纹。老人点名先要这一只，说忙了半天的孩子总怕做得不一样，寿碗里偏要摆个不一样的。
+婚车头花绕了两道，进巷时可以收拢|临河巷一户新人租花车，司机担心拐弯碰到街边货架。扎花师傅把花束分成两层，用两条活动带替换了原先的铁丝圈。|试车时两名邻居站在巷子的拐角看过一遍，花束收起仍留一朵在车头正中。新郎笑说，再窄的门道也看得出今天有喜事。
+借回的茶盘多一只，底下写着新娘小名|喜庆行点收十六只茶盘，多出来的那只花纹相同。掌柜把盘底水渍擦干，新娘的母亲一眼认出当年女儿写下的小名。|借出去那批公用茶盘的木胎略厚，新娘家的盘子托在手里要轻些。母亲摸着底下那行歪字直笑，叮嘱女儿别拿布把它擦掉。
+两桌客人吃在同一院，纸桌签用方言写|临渡两户人家同日办酒借用一处院子，店主在白纸签上分别写下两边长辈的本地称呼。端菜的人看过就知道该往哪桌送。|两位掌勺的师傅把桌签抄到了送菜盘背面。开席前他们各端一壶茶试走一遍，孩子们看热闹，让出了两条通往不同席面的窄道。
+纸扎的石榴裂了一道，新娘请师傅留下|赶制的喜桌陈设途中磕开一条缝，师傅准备重做。新娘看见里面几粒红色纸籽，索性让他把开口修圆，连皮和籽一起摆。|新娘用手指点了点纸籽，说不像市面卖的齐整塑料果，倒像自家院里熟过头的那一个。师傅把原来打算遮缝的绿叶挪到了背面。
+一份寿面用四把勺，端给住在四楼的奶奶|邻里合给老人过寿，楼梯太窄，大汤盆上不去。喜庆行借出四只带盖的小碗，让四位小辈每人端一份，面汤到桌仍热。|几个晚辈上楼时隔一层就互相应声，最后一只碗送到，前面三碗的盖子都还没掀开。老人抬箸前坚持挑一碗还给跑得最累的小孙女。
+婚筵请柬漏了巷名，卖糖人替新人画路|新郎家新印的一批请帖只写门牌没有巷名。路口卖糖人的师傅用背面空白画出一座桥和两口井，临时指路图又加印二十张。|地图上没有标尺，却把井台的圆形和桥脚的石头画得很清楚。先到的一名客人照图从街口走了一遍，回来指出还该补一家挂蓝布帘的铺子。
+给儿子办酒借了隔壁老桌，桌底还留着身高线|居民从邻居家抬来一张八仙桌，擦洗时翻到桌底，找到孩子幼时画下的三道线。新郎坐回旧椅子，头顶已经远远过了桌边。|当年的三道线挨得很近，新郎比划着说最后一次量身高以后，木桌就搬到隔壁去了。婚宴散席时两位老人约好有空再给桌边的漆补一补。
+喜糖袋少了十根绳，小裁缝送来十条布边|喜庆行打包时发现红线用尽，隔壁裁缝从当日裁剩的布边里剪出十条窄带。最后十袋喜糖多了一道细碎的花纹。|小裁缝留下两条滚边，说是给提着糖袋回家的孩子备用。等宴席散后，居然有两个大人来问，这种小花布还够不够缝只针线袋。
+满月席留一张矮桌，孩子自己学着摆碗|临渡一户人家借来矮桌给小客人坐，店员配了六只不易翻的小盏。几个大孩子先在院子中照着大人的样子排了一遍座位。|矮桌下只铺了棉布，没有铺滑亮的绸面，最小的孩子拿碗时稳当得多。摆完碗的几个孩子又数了一遍，门口那位抱着弟弟的也算一席。
+@民生|0|城西小区物业服务处|重|高|调查曝光|本报接到城西居民来信，对照楼道公告、住户留收的票据和物业工作簿逐项核查。工作簿由经办人签字后开放现场查阅。|事务员冯明元|费用记在哪一栏，我把当时的账拿给大家看。|居民何素兰|我们要找的，就是票上那个数到底从哪儿来。
+一楼也分了水泵费，四户拿回多摊款|城西一幢居民楼的四户一楼住户直接接入市政水管，物业却把二次供水电费平均摊进每家账单，经查管线后开具了退款单。|直供水的四块表在楼前一间小屋里，增压泵另设在楼后。水工给居民分画两条水路，上次维修过的接头也指给代表看过。
+楼道窗修了一边，结算单却列两扇|记者请木工陪同检查三楼转角的窗框，经手单列有两扇新窗，现场只有一扇用新料。物业从待结工程款中扣回另一扇费用。|物业拿来原工料便笺，上面把计划更换的两扇写在一起。木工当日交活时只换东侧一扇，西边窗锁仍是旧件，验收栏补了说明。
+两只灯共用一个电表，作坊夜班记进楼道账|记者在物业电工指认下核对照明清册，发现巷口作坊外廊两只灯接在居民公表上。双方约定另接电表并核算过去三月费用。|物业电工按楼道、廊灯分开标了线头，在居民见证下逐盏开关复核。门房另记两处每日开灯时刻，给双方核算前几个月的分摊作参考。
+清扫员只到东楼，西楼交费票一张不少|城西两幢楼的住户连续三周记录上门清扫次数，西楼的日期全空却照收同额费用。物业调出出工簿重新结算。|清扫员出示的旧派工单只印着东楼的门牌。他告诉记者，自己以为西楼另有人负责，楼层收费表却没有随着出工路线改过。
+车棚隔了小仓房，租金没有入公账|居民对照原车位图发现，车棚西头的三处标线被围进仓房。记者查到使用方已交租金，物业称将补登公共收益并张榜。|使用仓房的人留下每月交款的收据，出纳账里却写作临时代收。物业同意把这几项一并列出，请车棚原使用人核对挪走的车位。
+墙上的修缮名单，三个名字是同一户|记者陪两名住户翻看屋面修缮分摊表，发现搬家后换写的姓名被另列两户。财务重新按实际门牌分摊并逐张换发通知。|三处重复姓名所列住址都指向同一单元，其中一个还沿用了搬家前的旧门牌。财务按住户手里原始交款联核过数目，已约定退款日期。
+花坛换土算了两车，卸土登记只有一车|物业结算表上的车数与门房卸货簿不同，经问司机，另一车去了相邻小区。承包队已重新出具本楼院的工料单。|卸土司机的路簿在第二车旁写着另一条街，跟门卫记录能互相对上。住户提出把两个小区的结算单分别张贴，承包队当日下午补送了副本。
+换锁通知要求每家买三把，住户能否只领一把|城西一栋楼更换公用门锁时先按每户三把收钱，记者调取配钥匙单价，物业答应改按实领把数收费并退回差款。|一名独居住户拿来三把尚未拆圈的钥匙，只领走一把。出入门仍照原办法登记，物业在值班桌摆出钥匙单价和未领数量供查对。
+保洁合同过了期，新收费表仍印原公司|居民交费票上的服务单位与楼道公示合同并非一家，记者核对交接日期，物业承诺补发新合同摘要，逐户更换错写的收款票。|新服务队接手后的签收簿从月中才有记录，旧票却沿用到月底。双方各自出具经手日期，住户可按票号查明哪一周由谁安排清扫。
+水管维修单写了整层，现场更换不到两米|住户保存的修前照片与维修材料票显示，只更换厨房外一段旧管。物业撤下原拟按整层计的分摊表，另约住户到场量尺。|水工把拆下的锈管摆到墙根，一把卷尺就量完了新旧接管两端。居民代表拍下尺寸后，另请楼上两户查看有没有漏记的共用管段。
+@文娱|0|桥头戏服洗补铺|轻|无|其他|戏台散场，盔头、靠旗和水袖要送回桥头清点。洗补铺在后墙钉了一溜木钩，归还前让借衣人照旧照片核花样。|裁缝师傅秦幼芳|戏衣翻个面，针脚是谁下的我就认得。|业余演员常青山|台上只看得见一阵风，台下才晓得要缝几针。
+靠旗少了一颗铃，只听声音就找回原车|洗补铺清点四面靠旗发现缺了一颗铜铃，戏班沿散场时经过的路问到板车铺。推车人从车帮下取下铜铃，线头颜色还对得上。|铜铃挂回去时，打击乐队的老师傅让演员先走三步，再转一次身。声音和另外三面旗相近，留下的短线头才重新藏进旗边。
+一条水袖长半尺，师傅给小演员打暗褶|少年剧团借来的水袖按成人身量裁成，抬手时总要拖过台板。师傅不动剪刀，在袖口内侧打了三道褶，演完还能放回。|孩子把袖子往上抛了一回，第一次恰好露出鞋尖。师傅叫她换个方向再走两步，发现有一针拉得太紧，又从里面放宽了半寸。
+唱武生的姑娘，第一次领到合脚的靴|旧戏靴最小一双仍大出两指，桥头鞋匠量过姑娘双脚，把垫层做成可拆的两片。试走三圈后鞋跟终于没有再响。|姑娘穿上靴子先没开跑，只慢慢走完最常用的转身动作。脚跟稳了，以前惯常往鞋口塞的那团棉花便留在了试衣凳上。
+老戏衣下摆露出蓝字，是上代裁缝的借条|洗补铺拆开一件旧官衣的下摆，翻出作衬布用的蓝字布条。退休裁缝来认字，原来是戏班早年暂借灯油留下的收条。|戏班里有位老人记得当年临时借油照灯，却不知借据后来去哪儿了。布条上的墨字已经发淡，裁缝把它夹进两片白纸，没有再缝回衣里。
+三根胡子乱了套，戏班当场抄了一本须谱|洗补铺送回三副相似的戏髯，团里一时分不清哪出戏用哪副。两位老演员轮流戴上对照过去的台照，各画一眼眉作记号。|两位演员戴须时一个把长须掖进鬓边，一个要在胸前抖开。旁边的学徒照着画在本子上，这才知道长短相近的两副也不能随意互换。
+旧云肩补的新花，花心用的是当年一粒扣|一位老演员把珍藏的戏衣借给学生，缺角的云肩要补一朵绒花。老师从旧扣盒找回同批的一粒金扣，恰好用来做花心。|扣面边缘有一道很细的铜线，绒线绕过以后刚好盖住缺口。学生把补好的云肩放回旧照片旁，花心大小同原先那朵几乎一样。
+齐眉棍裹上软布，鼓师先敲三下验回声|业余剧团在室内排武戏，怕练习棍碰坏木板，补铺用废戏布裹住两头。鼓师站在两侧试听，给最响的那头又添一层。|鼓师闭上眼先听近处一头，又让演员拿远一些做同样的动作。软布把最刺耳的敲击声压住了，原本报时用的小鼓点还听得清。
+两件龙袍共一只箱，纸隔板上画出衣领|戏服箱换小后，两件角色不同的戏袍得叠在一起。常青山在厚纸隔板上分别画出领口纹样，后台摸黑取衣也不会拿错。|两张领形图只用粗笔画轮廓，高领朝左、圆领朝右。试装时有人突然遮住后台的灯，提衣箱的小伙子果然一摸纸角就找对了要取的那件。
+一双绣鞋留半边没补，老师要拿去上课|地方戏学校送来一双鞋尖磨开的旧鞋，授课老师请裁缝先补好左边，带两只鞋同去上课，给学生看落步不同带来的磨损。|课堂上有学生先看鞋底，以为两只鞋是不同人穿的。老师把左右鞋口内的名字翻给他看，这才说明总往一侧转身也会把鞋尖磨得不同。
+水牌背面多出一行字，专谢后台补衣人|剧团收场后有观众来问绣云肩的人是谁。演员回到后台才发现水牌只有台前名单，次日把补衣、绣花两位师傅的名字写到背面。|第一位被写上名字的师傅看完还想让出位置，请演员把给戏靴打底的老人也写进去。水牌翻过来，比正面多出一行细字。`;
+{
+  let desk;
+  let district = 0;
+  let item = 0;
+  for (const line of DISTRICT_WIRES.split('\n')) {
+    if (!line.trim()) continue;
+    if (line.startsWith('@')) {
+      desk = line.slice(1).split('|');
+      district++;
+      item = 0;
+      continue;
+    }
+    item++;
+    const [section, year, place, baseWeight, baseRisk, awardType, context, first, firstQuote, second, secondQuote] = desk;
+    const [title, finding, evidence] = line.split('|');
+    const id = 'citywire-' + district + '-' + item;
+    // 单家柜台与物业账单的个案按实际影响面计；少儿比赛和公共展览按参与规模计。
+    const smallerCase = district === 44 || district === 48 && item <= 8;
+    const publicProgram = [37,40].includes(district) && [1,2,3].includes(item);
+    const weight = smallerCase || publicProgram ? '中' : baseWeight;
+    const service = {1:[1,3,4,6],2:[4,9],3:[7,8],4:[6,7],5:[3,8,9],6:[7,10],11:[1,5],15:[3],23:[2,4],30:[4,6,7],33:[4,8]};
+    const risk = service[district]?.includes(item) ? '无' : baseRisk;
+    const address = place.startsWith('临渡') ? place : '临渡' + place;
+    // 每条现场事实都保留在正文。共用采访原话只在该跑口首次出现，避免不同稿件重复引语。
+    const lead = '本报讯 昨日，记者走访了' + address + '。' + finding;
+    const body = [];
+    if (item % 3 === 0) body.push(context);
+    body.push(evidence);
+    if (item === 1) body.push('“' + firstQuote + '”' + first + '说。');
+    else if (item === 2) body.push('“' + secondQuote + '”' + second + '说。');
+    if (item % 3 !== 0) body.push(context);
+    const excerpt = evidence.split(/[。！？]/u)[0] + '。';
+    const short = '本报讯 ' + finding + excerpt;
+    const entry = {id, roundSeven:true, section, reach:'本地', scene:null, weight, publicationRisk:risk, awardType,
+      ...(Number(year) ? {year:Number(year)} : {}), title, lead, body, short,
+      photoKeywords:[], salesFactor:64 + (district * 13 + item * 7) % 29, newsValue:54 + (district * 17 + item * 11) % 37};
+    if (risk !== '无') entry.pressure = {kind:risk === '高' ? 'government' : 'complaint', target:place};
+    if (weight === '重' || (item * 3 + district) % 10 < 3) {
+      const disputed = (risk === '高' || risk === '中') && (item + district) % 3 === 1;
+      const disposition = disputed ? 'negative' : (item + district) % 4 === 0 ? 'neutral' : 'positive';
+      const result = disputed ? '当事人来信补充了当天的情况，编辑部请跑口记者重新核对。' :
+        disposition === 'neutral' ? '报社收到一份现场手记，已与原先的采访材料放在一起。' :
+        '读者把见报的那一段带到现场逐项看过，给编辑部捎回一封回信。';
+      entry.followUp = {delayWeeks:1 + (district + item) % 4, type:disposition, influence:disputed ? -1 : disposition === 'neutral' ? 0 : 2,
+        reputation:disputed ? -1 : disposition === 'neutral' ? 0 : 1, text:'《' + title + '》见报后，' + result};
+    }
+    STORIES.push(entry);
+  }
+}
+const STORY_BY_ID = new Map(STORIES.map(story => [story.id, story]));
 
 const LIBRARY_PHOTO_FOLDER = '素材/第四轮E-第一批待审';
 const SECOND_LIBRARY_PHOTO_FOLDER = '素材/第五轮-第二批资料图';

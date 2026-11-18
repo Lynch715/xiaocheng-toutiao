@@ -1,9 +1,10 @@
 import {mkdir, readFile, writeFile} from 'node:fs/promises';
+import {basename, parse} from 'node:path';
 import {runInNewContext} from 'node:vm';
 
 const here = new URL('./', import.meta.url);
 const read = file => readFile(new URL(file, here), 'utf8');
-const scripts = ['news.js', 'stories.js', 'editorial.js', 'followups.js', 'pressure.js', 'model.js', 'paper.js', 'game.js'];
+const scripts = ['news.js', 'stories.js', 'editorial.js', 'followups.js', 'pressure.js', 'feedback-config.js', 'street-voices.js', 'reader-mail.js', 'city-benchmark.js', 'issue-feedback.js', 'model.js', 'paper.js', 'feedback-view.js', 'city-map.js', 'dashboard.js', 'save-archive.js', 'newsroom-view.js', 'game.js'];
 
 let html = await read('index.html');
 const css = await read('style.css');
@@ -14,8 +15,9 @@ const assets = [
   ...libraryFiles.map(file => [file, file])
 ];
 const imageUrls = Object.fromEntries(await Promise.all(assets.map(async ([key, file]) => {
-  const mime = file.endsWith('.jpg') ? 'jpeg' : 'webp';
-  const bytes = await readFile(new URL(file, here));
+  const mime = 'webp';
+  const printFile = '素材/印刷图/' + parse(basename(file)).name + '.webp';
+  const bytes = await readFile(new URL(printFile, here));
   return [key, `data:image/${mime};base64,${bytes.toString('base64')}`];
 })));
 html = html.replace('<link rel="stylesheet" href="style.css">', () => '<style>\n' + css + '</style>');
