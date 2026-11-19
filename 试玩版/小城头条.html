@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <meta name="theme-color" content="#eeece5">
 <meta name="description" content="从 2000 年起，每周六出版一张地方小报。">
 <title>小城头条</title>
@@ -34,7 +34,7 @@
   --num: "DIN Alternate", "DIN 2014", "Bahnschrift", "Roboto Condensed", "Arial Narrow", "PingFang SC", sans-serif;
 }
 * { box-sizing: border-box; }
-html, body { touch-action: manipulation; }
+html, body { touch-action: pan-x pan-y; }
 body { margin: 0; color: var(--ink); -webkit-font-smoothing: antialiased; }
 h1, h2, h3, p, figure { margin: 0; }
 a { color: inherit; }
@@ -80,13 +80,26 @@ button { font: inherit; }
 .step-actions { padding: 10px 12px; border-top: 1px solid var(--line); }
 .blank-slot-hint { flex-basis: 100%; margin: 1px 0 0; color: var(--muted); font-size: 13px; line-height: 1.5; }
 .layout-options { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 245px), 1fr)); gap: 8px; padding: 10px; }
-.layout-option { min-width: 0; border: 1px solid var(--line); color: var(--ink); text-align: left; }
-
+.layout-option { min-width: 0; display: grid; grid-template-columns: 60px minmax(0, 1fr); align-items: start; gap: 10px; border: 1px solid var(--line); color: var(--ink); text-align: left; }
 .layout-option:disabled { opacity: .6; }
-.layout-option > div { display: flex; flex-wrap: wrap; align-items: baseline; column-gap: 10px; row-gap: 2px; }
-
-.layout-option span { color: var(--red-dark); font: 650 12px/1.4 var(--sans); }
-.layout-option p, .step-hint p { margin: 5px 0 0; color: var(--muted); font-size: 13px; line-height: 1.55; }
+.layout-text { display: grid; gap: 3px; }
+.layout-forecast { color: var(--red-dark); font: 650 12px/1.4 var(--sans); }
+.layout-note, .step-hint p { color: var(--muted); font-size: 13px; line-height: 1.5; }
+.step-hint p { margin: 5px 0 0; }
+.layout-preview { display: grid; width: 60px; height: 80px; padding: 4px; gap: 3px; border: 1px solid #777; background: #fff; }
+.layout-option[data-id="lead"] .layout-preview { grid-template: "mast" 10px "headline" 7px "photo" 18px "copy" 1fr "side" 10px / 1fr; }
+.layout-option[data-id="balanced"] .layout-preview { grid-template: "mast mast" 10px "headline side" 6px "photo side" 15px "copy side" 1fr / 2fr 1fr; }
+.layout-option[data-id="photo"] .layout-preview { grid-template: "mast" 10px "photo" 25px "headline" 5px "copy" 1fr "side" 9px / 1fr; }
+.layout-option[data-id="banner"] .layout-preview { grid-template: "mast" 10px "headline" 5px "photo" 11px "copy" 1fr "side" 17px / 1fr; }
+.preview-mast { grid-area: mast; border-block: 1px solid #333; background: linear-gradient(#202020, #202020) left center / 60% 5px no-repeat; }
+.preview-headline { grid-area: headline; background: #222; }
+.preview-photo { grid-area: photo; background: #bcbcbc; position: relative; }
+.preview-photo::after { content: ""; position: absolute; inset: 0; background: #545454; clip-path: polygon(0 70%, 29% 37%, 55% 68%, 81% 29%, 100% 55%, 100% 100%, 0 100%); }
+.preview-copy, .preview-side { background: repeating-linear-gradient(#848484 0 1px, transparent 1px 3px); }
+.preview-copy { grid-area: copy; }
+.preview-side { grid-area: side; border-top: 1px solid #333; margin-top: 2px; }
+.layout-option[data-id="balanced"] .preview-side { border: 0; border-left: 1px solid #555; margin: 0; }
+.layout-option[data-id="banner"] .preview-side { display: grid; place-items: center; border: 1px solid #333; background: #e0e0e0; color: #222; font: 700 8px/1 var(--sans); }
 .slot-switch { display: flex; gap: 8px; padding: 10px 12px; border-bottom: 1px solid var(--line); }
 .slot-switch button { flex: 1; min-height: 44px; }
 .slot-switch button[aria-pressed="true"] { color: var(--red-dark); border-color: var(--red); background: #e7ebee; }
@@ -328,7 +341,7 @@ button:disabled { cursor: default; opacity: .52; }
 .year-actions > :is(a, button) { min-height: 44px; }
 .year-actions [aria-disabled="true"] { pointer-events: none; opacity: .6; }
 @media (max-width: 720px) {
-  html { scroll-padding-block: calc(12px + var(--safe-top)) calc(114px + var(--safe-bottom)); }
+  html { scroll-padding-block: calc(12px + var(--safe-top)) calc(114px + var(--safe-bottom)); -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
   .game { --workbar-height: calc(51px + var(--safe-bottom)); }
   .game:has(.desk-shortcuts:not([hidden])) { --workbar-height: calc(104px + var(--safe-bottom)); }
   .appbar-inner { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; }
@@ -347,12 +360,11 @@ button:disabled { cursor: default; opacity: .52; }
   .appnav button:focus-visible { outline-offset: -4px; }
   .desk-shortcuts:not([hidden]) { display: grid; padding: 4px 12px; border-top: 1px solid var(--line); }
   .desk-shortcuts .issue { margin: 0; padding-block: 8px; }
-  .game:has(:is(input, textarea, select):focus, #original-dialog[open]) :is(.workbar, .feedback) { visibility: hidden; }
+  .game:has(:is(input:not([type]), input[type="text"], input[type="number"], textarea):focus, #original-dialog[open]) :is(.workbar, .feedback) { visibility: hidden; }
   html:has(#original-dialog[open]) { overflow: hidden; }
 
   
   .game :is(button, input, select, textarea, summary, .export-link) { min-height: 44px; }
-  .game :is(button, summary, .export-link) { touch-action: manipulation; }
   .game :is(.soft, .proof-link) { font-size: 13px; }
   .game :is(button, select) { max-width: 100%; }
   .game :is(.soft, .issue, .proof-link) { white-space: normal; }
@@ -383,6 +395,7 @@ button:disabled { cursor: default; opacity: .52; }
     max-height: calc(var(--visible-height, 100dvh) - var(--dialog-top) - var(--dialog-bottom));
     overscroll-behavior: contain;
   }
+  #city-dialog .city-field :is(input, select) { font-size: 18px; }
   #original-dialog[open] {
     inset: var(--visible-top, 0px) 0 auto;
     width: 100%; max-width: none; height: var(--visible-height, 100dvh); max-height: none;
@@ -532,10 +545,6 @@ button:disabled { cursor: default; opacity: .52; }
 
   
 }
-@media (min-width:721px) and (max-width:950px) {
-  #masthead-issue { display: block; font: 12px/1.5 var(--sans); }
-  #masthead-issue::before { content: none; }
-}
 .weekly-data { padding-block: 6px 12px; }
 .weekly-data > p { margin-top: 6px; text-align: center; }
 .weekly-data .circulation-stamp strong { font-size: clamp(24px, 7vw, 38px); }
@@ -546,7 +555,7 @@ button:disabled { cursor: default; opacity: .52; }
 .data-board { display: grid; }
 .data-sales { grid-column: 1 / -1; }
 .data-board h2, .influence-panel h2, .annual-feedback h2 { font: 800 23px/1.25 var(--serif); margin-bottom: 9px; }
-.distribution-graph { width: 100%; height: auto; }
+.distribution-graph { display: block; width: 100%; height: auto; }
 .graph-grid { color: var(--muted); font: 12px var(--sans); fill: currentColor; }
 .graph-grid line { stroke: var(--line); }
 .graph-area { fill: #c1cfb9; }
@@ -710,9 +719,23 @@ span.map-pin { cursor: default; }
 .appbar .soft { background: transparent; color: #d6dee4; border-color: #3a4a57; min-height: 28px; }
 .appbar .soft:hover { color: #fff; border-color: #5ea3d6; }
 #points-total { color: #8cc3ea; }
+@media (min-width: 721px) {
+  #progress { display: flex; align-items: baseline; }
+  #masthead-name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  #masthead-issue { flex-shrink: 0; white-space: nowrap; }
+}
+@media (min-width: 721px) and (max-width: 1100px) {
+  .game { --appbar-height: 91px; }
+  .appbar-inner { display: grid; grid-template: "brand tools" 46px "workbar workbar" 44px / minmax(0, 1fr) auto; gap: 0 16px; }
+  .brand { grid-area: brand; }
+  .appbar-actions { grid-area: tools; }
+  .workbar { grid-area: workbar; border-top: 1px solid #ffffff14; }
+  .appnav { display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); flex: 1; }
+  .appnav button { justify-content: center; padding-inline: 4px; }
+}
 
 /* 经营看板 */
-.kpi-strip { background: #f3f6f8; border-bottom: 1px solid var(--line); position: sticky; top: 46px; z-index: 25; }
+.kpi-strip { background: #f3f6f8; border-bottom: 1px solid var(--line); position: sticky; top: calc(var(--appbar-height, 47px) + var(--safe-top)); z-index: 25; }
 .kpi-inner { display: grid; grid-template-columns: repeat(10, minmax(108px, 1fr)); overflow-x: auto; scrollbar-width: thin; }
 .kpi { padding: 7px 12px 6px; border-right: 1px solid var(--line-soft); min-width: 0; display: grid; grid-template-rows: auto auto auto; gap: 1px; }
 .kpi:last-child { border-right: 0; }
@@ -760,6 +783,7 @@ span.map-pin { cursor: default; }
 .panel-heading h2, .data-board h2, .influence-panel h2, .annual-feedback h2 { font: 700 14px/1.3 var(--sans); letter-spacing: 0; }
 .panel-heading p { font-size: 12px; }
 .data-board > .panel, .influence-panel, .clipping-wall { padding: 12px 14px; }
+.data-board > .panel { min-width: 0; }
 .data-board h2 { margin-bottom: 8px; padding-bottom: 6px; border-bottom: 1px solid var(--line-soft); }
 .manager-note { font-size: 12px; padding: 7px 12px; }
 
@@ -788,7 +812,7 @@ span.map-pin { cursor: default; }
 .report h3 { font: 700 14px/1.35 var(--sans); }
 .plan-metric strong, .plan-metric input { font-family: var(--num); letter-spacing: 0; }
 .desk-proof h2 { font: 700 14px/1.35 var(--sans); }
-.layout-option span, .ad-offer .manage-row > strong { color: var(--accent); }
+.layout-forecast, .ad-offer .manage-row > strong { color: var(--accent); }
 .money-in { color: var(--up); }
 .money-out, .risk-callout { color: var(--down); }
 
@@ -818,6 +842,33 @@ span.map-pin { cursor: default; }
 .grid-table .actions { white-space: nowrap; text-align: right; }
 .grid-table .actions button + button { margin-left: 4px; }
 .grid-table .actions .issue { padding: 3px 9px; min-height: 28px; font-size: 12px; }
+.channel-actions { display: grid; grid-template-columns: repeat(3, clamp(84px, 27vw, 116px)); gap: 6px; width: max-content; }
+.channel-actions > button { grid-row: 1; min-height: 38px; margin: 0; padding: 3px 5px; font: 600 12px/1.25 var(--sans); white-space: normal; }
+.channel-actions > [data-action="priority"] { grid-column: 1; }
+.channel-actions > [data-action="channel"] { grid-column: 2; }
+.channel-actions > [data-action="upgrade-channel"] { grid-column: 3; }
+.channel-actions > .cell-note { grid-column: 1 / -1; }
+.channel-cards { display: none; }
+@media (max-width: 720px) {
+  .channel-ledger-table { display: none; }
+  .channel-ledger .panel-heading p { white-space: normal; }
+  .channel-cards { display: block; }
+  .channel-card { display: grid; gap: 8px; padding: 10px 12px; border-bottom: 1px solid var(--line); }
+  .channel-card:nth-child(even) { background: #f2f5f7; }
+  .channel-card > header { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 4px 10px; }
+  .channel-card h3 { font: 700 15px/1.3 var(--sans); }
+  .channel-card small, .channel-stats dt, .channel-total { color: var(--muted); }
+  .channel-badges { display: flex; flex-wrap: wrap; gap: 4px; }
+  .channel-badges .chip { margin: 0; }
+  .channel-card .channel-actions { width: 100%; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .channel-actions > button { min-height: 44px; }
+  .channel-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px 10px; margin: 0; }
+  .channel-stats dt { font-size: 11.5px; }
+  .channel-stats dd { margin: 0; font-weight: 650; }
+  .channel-card > details { border-top: 1px solid var(--line-soft); }
+  .channel-card summary { color: var(--accent); align-content: center; cursor: pointer; }
+  .channel-total { padding: 8px 12px; }
+}
 .grid-table .topics { color: var(--muted); white-space: nowrap; }
 .grid-table .title-cell { min-width: 260px; max-width: 420px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-family: var(--serif); font-weight: 600; }
 .grid-table.compact th, .grid-table.compact td { padding: 4px 8px; }
@@ -895,7 +946,7 @@ span.map-pin { cursor: default; }
 @media (max-width: 1100px) {
   .desk-layout { grid-template-columns: 1fr; }
   .desk-rail { position: static; }
-  .data-board { grid-template-columns: 1fr; }
+  .data-board { grid-template-columns: minmax(0, 1fr); }
   .data-board > .data-sales:first-child { grid-row: auto; }
 }
 @media (max-width: 860px) {
@@ -10626,6 +10677,11 @@ function statusChip(state) {
   return '<span class="chip chip-' + state + '">' + MAP_STATE_LABELS[state] + '</span>';
 }
 
+function channelStatsList(labels, values) {
+  return '<dl class="channel-stats">' + labels.map((label, index) =>
+    '<div><dt>' + label + '</dt><dd>' + values[index] + '</dd></div>').join('') + '</dl>';
+}
+
 function channelsTableView() {
   const editable = game.phase === 'desk';
   const cash = cashOf(game);
@@ -10636,7 +10692,8 @@ function channelsTableView() {
   const order = {active:0, paused:1, available:2, remote:3, captured:4, locked:5};
   const rows = [...outlets].sort((a, b) => order[channelMapState(game, a)] - order[channelMapState(game, b)]);
   const totals = {cap:0, planned:0, sold:0, printed:0, revenue:0, fee:0};
-  const body = rows.map(channel => {
+  const labels = ['容量', '本期拟送', '上期实售', '售出率', '售罄', '上期报款', '配送费', '代售/份', '读者偏好'];
+  const entries = rows.map(channel => {
     const state = channelMapState(game, channel);
     const active = state === 'active';
     const stand = lastStand(game, channel.id);
@@ -10662,15 +10719,24 @@ function channelsTableView() {
         '" data-action="priority" data-id="' + channel.id + '"' + (editable ? '' : ' disabled') + '>' + (focus ? '重点中' : '重点') + '</button>' : '') +
       '<button type="button" class="' + (state === 'available' ? 'issue' : 'soft') + '" data-action="channel" data-id="' + channel.id + '"' +
       (disabled ? ' disabled' : '') + '>' + (active ? '暂停' : state === 'paused' ? '恢复' : '开拓 ' + money(channelSetupCost(game, channel))) + '</button>';
-    return '<tr class="row-' + state + '"><th scope="row"><b>' + h(channel.name) + '</b><small>' + h(CITY_MAP.nodes[channel.id]?.district || '') +
-      '</small></th><td>' + (game.issueCount === 156 && game.unlocked.includes(channel.id) ? '<span class="chip">' + FEEDBACK_CONFIG.network.names[channelGrade(game,channel.id)-1] + '</span>' : '') + statusChip(state) + (rivalOutlets.includes(channel.id) && state !== 'captured' ? '<span class="chip chip-rival">对手同点</span>' : '') +
-      '</td><td class="num">' + number(channel.cap) + '</td><td class="num">' + (active ? number(plan) : '—') +
-      '</td><td class="num">' + (stand ? number(sold) : '—') + '</td><td class="num rate">' +
-      (rate == null ? '—' : '<span class="ratebar"><i style="width:' + (rate * 100).toFixed(0) + '%"></i></span>' + (rate * 100).toFixed(0) + '%') +
-      '</td><td class="num">' + (stand?.time || '—') + '</td><td class="num">' + (stand ? money(revenue) : '—') +
-      '</td><td class="num">' + money(channel.fee) + '</td><td class="num">' + money(channel.commission) + '</td><td class="topics">' + h(topics) +
-      '</td><td class="actions">' + action + upgradeButton(game, channel.id) + '</td></tr>';
-  }).join('');
+    const name = h(channel.name);
+    const district = h(CITY_MAP.nodes[channel.id]?.district || '');
+    const badges = (game.issueCount === 156 && game.unlocked.includes(channel.id) ?
+      '<span class="chip">' + FEEDBACK_CONFIG.network.names[channelGrade(game,channel.id)-1] + '</span>' : '') +
+      statusChip(state) + (rivalOutlets.includes(channel.id) && state !== 'captured' ? '<span class="chip chip-rival">对手同点</span>' : '');
+    const values = [number(channel.cap), active ? number(plan) : '—', stand ? number(sold) : '—',
+      rate == null ? '—' : '<span class="ratebar"><i style="width:' + (rate * 100).toFixed(0) + '%"></i></span>' + (rate * 100).toFixed(0) + '%',
+      h(stand?.time || '—'), stand ? money(revenue) : '—', money(channel.fee), money(channel.commission), h(topics)];
+    const controls = '<div class="channel-actions">' + action + upgradeButton(game, channel.id) + '</div>';
+    const row = '<tr class="row-' + state + '"><th scope="row"><b>' + name + '</b><small>' + district + '</small></th><td>' + badges + '</td>' +
+      values.map((value, index) => '<td class="' + (index === labels.length - 1 ? 'topics' : 'num') + '">' + value + '</td>').join('') +
+      '<td>' + controls + '</td></tr>';
+    const card = '<article class="channel-card row-' + state + '" aria-labelledby="outlet-' + channel.id + '"><header><div>' +
+      '<h3 id="outlet-' + channel.id + '">' + name + '</h3><small>' + district + '</small></div><div class="channel-badges">' + badges + '</div></header>' +
+      controls + channelStatsList(labels.slice(0, 3), values.slice(0, 3)) +
+      '<details><summary>更多统计</summary>' + channelStatsList(labels.slice(3), values.slice(3)) + '</details></article>';
+    return {row, card};
+  });
   const sellThrough = totals.printed ? (totals.sold * 100 / totals.printed).toFixed(1) + '%' : '—';
   return pageHeader('发行经营', newspaperName(game)) +
     '<dl class="metric-row"><div><dt>在营网点</dt><dd>' + game.active.length + ' / ' + channelLimit(game) + '</dd></div>' +
@@ -10678,14 +10744,15 @@ function channelsTableView() {
     ' 份</dd></div><div><dt>上期售出率</dt><dd>' + sellThrough + '</dd></div><div><dt>上期报款</dt><dd>' + money(totals.revenue) +
     ' 元</dd></div><div><dt>每期配送费</dt><dd>' + money(totals.fee) + ' 元</dd></div><div><dt>重点配送</dt><dd>' +
     h(game.priority ? channelById(game.priority).name : '未设') + '</dd></div></dl>' +
-    '<section class="panel table-panel"><header class="panel-heading"><h2>网点台账</h2><p>' +
+    '<section class="panel table-panel channel-ledger"><header class="panel-heading"><h2>网点台账</h2><p>' +
     (editable ? '采编期间可调整网点；' : '下期采编开始后可调整；') + '地图上也能直接操作 <button type="button" class="link-button" data-view="influence">打开地图</button></p></header>' +
-    '<div class="table-scroll"><table class="grid-table"><thead><tr><th scope="col">网点</th><th scope="col">状态</th><th scope="col" class="num">容量</th>' +
-    '<th scope="col" class="num">本期拟送</th><th scope="col" class="num">上期实售</th><th scope="col" class="num">售出率</th><th scope="col" class="num">售罄</th>' +
-    '<th scope="col" class="num">上期报款</th><th scope="col" class="num">配送费</th><th scope="col" class="num">代售/份</th><th scope="col">读者偏好</th>' +
-    '<th scope="col">操作</th></tr></thead><tbody>' + body + '</tbody><tfoot><tr><th scope="row">合计</th><td></td><td class="num">' + number(totals.cap) +
+    '<div class="table-scroll channel-ledger-table"><table class="grid-table"><thead><tr><th scope="col">网点</th><th scope="col">状态</th>' +
+    labels.map((label, index) => '<th scope="col"' + (index < labels.length - 1 ? ' class="num"' : '') + '>' + label + '</th>').join('') +
+    '<th scope="col">操作</th></tr></thead><tbody>' + entries.map(entry => entry.row).join('') + '</tbody><tfoot><tr><th scope="row">合计</th><td></td><td class="num">' + number(totals.cap) +
     '</td><td class="num">' + number(totals.planned) + '</td><td class="num">' + number(totals.sold) + '</td><td class="num">' + sellThrough +
-    '</td><td></td><td class="num">' + money(totals.revenue) + '</td><td class="num">' + money(totals.fee) + '</td><td colspan="3"></td></tr></tfoot></table></div></section>';
+    '</td><td></td><td class="num">' + money(totals.revenue) + '</td><td class="num">' + money(totals.fee) + '</td><td colspan="3"></td></tr></tfoot></table></div>' +
+    '<div class="channel-cards">' + entries.map(entry => entry.card).join('') +
+    '<p class="channel-total">上期网点合计实售 <strong>' + number(totals.sold) + '</strong> 份</p></div></section>';
 }
 
 function staffTableView() {
@@ -11713,9 +11780,11 @@ function layoutOptions(story) {
     const forecast = !available ? '先给头条配一张照片' : id === 'balanced' ? '销量基准' :
       '本稿需求约 ' + (change >= 0 ? '+' : '−') + Math.abs(change) + '%';
     return '<button type="button" class="layout-option" data-action="choose-layout" data-id="' + id +
-      '" aria-pressed="' + (game.layout === id) + '"' + (available ? '' : ' disabled') + '><div>' +
-      '<strong>' + h(layout.label) + '</strong><span>' + h(forecast) + '</span></div><p>' +
-      h(LAYOUT_NOTES[id]) + '</p></button>';
+      '" aria-pressed="' + (game.layout === id) + '"' + (available ? '' : ' disabled') + '>' +
+      '<span class="layout-preview" aria-hidden="true"><i class="preview-mast"></i><i class="preview-headline"></i>' +
+      '<i class="preview-photo"></i><i class="preview-copy"></i><i class="preview-side">' +
+      (id === 'banner' ? '广告' : '') + '</i></span><span class="layout-text"><strong>' + h(layout.label) + '</strong>' +
+      '<span class="layout-forecast">' + h(forecast) + '</span><span class="layout-note">' + h(LAYOUT_NOTES[id]) + '</span></span></button>';
   }).join('') + '</div>';
 }
 
@@ -12128,6 +12197,7 @@ function render() {
   }
   if (game.phase === 'desk' && deskStage === 'print' && !readyForProof()) deskStage = firstDeskStage();
   mastheadName.textContent = newspaperName(game);
+  mastheadName.title = mastheadName.textContent;
   mastheadIssue.textContent = game.phase === 'complete' ? currentYear(game) + ' 年 · 年终特刊' : currentYear(game) + ' 年 · 第 ' +
     (game.week + 1) + ' / ' + campaignIssueCount(game) + ' 期';
   document.documentElement.style.setProperty('--paper-stock', paperStock(game.paperStock).color);
@@ -12912,6 +12982,18 @@ document.addEventListener('focusin', event => {
 window.addEventListener('resize', viewportResized);
 visualViewport?.addEventListener('resize', viewportResized);
 visualViewport?.addEventListener('scroll', updateVisibleArea);
+
+// iOS Safari 允许忽略 viewport 的缩放限制。只拦多指手势，保留单指滚动和大样按钮。
+for (const type of ['gesturestart', 'gesturechange', 'gestureend']) {
+  document.addEventListener(type, event => {
+    if (event.cancelable) event.preventDefault();
+  }, {passive:false});
+}
+for (const type of ['touchstart', 'touchmove']) {
+  document.addEventListener(type, event => {
+    if (event.touches.length > 1 && event.cancelable) event.preventDefault();
+  }, {passive:false});
+}
 
 render();
 if (pendingVolume) app.textContent = '正在翻开合订本……';

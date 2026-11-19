@@ -97,6 +97,11 @@ function statusChip(state) {
   return '<span class="chip chip-' + state + '">' + MAP_STATE_LABELS[state] + '</span>';
 }
 
+function channelStatsList(labels, values) {
+  return '<dl class="channel-stats">' + labels.map((label, index) =>
+    '<div><dt>' + label + '</dt><dd>' + values[index] + '</dd></div>').join('') + '</dl>';
+}
+
 function channelsTableView() {
   const editable = game.phase === 'desk';
   const cash = cashOf(game);
@@ -107,7 +112,8 @@ function channelsTableView() {
   const order = {active:0, paused:1, available:2, remote:3, captured:4, locked:5};
   const rows = [...outlets].sort((a, b) => order[channelMapState(game, a)] - order[channelMapState(game, b)]);
   const totals = {cap:0, planned:0, sold:0, printed:0, revenue:0, fee:0};
-  const body = rows.map(channel => {
+  const labels = ['容量', '本期拟送', '上期实售', '售出率', '售罄', '上期报款', '配送费', '代售/份', '读者偏好'];
+  const entries = rows.map(channel => {
     const state = channelMapState(game, channel);
     const active = state === 'active';
     const stand = lastStand(game, channel.id);
@@ -133,15 +139,24 @@ function channelsTableView() {
         '" data-action="priority" data-id="' + channel.id + '"' + (editable ? '' : ' disabled') + '>' + (focus ? '重点中' : '重点') + '</button>' : '') +
       '<button type="button" class="' + (state === 'available' ? 'issue' : 'soft') + '" data-action="channel" data-id="' + channel.id + '"' +
       (disabled ? ' disabled' : '') + '>' + (active ? '暂停' : state === 'paused' ? '恢复' : '开拓 ' + money(channelSetupCost(game, channel))) + '</button>';
-    return '<tr class="row-' + state + '"><th scope="row"><b>' + h(channel.name) + '</b><small>' + h(CITY_MAP.nodes[channel.id]?.district || '') +
-      '</small></th><td>' + (game.issueCount === 156 && game.unlocked.includes(channel.id) ? '<span class="chip">' + FEEDBACK_CONFIG.network.names[channelGrade(game,channel.id)-1] + '</span>' : '') + statusChip(state) + (rivalOutlets.includes(channel.id) && state !== 'captured' ? '<span class="chip chip-rival">对手同点</span>' : '') +
-      '</td><td class="num">' + number(channel.cap) + '</td><td class="num">' + (active ? number(plan) : '—') +
-      '</td><td class="num">' + (stand ? number(sold) : '—') + '</td><td class="num rate">' +
-      (rate == null ? '—' : '<span class="ratebar"><i style="width:' + (rate * 100).toFixed(0) + '%"></i></span>' + (rate * 100).toFixed(0) + '%') +
-      '</td><td class="num">' + (stand?.time || '—') + '</td><td class="num">' + (stand ? money(revenue) : '—') +
-      '</td><td class="num">' + money(channel.fee) + '</td><td class="num">' + money(channel.commission) + '</td><td class="topics">' + h(topics) +
-      '</td><td class="actions">' + action + upgradeButton(game, channel.id) + '</td></tr>';
-  }).join('');
+    const name = h(channel.name);
+    const district = h(CITY_MAP.nodes[channel.id]?.district || '');
+    const badges = (game.issueCount === 156 && game.unlocked.includes(channel.id) ?
+      '<span class="chip">' + FEEDBACK_CONFIG.network.names[channelGrade(game,channel.id)-1] + '</span>' : '') +
+      statusChip(state) + (rivalOutlets.includes(channel.id) && state !== 'captured' ? '<span class="chip chip-rival">对手同点</span>' : '');
+    const values = [number(channel.cap), active ? number(plan) : '—', stand ? number(sold) : '—',
+      rate == null ? '—' : '<span class="ratebar"><i style="width:' + (rate * 100).toFixed(0) + '%"></i></span>' + (rate * 100).toFixed(0) + '%',
+      h(stand?.time || '—'), stand ? money(revenue) : '—', money(channel.fee), money(channel.commission), h(topics)];
+    const controls = '<div class="channel-actions">' + action + upgradeButton(game, channel.id) + '</div>';
+    const row = '<tr class="row-' + state + '"><th scope="row"><b>' + name + '</b><small>' + district + '</small></th><td>' + badges + '</td>' +
+      values.map((value, index) => '<td class="' + (index === labels.length - 1 ? 'topics' : 'num') + '">' + value + '</td>').join('') +
+      '<td>' + controls + '</td></tr>';
+    const card = '<article class="channel-card row-' + state + '" aria-labelledby="outlet-' + channel.id + '"><header><div>' +
+      '<h3 id="outlet-' + channel.id + '">' + name + '</h3><small>' + district + '</small></div><div class="channel-badges">' + badges + '</div></header>' +
+      controls + channelStatsList(labels.slice(0, 3), values.slice(0, 3)) +
+      '<details><summary>更多统计</summary>' + channelStatsList(labels.slice(3), values.slice(3)) + '</details></article>';
+    return {row, card};
+  });
   const sellThrough = totals.printed ? (totals.sold * 100 / totals.printed).toFixed(1) + '%' : '—';
   return pageHeader('发行经营', newspaperName(game)) +
     '<dl class="metric-row"><div><dt>在营网点</dt><dd>' + game.active.length + ' / ' + channelLimit(game) + '</dd></div>' +
@@ -149,14 +164,15 @@ function channelsTableView() {
     ' 份</dd></div><div><dt>上期售出率</dt><dd>' + sellThrough + '</dd></div><div><dt>上期报款</dt><dd>' + money(totals.revenue) +
     ' 元</dd></div><div><dt>每期配送费</dt><dd>' + money(totals.fee) + ' 元</dd></div><div><dt>重点配送</dt><dd>' +
     h(game.priority ? channelById(game.priority).name : '未设') + '</dd></div></dl>' +
-    '<section class="panel table-panel"><header class="panel-heading"><h2>网点台账</h2><p>' +
+    '<section class="panel table-panel channel-ledger"><header class="panel-heading"><h2>网点台账</h2><p>' +
     (editable ? '采编期间可调整网点；' : '下期采编开始后可调整；') + '地图上也能直接操作 <button type="button" class="link-button" data-view="influence">打开地图</button></p></header>' +
-    '<div class="table-scroll"><table class="grid-table"><thead><tr><th scope="col">网点</th><th scope="col">状态</th><th scope="col" class="num">容量</th>' +
-    '<th scope="col" class="num">本期拟送</th><th scope="col" class="num">上期实售</th><th scope="col" class="num">售出率</th><th scope="col" class="num">售罄</th>' +
-    '<th scope="col" class="num">上期报款</th><th scope="col" class="num">配送费</th><th scope="col" class="num">代售/份</th><th scope="col">读者偏好</th>' +
-    '<th scope="col">操作</th></tr></thead><tbody>' + body + '</tbody><tfoot><tr><th scope="row">合计</th><td></td><td class="num">' + number(totals.cap) +
+    '<div class="table-scroll channel-ledger-table"><table class="grid-table"><thead><tr><th scope="col">网点</th><th scope="col">状态</th>' +
+    labels.map((label, index) => '<th scope="col"' + (index < labels.length - 1 ? ' class="num"' : '') + '>' + label + '</th>').join('') +
+    '<th scope="col">操作</th></tr></thead><tbody>' + entries.map(entry => entry.row).join('') + '</tbody><tfoot><tr><th scope="row">合计</th><td></td><td class="num">' + number(totals.cap) +
     '</td><td class="num">' + number(totals.planned) + '</td><td class="num">' + number(totals.sold) + '</td><td class="num">' + sellThrough +
-    '</td><td></td><td class="num">' + money(totals.revenue) + '</td><td class="num">' + money(totals.fee) + '</td><td colspan="3"></td></tr></tfoot></table></div></section>';
+    '</td><td></td><td class="num">' + money(totals.revenue) + '</td><td class="num">' + money(totals.fee) + '</td><td colspan="3"></td></tr></tfoot></table></div>' +
+    '<div class="channel-cards">' + entries.map(entry => entry.card).join('') +
+    '<p class="channel-total">上期网点合计实售 <strong>' + number(totals.sold) + '</strong> 份</p></div></section>';
 }
 
 function staffTableView() {

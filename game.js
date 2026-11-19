@@ -663,9 +663,11 @@ function layoutOptions(story) {
     const forecast = !available ? '先给头条配一张照片' : id === 'balanced' ? '销量基准' :
       '本稿需求约 ' + (change >= 0 ? '+' : '−') + Math.abs(change) + '%';
     return '<button type="button" class="layout-option" data-action="choose-layout" data-id="' + id +
-      '" aria-pressed="' + (game.layout === id) + '"' + (available ? '' : ' disabled') + '><div>' +
-      '<strong>' + h(layout.label) + '</strong><span>' + h(forecast) + '</span></div><p>' +
-      h(LAYOUT_NOTES[id]) + '</p></button>';
+      '" aria-pressed="' + (game.layout === id) + '"' + (available ? '' : ' disabled') + '>' +
+      '<span class="layout-preview" aria-hidden="true"><i class="preview-mast"></i><i class="preview-headline"></i>' +
+      '<i class="preview-photo"></i><i class="preview-copy"></i><i class="preview-side">' +
+      (id === 'banner' ? '广告' : '') + '</i></span><span class="layout-text"><strong>' + h(layout.label) + '</strong>' +
+      '<span class="layout-forecast">' + h(forecast) + '</span><span class="layout-note">' + h(LAYOUT_NOTES[id]) + '</span></span></button>';
   }).join('') + '</div>';
 }
 
@@ -1078,6 +1080,7 @@ function render() {
   }
   if (game.phase === 'desk' && deskStage === 'print' && !readyForProof()) deskStage = firstDeskStage();
   mastheadName.textContent = newspaperName(game);
+  mastheadName.title = mastheadName.textContent;
   mastheadIssue.textContent = game.phase === 'complete' ? currentYear(game) + ' 年 · 年终特刊' : currentYear(game) + ' 年 · 第 ' +
     (game.week + 1) + ' / ' + campaignIssueCount(game) + ' 期';
   document.documentElement.style.setProperty('--paper-stock', paperStock(game.paperStock).color);
@@ -1862,6 +1865,18 @@ document.addEventListener('focusin', event => {
 window.addEventListener('resize', viewportResized);
 visualViewport?.addEventListener('resize', viewportResized);
 visualViewport?.addEventListener('scroll', updateVisibleArea);
+
+// iOS Safari 允许忽略 viewport 的缩放限制。只拦多指手势，保留单指滚动和大样按钮。
+for (const type of ['gesturestart', 'gesturechange', 'gestureend']) {
+  document.addEventListener(type, event => {
+    if (event.cancelable) event.preventDefault();
+  }, {passive:false});
+}
+for (const type of ['touchstart', 'touchmove']) {
+  document.addEventListener(type, event => {
+    if (event.touches.length > 1 && event.cancelable) event.preventDefault();
+  }, {passive:false});
+}
 
 render();
 if (pendingVolume) app.textContent = '正在翻开合订本……';
