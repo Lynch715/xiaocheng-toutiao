@@ -569,14 +569,23 @@ function buyEquipment(campaign) {
   return withEntries({...campaign,equipment:level + 1}, [{label:'设备 · ' + item.name,cents:-item.cost}]);
 }
 
+const EQUIPMENT_EFFECTS = FEEDBACK_CONFIG.equipment.items.reduce((levels, item) => {
+  levels.push({...levels.at(-1), ...item.effects});
+  return levels;
+}, [{}]);
+
+function equipmentEffects(owner) {
+  return EQUIPMENT_EFFECTS[owner.equipment ?? 0] ?? EQUIPMENT_EFFECTS[0];
+}
+
 function equipmentPrintLimit(campaign) {
-  return campaign.equipment === FEEDBACK_CONFIG.equipment.items.length ? FEEDBACK_CONFIG.equipment.maxCopies : MAX_PRINT;
+  return equipmentEffects(campaign).maxCopies ?? MAX_PRINT;
 }
 function equipmentBatches(edition) {
-  return edition.equipment === FEEDBACK_CONFIG.equipment.items.length ? FEEDBACK_CONFIG.equipment.reprintBatches : REPRINT_BATCHES;
+  return equipmentEffects(edition).reprintBatches ?? REPRINT_BATCHES;
 }
 function equipmentPhotoBonus(campaign, layout) {
-  return layout === 'photo' ? FEEDBACK_CONFIG.equipment.photoBonus[campaign.equipment || 0] : 0;
+  return layout === 'photo' ? equipmentEffects(campaign).photoBonus ?? 0 : 0;
 }
 
 function specialEventFor(campaign) {

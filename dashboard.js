@@ -178,30 +178,33 @@ function channelsTableView() {
 function staffTableView() {
   const ready = availableReporters(game).map(reporter => reporter.id);
   const cash = cashOf(game);
-  const editable = game.phase === 'desk';
+  const remaining = Math.max(0, staffLimit(game) - game.staff.length);
+  const phaseNote = game.phase === 'desk' ? '可调整' : game.phase === 'complete' ? '本局已结账' : '等下期采编';
   const salary = reporter => reporterSalary(game, reporter);
   const payroll = REPORTERS.filter(reporter => game.staff.includes(reporter.id)).reduce((sum, reporter) => sum + salary(reporter), 0);
   const row = reporter => {
     const career = reporterCareer(game, reporter.id);
-    const present = game.staff.includes(reporter.id);
-    const cost = present ? Math.ceil(salary(reporter) / 2) : reporter.hire;
+    const {hiring, cost, reason} = staffChangeTerms(game, reporter);
+    const present = !hiring;
     const trip = game.trips.find(item => item.reporter === reporter.id);
-    const disabled = !editable || cash < cost || (present ? game.staff.length <= 1 || trip : game.staff.length >= staffLimit(game));
-    const status = !present ? '可招聘' : game.newsLibrary ? '在岗' : ready.includes(reporter.id) ? '可出勤' : clockText(trip.at) + ' 回电';
+    const explanation = reason === 'cash' ? '现金不足，还差 ' + money(cost - cash) + ' 元' :
+      {next:'等下期采编', complete:'本局已结账', full:'已满员', last:'至少留一名记者', trip:'采访结束后可调整'}[reason];
+    const status = hiring ? '候选' : game.newsLibrary ? '在岗' : ready.includes(reporter.id) ? '可出勤' : clockText(trip.at) + ' 回电';
     return '<tr class="' + (present ? 'row-active' : '') + '"><th scope="row"><b>' + h(reporter.name) + '</b><small>' + h(reporter.style) +
       '</small>' + (game.issueCount === 156 && (present || career.xp) ? '<div class="career"><span>' + h(career.title || '见习记者') +
-        ' · ' + career.xp + ' 经验</span><progress aria-label="晋级进度" max="' + (career.needed || 1) + '" value="' + (career.needed ? career.progress : 1) + '"></progress></div>' : '') + '</th><td><span class="chip ' + (present ? 'chip-active' : 'chip-paused') + '">' + h(status) + '</span></td><td>' +
+        ' · ' + career.xp + ' 经验</span><progress aria-label="晋级进度" max="' + (career.needed || 1) + '" value="' + (career.needed ? career.progress : 1) + '"></progress></div>' : '') + '</th><td><span class="chip ' + (present ? 'chip-active' : 'chip-paused') + '">' + h(status) + '</span>' +
+      (reason ? '<small class="staff-action-note" id="staff-note-' + reporter.id + '">' + h(explanation) + '</small>' : '') + '</td><td>' +
       h(reporter.specialties.join(' ')) + '</td><td>' + pips(career.reach) + '</td><td>' + pips(career.verify) + '</td><td>' +
       pips(career.write) + '</td><td class="num">' + money(salary(reporter)) + '</td><td class="num">' + money(cost) +
       '</td><td class="actions"><button type="button" class="soft" data-action="' + (present ? 'fire' : 'hire') + '" data-id="' + reporter.id + '"' +
-      (disabled ? ' disabled' : '') + '>' + (present ? '解聘' : '招聘') + '</button></td></tr>';
+      (reason ? ' disabled aria-describedby="staff-note-' + reporter.id + '"' : '') + '>' + (present ? '解聘' : '招聘') + '</button></td></tr>';
   };
   const staffed = REPORTERS.filter(reporter => game.staff.includes(reporter.id));
   const others = REPORTERS.filter(reporter => !game.staff.includes(reporter.id));
   return pageHeader('记者部', newspaperName(game)) +
     '<dl class="metric-row"><div><dt>在岗</dt><dd>' + game.staff.length + ' / ' + staffLimit(game) + '</dd></div><div><dt>周薪合计</dt><dd>' +
-    money(payroll) + ' 元</dd></div><div><dt>可招聘</dt><dd>' + others.length + ' 人</dd></div><div><dt>人员调整</dt><dd>' +
-    (editable ? '可调整' : '下期采编开始后') + '</dd></div></dl>' +
+    money(payroll) + ' 元</dd></div><div><dt>剩余招聘名额</dt><dd>' + remaining + ' 人</dd></div><div><dt>人员调整</dt><dd>' +
+    phaseNote + '</dd></div></dl>' +
     '<section class="panel table-panel"><header class="panel-heading"><h2>记者名册</h2><p>解聘结算半周薪，招聘一次性付费</p></header>' +
     '<div class="table-scroll"><table class="grid-table"><thead><tr><th scope="col">记者</th><th scope="col">状态</th><th scope="col">专长</th>' +
     '<th scope="col">跑线</th><th scope="col">核实</th><th scope="col">写稿</th><th scope="col" class="num">周薪</th><th scope="col" class="num">费用</th>' +

@@ -42,15 +42,32 @@ function upgradeButton(campaign, id) {
 }
 
 function equipmentPanel(campaign) {
-  if (campaign.issueCount !== 156) return '';
+  if (!roundEnabled(campaign)) return '';
   const stage = campaign.equipment || 0;
-  const descriptions = ['头版套印红色报头，图片版更抢眼。','照片可用彩色印刷，图片版更受欢迎。','提高首印上限，补送可接更大的印单。'];
+  const items = FEEDBACK_CONFIG.equipment.items;
+  const budget = cashOf(campaign) - minimumViablePressCost(campaign);
   return '<section class="panel"><header class="panel-heading"><h2>印厂设备</h2><p>已置办 ' + stage +
-    ' / 3 件</p></header><ol class="equipment-list">' + FEEDBACK_CONFIG.equipment.items.map((item,i) =>
-      '<li><div><b>' + h(item.name) + '</b><small>' + descriptions[i] + '</small></div>' +
-      (i < stage ? '<span class="chip chip-active">已置办</span>' : '<button class="soft" data-action="buy-equipment" type="button"' +
-        (campaign.phase !== 'desk' || i !== stage || cashOf(campaign) < item.cost + minimumViablePressCost(campaign) ? ' disabled' : '') + '>' +
-        (i > stage ? '先置办上一件' : '置办') + ' · ' + money(item.cost) + ' 元</button>') + '</li>').join('') + '</ol></section>';
+    ' / ' + items.length + ' 件</p></header><ol class="equipment-list">' + items.map((item,i) => {
+      const control = i < stage ? '<span class="chip chip-active">已置办</span>' : i > stage ? '<small>待安装 · ' + money(item.cost) + ' 元</small>' :
+        '<button class="soft" data-action="buy-equipment" type="button"' + (campaign.phase !== 'desk' || budget < item.cost ? ' disabled' : '') +
+          '>置办 · ' + money(item.cost) + ' 元</button>';
+      const note = i === stage && campaign.phase === 'desk' && budget < item.cost ?
+        '<small>预留开印资金后还差 ' + money(item.cost - budget) + ' 元</small>' : '';
+      return '<li><div><b>' + h(item.name) + '</b><small>' + h(item.description) + '</small>' + note + '</div>' + control + '</li>';
+    }).join('') + '</ol></section>';
+}
+
+function certificateButton(year, label = '查看奖状') {
+  return '<button type="button" class="soft accent" data-action="open-certificate" data-id="' + year + '" aria-haspopup="dialog">' + label + '</button>';
+}
+
+function certificateMarkup({year, date, issue, title, paperName, editorName}) {
+  return '<article class="award-certificate"><p class="certificate-year">' + year + ' 年度省好新闻奖</p>' +
+    '<h3>获奖证书</h3><p class="certificate-recipient">《' + h(paperName) + '》编辑部</p>' +
+    '<p>贵报刊发的报道</p><p class="certificate-work">《' + h(title) + '》</p><p>荣获省好新闻奖，特颁此证。</p>' +
+    '<p class="certificate-credit">总第 ' + ordinal(issue) + ' 期' + (editorName ? ' · 总编辑 ' + h(editorName) : '') + '</p>' +
+    '<footer><div><strong>省好新闻奖评审委员会</strong><br><time datetime="' + date + '">' + chinesePaperDate(date).split('　')[0] +
+    '</time></div><span class="certificate-seal" aria-hidden="true">省奖<br>评审</span></footer></article>';
 }
 
 function issueHighlights(edition) {

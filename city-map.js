@@ -400,6 +400,13 @@ function mapScaleFor(level) {
   return level >= 3 ? 'nation' : level >= 2 ? 'province' : 'city';
 }
 
+const MAP_LEGENDS = {
+  city:[['own','本报覆盖'],['rival','对手覆盖'],['contested-hex','争夺街区'],['frontier','可扩张边缘'],
+    ['active','在营网点'],['available','可开拓'],['remote','未连通'],['locked','未解锁']],
+  province:[['own','整县覆盖'],['readers','已有读者'],['unreached','未覆盖']],
+  nation:[['own','本省'],['readers','已有读者'],['unreached','未覆盖'],['rail','铁路干线']]
+};
+
 function influenceView() {
   const data = reportData(game);
   const levels = FEEDBACK_CONFIG.influence.levels;
@@ -418,12 +425,13 @@ function influenceView() {
   const tabs = [['city', '城区', 0], ['province', '全省', 1], ['nation', '全国', 2]].map(([key, label, needed]) =>
     '<button type="button" class="soft' + (scale === key ? ' accent' : '') + '" aria-pressed="' + (scale === key) +
     '" data-action="map-scale" data-id="' + key + '">' + label + (level < needed ? ' · 未到' : '') + '</button>').join('');
-  const body = scale === 'province' ? '<div class="city-map-layout"><div class="map-scroll">' + provinceMapMarkup(game) + '</div>' + provinceTable(game) + '</div>' :
-    scale === 'nation' ? '<div class="city-map-layout"><div class="map-scroll">' + nationMapMarkup(game) + '</div>' + nationTable(game) + '</div>' :
-    '<div class="city-map-layout"><div class="map-scroll">' + cityMapMarkup(game, mapSelection) + '</div>' + mapChannelCard(game, mapSelection) + '</div>' +
-    '<p class="map-card-note">城区只计可配送街区。暂停网点会收回它的覆盖圈，其他在营网点继续送报。</p><p class="map-legend"><span class="key-own">本报覆盖</span><span class="key-rival">对手覆盖</span><span class="key-contested-hex">争夺街区</span>' +
-    '<span class="key-frontier">可扩张边缘</span><span class="key-active">在营网点</span><span class="key-available">可开拓</span>' +
-    '<span class="key-remote">未连通</span><span class="key-locked">未解锁</span></p>';
+  const legend = '<div class="map-legend" role="group" aria-label="地图图例">' + MAP_LEGENDS[scale].map(([key, label]) =>
+    '<span class="key-' + key + '">' + label + '</span>').join('') + '</div>';
+  const markup = scale === 'province' ? provinceMapMarkup(game) : scale === 'nation' ? nationMapMarkup(game) : cityMapMarkup(game, mapSelection);
+  const card = scale === 'province' ? provinceTable(game) : scale === 'nation' ? nationTable(game) : mapChannelCard(game, mapSelection);
+  const body = '<div class="city-map-layout"><div class="map-figure">' + legend +
+    '<div class="map-scroll" tabindex="0" role="region" aria-label="地图画面">' + markup + '</div></div>' + card + '</div>' +
+    (scale === 'city' ? '<p class="map-card-note">城区只计可配送街区。暂停网点会收回它的覆盖圈，其他在营网点继续送报。</p>' : '');
   return pageHeader('发行地图', newspaperName(game) + ' · ' + game.city + ' · ' + levels[level][0]) +
     '<dl class="metric-row"><div><dt>影响力</dt><dd>' + h(levels[level][0]) + ' ' + number(data.influence.points) + '</dd></div>' +
     '<div><dt>在营网点</dt><dd>' + game.active.length + ' / ' + channelLimit(game) + '</dd></div>' +

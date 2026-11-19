@@ -115,8 +115,16 @@ Object.assign(FEEDBACK_CONFIG, {
     // 按省图由近及远，77格中的第65格进入最远的石门县。
     provinceTiles:77,ninthCountyTile:65},
   // 设备只买一次，按印厂安装顺序开放。金额单位为分。
-  equipment:{items:[{name:'套红报头',cost:46000},{name:'彩色头版图片',cost:87000},{name:'扩印设备',cost:160000}],
-    photoBonus:[0,.015,.035,.035], maxCopies:24000,reprintBatches:[0,250,500,1000,1500,2000]},
+  equipment:{items:[
+    {name:'套红报头',cost:46000,description:'头版套印红色报头，图片版更抢眼。',effects:{photoBonus:.015}},
+    {name:'彩色头版图片',cost:87000,description:'照片可用彩色印刷，图片版更受欢迎。',effects:{photoBonus:.035}},
+    {name:'扩印设备',cost:160000,description:'首印上限升至 24,000 份，可接 1,500 和 2,000 份补印单。',
+      effects:{maxCopies:24000,reprintBatches:[0,250,500,1000,1500,2000]}},
+    {name:'省纸输纸装置',cost:380000,description:'每份正刊首印节省 2 分钱。',effects:{paperSaving:2}},
+    {name:'高速补印线',cost:620000,description:'单个网点可再接 2,500 和 3,000 份的补印单，仍受余货容量限制。',
+      effects:{reprintBatches:[0,250,500,1000,1500,2000,2500,3000]}},
+    {name:'轮转胶印机',cost:980000,description:'首印上限升至 30,000 份；每份正刊首印共省 3 分钱。',effects:{maxCopies:30000,paperSaving:3}}
+  ]},
   // 经验随刊用、专长、转载和积极后续累积。每次升一级添一点能力，单项最高五点。
   career:{publication:3,specialty:2,syndication:2,followup:3,thresholds:[35,115,250,480,780,1050],
     writeScore:1,verifyScore:1,reachReprint:.008,

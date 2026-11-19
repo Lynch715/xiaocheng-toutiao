@@ -2,6 +2,7 @@ const app = document.getElementById('app');
 const announcer = document.getElementById('announcer');
 const paperDialog = document.getElementById('paper-dialog');
 const achievementsDialog = document.getElementById('achievements-dialog');
+const certificateDialog = document.getElementById('certificate-dialog');
 const pointsTotal = document.getElementById('points-total');
 const achievementContent = document.getElementById('achievement-content');
 const paperViewport = document.getElementById('paper-viewport');
@@ -998,6 +999,7 @@ function annualSummaryView(selectedYear = null) {
       '"></canvas><figcaption>第 ' + best.issue + ' 期 · 实售 ' + number(best.sold) + ' 份<br><strong>' +
       h(best.title) + '</strong></figcaption></figure>' : '<p>合订本暂无已签发的报纸。</p>') + '</section>' +
     '<section class="year-honors"><h2>获奖与成就</h2><h3>省好新闻奖</h3>' + list(awardLines) +
+    (awardCertificate(game, year) ? certificateButton(year) : '') +
     '<h3>报社成就</h3>' + list(achievementNames) + '</section></div>' + annualFeedback.html + (last ? weeklyFeedbackView(last) : '') + '<footer class="year-imprint"><span>' +
     h(newspaperName(game)) + '编辑部</span>' + (game.editorName ? '<span>总编辑 ' + h(game.editorName) + '</span>' : '') +
     '</footer></article>';
@@ -1131,9 +1133,12 @@ function renderAchievements() {
   pointsTotal.textContent = number(total) + ' 分';
   if (!achievementsDialog.open) return;
   const earned = achievements.filter(achievement => achievement.earned).length;
+  const certificates = annualYears(game).map(year => awardCertificate(game, year)).filter(Boolean);
+  const awards = certificates.length ? '<section class="certificate-shelf"><h3>获奖证书</h3>' + certificates.map(({year}) =>
+    certificateButton(year, year + ' 年省奖奖状')).join('') + '</section>' : '';
   achievementContent.innerHTML = '<div class="achievement-total"><strong>' + number(total) +
     ' 分</strong><p>签发 ' + number(pressPoints) + ' · 实售 ' + number(salePoints) + ' · 成就 ' + number(awardPoints) + '</p>' +
-    '<p>每签发一期得 10 分，累计实售每满 1,000 份得 1 分，每项成就只计一次。</p></div>' +
+    '<p>每签发一期得 10 分，累计实售每满 1,000 份得 1 分，每项成就只计一次。</p></div>' + awards +
     '<p class="achievement-count">已达成 ' + earned + ' / ' + achievements.length + '</p><ul class="achievement-list">' +
     achievements.map(({name, description, reward, earned}) => '<li' + (earned ? ' class="earned"' : '') +
       '><div><strong>' + h(name) + '</strong><p>' + h(description) + '</p></div><span>' +
@@ -1726,6 +1731,15 @@ document.addEventListener('click', event => {
       renderAchievements();
       break;
     case 'close-achievements': achievementsDialog.close(); break;
+    case 'open-certificate': {
+      const certificate = awardCertificate(game, Number(id));
+      if (certificate && !certificateDialog.open) {
+        document.getElementById('certificate-content').innerHTML = certificateMarkup(certificate);
+        certificateDialog.showModal();
+      }
+      break;
+    }
+    case 'close-certificate': certificateDialog.close(); break;
     case 'accept-quote': {
       const next = acceptAdvertiserQuote(game, Number(issue));
       if (next && commit(next)) announce('已预留下期广告版位，见报后结款。');

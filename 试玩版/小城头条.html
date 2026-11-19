@@ -236,7 +236,22 @@ button:disabled { cursor: default; opacity: .52; }
 #paper-dialog[open] { display: flex; flex-direction: column; }
 #achievements-dialog { width: min(490px, calc(100% - 24px)); max-height: calc(100dvh - var(--dialog-top) - var(--dialog-bottom)); padding: 0; border: 1px solid var(--line); background: var(--sheet); color: var(--ink); }
 #achievements-dialog[open] { display: flex; flex-direction: column; }
-.achievement-content { min-height: 0; overflow: auto; overscroll-behavior: contain; }
+.achievement-content, .certificate-content { min-height: 0; overflow: auto; overscroll-behavior: contain; }
+#certificate-dialog { width: min(640px, calc(100% - 22px)); max-height: calc(100dvh - var(--dialog-top) - var(--dialog-bottom)); padding: 0; border: 1px solid var(--line); background: var(--sheet); color: var(--ink); }
+#certificate-dialog[open] { display: flex; flex-direction: column; }
+.certificate-content { padding: clamp(9px, 3vw, 20px); background: #e6e0d5; }
+.award-certificate { display: grid; gap: 7px; padding: clamp(13px, 4vw, 30px); border: 5px double #96744a; background: #faf3e1; color: #382b1f; text-align: center; font: 14px/1.55 var(--serif); overflow-wrap: anywhere; }
+.certificate-year { color: #805e38; font: 700 13px/1.4 var(--sans); }
+.award-certificate h3 { margin-bottom: 7px; color: #913329; font: 800 clamp(30px, 7vw, 48px)/1.25 var(--serif); letter-spacing: .11em; }
+.certificate-recipient, .certificate-work { font-weight: 750; }
+.certificate-recipient { font-size: 16px; }
+.certificate-work { padding-block: 4px; font-size: clamp(17px, 4vw, 23px); }
+.certificate-credit { color: #6e5440; font-size: 12px; }
+.award-certificate footer { display: flex; align-items: center; justify-content: flex-end; gap: 12px; margin-top: 8px; text-align: right; color: #6e5440; font-size: 12px; }
+.certificate-seal { display: grid; place-content: center; flex: 0 0 43px; height: 43px; border: 3px double #9d3d32; color: #9d3d32; text-align: center; font: 750 12px/1.15 var(--serif); transform: rotate(-6deg); }
+.certificate-shelf { display: flex; flex-wrap: wrap; gap: 6px; padding: 10px 16px; border-bottom: 1px solid var(--line); }
+.certificate-shelf h3 { width: 100%; font-size: 14px; }
+.year-honors [data-action="open-certificate"] { margin-block: 5px 8px; }
 .achievement-total { padding: 12px 16px 14px; background: #e4e9ed; border-bottom: 1px solid var(--line); }
 .achievement-total > strong { color: var(--red-dark); font: 750 29px/1.2 var(--serif); }
 .achievement-total p, .achievement-list p { color: var(--muted); font-size: 13px; margin-top: 3px; }
@@ -667,7 +682,9 @@ span.map-pin { cursor: default; }
 .map-interests li { display: grid; align-items: center; gap: 8px; font-size: 13px; }
 .map-interests meter { width: 100%; height: 9px; }
 .map-card .report-buttons { display: flex; flex-wrap: wrap; gap: 6px; }
-.map-legend { display: flex; flex-wrap: wrap; gap: 6px 16px; margin: 10px 0 2px; font-size: 12.5px; color: var(--muted); }
+.map-figure { min-width: 0; }
+.map-legend { display: flex; flex-wrap: wrap; gap: 4px 12px; margin-bottom: 8px; padding: 6px 8px; border: 1px solid var(--line); background: var(--sheet-2); font-size: 12px; color: var(--muted); }
+.map-legend span { white-space: nowrap; }
 .map-legend span::before { content: ''; display: inline-block; width: 11px; height: 11px; border-radius: 50%; margin-right: 5px; vertical-align: -1px; }
 .map-legend .key-active::before { background: #50705a; }
 .map-legend .key-available::before { border: 2px dashed var(--red-dark); width: 7px; height: 7px; }
@@ -1087,6 +1104,9 @@ progress { accent-color: var(--accent); }
 .map-interests li { grid-template-columns: 38px 1fr 34px; }
 .map-interests b { font: 600 12px var(--num); text-align: right; }
 .map-legend .key-own::before { background: #8fbf9d; border-radius: 0; }
+.map-legend .key-readers::before { background: #c3dcc9; border-radius: 0; }
+.map-legend .key-unreached::before { background: #e1e5e8; border: 1px solid #aab4be; border-radius: 0; }
+.map-legend .key-rail::before { height: 0; border-top: 2px dashed #8f9ba4; border-radius: 0; vertical-align: 3px; }
 .map-legend .key-rival::before { background: #efc9c3; border-radius: 0; }
 .map-legend .key-contested-hex::before { background: repeating-linear-gradient(45deg, #c3dcc9 0 3px, #d9887c 3px 5px); border-radius: 0; }
 .map-legend .key-frontier::before { border: 1.5px dashed #6c96b8; border-radius: 0; width: 8px; height: 8px; }
@@ -1140,6 +1160,7 @@ progress { accent-color: var(--accent); }
 .year-timeline b { display:inline-block; min-width:4.8em; }
 .career { padding-top:4px; font-weight:500; }
 .career progress { max-width:140px; }
+.staff-action-note { display: block; margin-top: 3px; color: var(--down); font-size: 11.5px; }
 @media (max-width:720px) {
   .desk-layout, .finance-grid, .data-board, .city-map-layout { grid-template-columns:minmax(0,1fr); }
   .desk-flow, .desk-rail, .map-panel, .finance-side, .data-board > section, .table-panel { min-width:0; }
@@ -1202,6 +1223,13 @@ progress { accent-color: var(--accent); }
     <button type="button" data-action="close-achievements" autofocus>关闭</button>
   </header>
   <div id="achievement-content" class="achievement-content"></div>
+</dialog>
+<dialog id="certificate-dialog" aria-labelledby="certificate-title">
+  <header class="dialog-head">
+    <h2 id="certificate-title">获奖证书</h2>
+    <button type="button" data-action="close-certificate" autofocus>关闭</button>
+  </header>
+  <div id="certificate-content" class="certificate-content"></div>
 </dialog>
 <dialog id="resume-dialog" aria-labelledby="resume-title">
   <div class="restart-form">
@@ -6541,8 +6569,16 @@ Object.assign(FEEDBACK_CONFIG, {
     // 按省图由近及远，77格中的第65格进入最远的石门县。
     provinceTiles:77,ninthCountyTile:65},
   // 设备只买一次，按印厂安装顺序开放。金额单位为分。
-  equipment:{items:[{name:'套红报头',cost:46000},{name:'彩色头版图片',cost:87000},{name:'扩印设备',cost:160000}],
-    photoBonus:[0,.015,.035,.035], maxCopies:24000,reprintBatches:[0,250,500,1000,1500,2000]},
+  equipment:{items:[
+    {name:'套红报头',cost:46000,description:'头版套印红色报头，图片版更抢眼。',effects:{photoBonus:.015}},
+    {name:'彩色头版图片',cost:87000,description:'照片可用彩色印刷，图片版更受欢迎。',effects:{photoBonus:.035}},
+    {name:'扩印设备',cost:160000,description:'首印上限升至 24,000 份，可接 1,500 和 2,000 份补印单。',
+      effects:{maxCopies:24000,reprintBatches:[0,250,500,1000,1500,2000]}},
+    {name:'省纸输纸装置',cost:380000,description:'每份正刊首印节省 2 分钱。',effects:{paperSaving:2}},
+    {name:'高速补印线',cost:620000,description:'单个网点可再接 2,500 和 3,000 份的补印单，仍受余货容量限制。',
+      effects:{reprintBatches:[0,250,500,1000,1500,2000,2500,3000]}},
+    {name:'轮转胶印机',cost:980000,description:'首印上限升至 30,000 份；每份正刊首印共省 3 分钱。',effects:{maxCopies:30000,paperSaving:3}}
+  ]},
   // 经验随刊用、专长、转载和积极后续累积。每次升一级添一点能力，单项最高五点。
   career:{publication:3,specialty:2,syndication:2,followup:3,thresholds:[35,115,250,480,780,1050],
     writeScore:1,verifyScore:1,reachReprint:.008,
@@ -7248,14 +7284,23 @@ function buyEquipment(campaign) {
   return withEntries({...campaign,equipment:level + 1}, [{label:'设备 · ' + item.name,cents:-item.cost}]);
 }
 
+const EQUIPMENT_EFFECTS = FEEDBACK_CONFIG.equipment.items.reduce((levels, item) => {
+  levels.push({...levels.at(-1), ...item.effects});
+  return levels;
+}, [{}]);
+
+function equipmentEffects(owner) {
+  return EQUIPMENT_EFFECTS[owner.equipment ?? 0] ?? EQUIPMENT_EFFECTS[0];
+}
+
 function equipmentPrintLimit(campaign) {
-  return campaign.equipment === FEEDBACK_CONFIG.equipment.items.length ? FEEDBACK_CONFIG.equipment.maxCopies : MAX_PRINT;
+  return equipmentEffects(campaign).maxCopies ?? MAX_PRINT;
 }
 function equipmentBatches(edition) {
-  return edition.equipment === FEEDBACK_CONFIG.equipment.items.length ? FEEDBACK_CONFIG.equipment.reprintBatches : REPRINT_BATCHES;
+  return equipmentEffects(edition).reprintBatches ?? REPRINT_BATCHES;
 }
 function equipmentPhotoBonus(campaign, layout) {
-  return layout === 'photo' ? FEEDBACK_CONFIG.equipment.photoBonus[campaign.equipment || 0] : 0;
+  return layout === 'photo' ? equipmentEffects(campaign).photoBonus ?? 0 : 0;
 }
 
 function specialEventFor(campaign) {
@@ -8238,16 +8283,25 @@ function reporterSalary(campaign, reporter) {
   return Math.round(reporter.salary * campaignPrices(campaign).salary);
 }
 
+function staffChangeTerms(campaign, reporter) {
+  const hiring = !campaign.staff.includes(reporter.id);
+  const cost = hiring ? reporter.hire : Math.ceil(reporterSalary(campaign, reporter) / 2);
+  let reason = null;
+  if (campaign.phase !== 'desk') reason = campaign.phase === 'complete' ? 'complete' : 'next';
+  else if (hiring && campaign.staff.length >= staffLimit(campaign)) reason = 'full';
+  else if (!hiring && campaign.staff.length <= 1) reason = 'last';
+  else if (!hiring && campaign.trips.some(trip => trip.reporter === reporter.id)) reason = 'trip';
+  else if (cashOf(campaign) < cost) reason = 'cash';
+  return {hiring, cost, reason};
+}
+
 function changeStaff(campaign, id, hiring) {
   const reporter = reporterById(id);
-  if (!reporter || campaign.phase !== 'desk') return null;
-  const present = campaign.staff.includes(id);
-  if (hiring ? present || campaign.staff.length >= staffLimit(campaign) : !present || campaign.staff.length <= 1) return null;
-  if (!hiring && campaign.trips.some(trip => trip.reporter === id)) return null;
-  const cost = hiring ? reporter.hire : Math.ceil(reporterSalary(campaign, reporter) / 2);
-  if (cashOf(campaign) < cost) return null;
+  if (!reporter) return null;
+  const terms = staffChangeTerms(campaign, reporter);
+  if (terms.hiring !== Boolean(hiring) || terms.reason) return null;
   const staff = hiring ? [...campaign.staff, id] : campaign.staff.filter(other => other !== id);
-  return withEntries({...campaign, staff}, [{label:(hiring ? '招聘费 · ' : '解聘结算 · ') + reporter.name, cents:-cost}]);
+  return withEntries({...campaign, staff}, [{label:(hiring ? '招聘费 · ' : '解聘结算 · ') + reporter.name, cents:-terms.cost}]);
 }
 
 function changeChannel(campaign, id) {
@@ -8282,7 +8336,8 @@ function fixedEntries(campaign, deliver) {
 }
 
 function pressQuote(campaign, copies) {
-  const expenses = [{label:'印刷费', cents:-copies * campaignPrices(campaign).paper}, ...fixedEntries(campaign, true)];
+  const paperCents = campaignPrices(campaign).paper - (equipmentEffects(campaign).paperSaving ?? 0);
+  const expenses = [{label:'印刷费', cents:-copies * paperCents}, ...fixedEntries(campaign, true)];
   return {expenses, total:expenses.reduce((total, row) => total - row.cents, 0)};
 }
 
@@ -8881,6 +8936,15 @@ function annualCampaign(campaign, year) {
     pressure:{...campaign.pressure, events, credibility:last.feedback?.trust ?? campaign.pressure.credibility}};
 }
 
+function awardCertificate(campaign, year) {
+  const closing = campaign.editions.find(edition => Number(edition.date.slice(0, 4)) === year && isAnnualIssue(campaign, edition.issue));
+  if (!closing) return null;
+  const awards = closing.feedback?.awards ?? annualAwardResults(annualCampaign(campaign, year));
+  const winner = awards.winner;
+  const edition = winner && campaign.editions.find(entry => entry.issue === winner.issue && Number(entry.date.slice(0, 4)) === year);
+  return edition ? {year, date:closing.date, issue:edition.issue, title:winner.title, paperName:edition.paperName, editorName:edition.editorName} : null;
+}
+
 function annualSummary(campaign) {
   const offset = (campaign.annualRange?.first || 1) - 1;
   const count = campaign.annualRange ? campaign.annualRange.last - offset :
@@ -8895,7 +8959,8 @@ function annualSummary(campaign) {
     if (!best || edition.sold > best.sold) best = edition;
     rivalSold += edition.feedback?.rival?.sold ?? edition.rival.stands.reduce((sum, stand) => sum + stand.sold, 0);
   }
-  return {curve, weights, best, rivalSold, ...annualAwardResults(campaign)};
+  const awards = campaign.editions.at(-1)?.feedback?.awards ?? annualAwardResults(campaign);
+  return {curve, weights, best, rivalSold, ...awards};
 }
 
 function annualTitle({ending, cash, sold, trust, adRate, level = null}) {
@@ -8947,6 +9012,8 @@ function nextIssue(campaign) {
 }
 
 function validEditionSales(edition, pendingAllowed) {
+  if (edition.equipment != null && (!Number.isInteger(edition.equipment) || edition.equipment < 0 ||
+    edition.equipment > FEEDBACK_CONFIG.equipment.items.length)) return false;
   if (!validCopies(edition.printed, edition) || !Number.isInteger(edition.net) || !Array.isArray(edition.stands)) return false;
   let firstPrint = 0;
   let firstSold = 0;
@@ -10526,6 +10593,13 @@ function mapScaleFor(level) {
   return level >= 3 ? 'nation' : level >= 2 ? 'province' : 'city';
 }
 
+const MAP_LEGENDS = {
+  city:[['own','本报覆盖'],['rival','对手覆盖'],['contested-hex','争夺街区'],['frontier','可扩张边缘'],
+    ['active','在营网点'],['available','可开拓'],['remote','未连通'],['locked','未解锁']],
+  province:[['own','整县覆盖'],['readers','已有读者'],['unreached','未覆盖']],
+  nation:[['own','本省'],['readers','已有读者'],['unreached','未覆盖'],['rail','铁路干线']]
+};
+
 function influenceView() {
   const data = reportData(game);
   const levels = FEEDBACK_CONFIG.influence.levels;
@@ -10544,12 +10618,13 @@ function influenceView() {
   const tabs = [['city', '城区', 0], ['province', '全省', 1], ['nation', '全国', 2]].map(([key, label, needed]) =>
     '<button type="button" class="soft' + (scale === key ? ' accent' : '') + '" aria-pressed="' + (scale === key) +
     '" data-action="map-scale" data-id="' + key + '">' + label + (level < needed ? ' · 未到' : '') + '</button>').join('');
-  const body = scale === 'province' ? '<div class="city-map-layout"><div class="map-scroll">' + provinceMapMarkup(game) + '</div>' + provinceTable(game) + '</div>' :
-    scale === 'nation' ? '<div class="city-map-layout"><div class="map-scroll">' + nationMapMarkup(game) + '</div>' + nationTable(game) + '</div>' :
-    '<div class="city-map-layout"><div class="map-scroll">' + cityMapMarkup(game, mapSelection) + '</div>' + mapChannelCard(game, mapSelection) + '</div>' +
-    '<p class="map-card-note">城区只计可配送街区。暂停网点会收回它的覆盖圈，其他在营网点继续送报。</p><p class="map-legend"><span class="key-own">本报覆盖</span><span class="key-rival">对手覆盖</span><span class="key-contested-hex">争夺街区</span>' +
-    '<span class="key-frontier">可扩张边缘</span><span class="key-active">在营网点</span><span class="key-available">可开拓</span>' +
-    '<span class="key-remote">未连通</span><span class="key-locked">未解锁</span></p>';
+  const legend = '<div class="map-legend" role="group" aria-label="地图图例">' + MAP_LEGENDS[scale].map(([key, label]) =>
+    '<span class="key-' + key + '">' + label + '</span>').join('') + '</div>';
+  const markup = scale === 'province' ? provinceMapMarkup(game) : scale === 'nation' ? nationMapMarkup(game) : cityMapMarkup(game, mapSelection);
+  const card = scale === 'province' ? provinceTable(game) : scale === 'nation' ? nationTable(game) : mapChannelCard(game, mapSelection);
+  const body = '<div class="city-map-layout"><div class="map-figure">' + legend +
+    '<div class="map-scroll" tabindex="0" role="region" aria-label="地图画面">' + markup + '</div></div>' + card + '</div>' +
+    (scale === 'city' ? '<p class="map-card-note">城区只计可配送街区。暂停网点会收回它的覆盖圈，其他在营网点继续送报。</p>' : '');
   return pageHeader('发行地图', newspaperName(game) + ' · ' + game.city + ' · ' + levels[level][0]) +
     '<dl class="metric-row"><div><dt>影响力</dt><dd>' + h(levels[level][0]) + ' ' + number(data.influence.points) + '</dd></div>' +
     '<div><dt>在营网点</dt><dd>' + game.active.length + ' / ' + channelLimit(game) + '</dd></div>' +
@@ -10758,30 +10833,33 @@ function channelsTableView() {
 function staffTableView() {
   const ready = availableReporters(game).map(reporter => reporter.id);
   const cash = cashOf(game);
-  const editable = game.phase === 'desk';
+  const remaining = Math.max(0, staffLimit(game) - game.staff.length);
+  const phaseNote = game.phase === 'desk' ? '可调整' : game.phase === 'complete' ? '本局已结账' : '等下期采编';
   const salary = reporter => reporterSalary(game, reporter);
   const payroll = REPORTERS.filter(reporter => game.staff.includes(reporter.id)).reduce((sum, reporter) => sum + salary(reporter), 0);
   const row = reporter => {
     const career = reporterCareer(game, reporter.id);
-    const present = game.staff.includes(reporter.id);
-    const cost = present ? Math.ceil(salary(reporter) / 2) : reporter.hire;
+    const {hiring, cost, reason} = staffChangeTerms(game, reporter);
+    const present = !hiring;
     const trip = game.trips.find(item => item.reporter === reporter.id);
-    const disabled = !editable || cash < cost || (present ? game.staff.length <= 1 || trip : game.staff.length >= staffLimit(game));
-    const status = !present ? '可招聘' : game.newsLibrary ? '在岗' : ready.includes(reporter.id) ? '可出勤' : clockText(trip.at) + ' 回电';
+    const explanation = reason === 'cash' ? '现金不足，还差 ' + money(cost - cash) + ' 元' :
+      {next:'等下期采编', complete:'本局已结账', full:'已满员', last:'至少留一名记者', trip:'采访结束后可调整'}[reason];
+    const status = hiring ? '候选' : game.newsLibrary ? '在岗' : ready.includes(reporter.id) ? '可出勤' : clockText(trip.at) + ' 回电';
     return '<tr class="' + (present ? 'row-active' : '') + '"><th scope="row"><b>' + h(reporter.name) + '</b><small>' + h(reporter.style) +
       '</small>' + (game.issueCount === 156 && (present || career.xp) ? '<div class="career"><span>' + h(career.title || '见习记者') +
-        ' · ' + career.xp + ' 经验</span><progress aria-label="晋级进度" max="' + (career.needed || 1) + '" value="' + (career.needed ? career.progress : 1) + '"></progress></div>' : '') + '</th><td><span class="chip ' + (present ? 'chip-active' : 'chip-paused') + '">' + h(status) + '</span></td><td>' +
+        ' · ' + career.xp + ' 经验</span><progress aria-label="晋级进度" max="' + (career.needed || 1) + '" value="' + (career.needed ? career.progress : 1) + '"></progress></div>' : '') + '</th><td><span class="chip ' + (present ? 'chip-active' : 'chip-paused') + '">' + h(status) + '</span>' +
+      (reason ? '<small class="staff-action-note" id="staff-note-' + reporter.id + '">' + h(explanation) + '</small>' : '') + '</td><td>' +
       h(reporter.specialties.join(' ')) + '</td><td>' + pips(career.reach) + '</td><td>' + pips(career.verify) + '</td><td>' +
       pips(career.write) + '</td><td class="num">' + money(salary(reporter)) + '</td><td class="num">' + money(cost) +
       '</td><td class="actions"><button type="button" class="soft" data-action="' + (present ? 'fire' : 'hire') + '" data-id="' + reporter.id + '"' +
-      (disabled ? ' disabled' : '') + '>' + (present ? '解聘' : '招聘') + '</button></td></tr>';
+      (reason ? ' disabled aria-describedby="staff-note-' + reporter.id + '"' : '') + '>' + (present ? '解聘' : '招聘') + '</button></td></tr>';
   };
   const staffed = REPORTERS.filter(reporter => game.staff.includes(reporter.id));
   const others = REPORTERS.filter(reporter => !game.staff.includes(reporter.id));
   return pageHeader('记者部', newspaperName(game)) +
     '<dl class="metric-row"><div><dt>在岗</dt><dd>' + game.staff.length + ' / ' + staffLimit(game) + '</dd></div><div><dt>周薪合计</dt><dd>' +
-    money(payroll) + ' 元</dd></div><div><dt>可招聘</dt><dd>' + others.length + ' 人</dd></div><div><dt>人员调整</dt><dd>' +
-    (editable ? '可调整' : '下期采编开始后') + '</dd></div></dl>' +
+    money(payroll) + ' 元</dd></div><div><dt>剩余招聘名额</dt><dd>' + remaining + ' 人</dd></div><div><dt>人员调整</dt><dd>' +
+    phaseNote + '</dd></div></dl>' +
     '<section class="panel table-panel"><header class="panel-heading"><h2>记者名册</h2><p>解聘结算半周薪，招聘一次性付费</p></header>' +
     '<div class="table-scroll"><table class="grid-table"><thead><tr><th scope="col">记者</th><th scope="col">状态</th><th scope="col">专长</th>' +
     '<th scope="col">跑线</th><th scope="col">核实</th><th scope="col">写稿</th><th scope="col" class="num">周薪</th><th scope="col" class="num">费用</th>' +
@@ -11009,15 +11087,32 @@ function upgradeButton(campaign, id) {
 }
 
 function equipmentPanel(campaign) {
-  if (campaign.issueCount !== 156) return '';
+  if (!roundEnabled(campaign)) return '';
   const stage = campaign.equipment || 0;
-  const descriptions = ['头版套印红色报头，图片版更抢眼。','照片可用彩色印刷，图片版更受欢迎。','提高首印上限，补送可接更大的印单。'];
+  const items = FEEDBACK_CONFIG.equipment.items;
+  const budget = cashOf(campaign) - minimumViablePressCost(campaign);
   return '<section class="panel"><header class="panel-heading"><h2>印厂设备</h2><p>已置办 ' + stage +
-    ' / 3 件</p></header><ol class="equipment-list">' + FEEDBACK_CONFIG.equipment.items.map((item,i) =>
-      '<li><div><b>' + h(item.name) + '</b><small>' + descriptions[i] + '</small></div>' +
-      (i < stage ? '<span class="chip chip-active">已置办</span>' : '<button class="soft" data-action="buy-equipment" type="button"' +
-        (campaign.phase !== 'desk' || i !== stage || cashOf(campaign) < item.cost + minimumViablePressCost(campaign) ? ' disabled' : '') + '>' +
-        (i > stage ? '先置办上一件' : '置办') + ' · ' + money(item.cost) + ' 元</button>') + '</li>').join('') + '</ol></section>';
+    ' / ' + items.length + ' 件</p></header><ol class="equipment-list">' + items.map((item,i) => {
+      const control = i < stage ? '<span class="chip chip-active">已置办</span>' : i > stage ? '<small>待安装 · ' + money(item.cost) + ' 元</small>' :
+        '<button class="soft" data-action="buy-equipment" type="button"' + (campaign.phase !== 'desk' || budget < item.cost ? ' disabled' : '') +
+          '>置办 · ' + money(item.cost) + ' 元</button>';
+      const note = i === stage && campaign.phase === 'desk' && budget < item.cost ?
+        '<small>预留开印资金后还差 ' + money(item.cost - budget) + ' 元</small>' : '';
+      return '<li><div><b>' + h(item.name) + '</b><small>' + h(item.description) + '</small>' + note + '</div>' + control + '</li>';
+    }).join('') + '</ol></section>';
+}
+
+function certificateButton(year, label = '查看奖状') {
+  return '<button type="button" class="soft accent" data-action="open-certificate" data-id="' + year + '" aria-haspopup="dialog">' + label + '</button>';
+}
+
+function certificateMarkup({year, date, issue, title, paperName, editorName}) {
+  return '<article class="award-certificate"><p class="certificate-year">' + year + ' 年度省好新闻奖</p>' +
+    '<h3>获奖证书</h3><p class="certificate-recipient">《' + h(paperName) + '》编辑部</p>' +
+    '<p>贵报刊发的报道</p><p class="certificate-work">《' + h(title) + '》</p><p>荣获省好新闻奖，特颁此证。</p>' +
+    '<p class="certificate-credit">总第 ' + ordinal(issue) + ' 期' + (editorName ? ' · 总编辑 ' + h(editorName) : '') + '</p>' +
+    '<footer><div><strong>省好新闻奖评审委员会</strong><br><time datetime="' + date + '">' + chinesePaperDate(date).split('　')[0] +
+    '</time></div><span class="certificate-seal" aria-hidden="true">省奖<br>评审</span></footer></article>';
 }
 
 function issueHighlights(edition) {
@@ -11119,6 +11214,7 @@ const app = document.getElementById('app');
 const announcer = document.getElementById('announcer');
 const paperDialog = document.getElementById('paper-dialog');
 const achievementsDialog = document.getElementById('achievements-dialog');
+const certificateDialog = document.getElementById('certificate-dialog');
 const pointsTotal = document.getElementById('points-total');
 const achievementContent = document.getElementById('achievement-content');
 const paperViewport = document.getElementById('paper-viewport');
@@ -12115,6 +12211,7 @@ function annualSummaryView(selectedYear = null) {
       '"></canvas><figcaption>第 ' + best.issue + ' 期 · 实售 ' + number(best.sold) + ' 份<br><strong>' +
       h(best.title) + '</strong></figcaption></figure>' : '<p>合订本暂无已签发的报纸。</p>') + '</section>' +
     '<section class="year-honors"><h2>获奖与成就</h2><h3>省好新闻奖</h3>' + list(awardLines) +
+    (awardCertificate(game, year) ? certificateButton(year) : '') +
     '<h3>报社成就</h3>' + list(achievementNames) + '</section></div>' + annualFeedback.html + (last ? weeklyFeedbackView(last) : '') + '<footer class="year-imprint"><span>' +
     h(newspaperName(game)) + '编辑部</span>' + (game.editorName ? '<span>总编辑 ' + h(game.editorName) + '</span>' : '') +
     '</footer></article>';
@@ -12248,9 +12345,12 @@ function renderAchievements() {
   pointsTotal.textContent = number(total) + ' 分';
   if (!achievementsDialog.open) return;
   const earned = achievements.filter(achievement => achievement.earned).length;
+  const certificates = annualYears(game).map(year => awardCertificate(game, year)).filter(Boolean);
+  const awards = certificates.length ? '<section class="certificate-shelf"><h3>获奖证书</h3>' + certificates.map(({year}) =>
+    certificateButton(year, year + ' 年省奖奖状')).join('') + '</section>' : '';
   achievementContent.innerHTML = '<div class="achievement-total"><strong>' + number(total) +
     ' 分</strong><p>签发 ' + number(pressPoints) + ' · 实售 ' + number(salePoints) + ' · 成就 ' + number(awardPoints) + '</p>' +
-    '<p>每签发一期得 10 分，累计实售每满 1,000 份得 1 分，每项成就只计一次。</p></div>' +
+    '<p>每签发一期得 10 分，累计实售每满 1,000 份得 1 分，每项成就只计一次。</p></div>' + awards +
     '<p class="achievement-count">已达成 ' + earned + ' / ' + achievements.length + '</p><ul class="achievement-list">' +
     achievements.map(({name, description, reward, earned}) => '<li' + (earned ? ' class="earned"' : '') +
       '><div><strong>' + h(name) + '</strong><p>' + h(description) + '</p></div><span>' +
@@ -12843,6 +12943,15 @@ document.addEventListener('click', event => {
       renderAchievements();
       break;
     case 'close-achievements': achievementsDialog.close(); break;
+    case 'open-certificate': {
+      const certificate = awardCertificate(game, Number(id));
+      if (certificate && !certificateDialog.open) {
+        document.getElementById('certificate-content').innerHTML = certificateMarkup(certificate);
+        certificateDialog.showModal();
+      }
+      break;
+    }
+    case 'close-certificate': certificateDialog.close(); break;
     case 'accept-quote': {
       const next = acceptAdvertiserQuote(game, Number(issue));
       if (next && commit(next)) announce('已预留下期广告版位，见报后结款。');

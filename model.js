@@ -699,16 +699,25 @@ function reporterSalary(campaign, reporter) {
   return Math.round(reporter.salary * campaignPrices(campaign).salary);
 }
 
+function staffChangeTerms(campaign, reporter) {
+  const hiring = !campaign.staff.includes(reporter.id);
+  const cost = hiring ? reporter.hire : Math.ceil(reporterSalary(campaign, reporter) / 2);
+  let reason = null;
+  if (campaign.phase !== 'desk') reason = campaign.phase === 'complete' ? 'complete' : 'next';
+  else if (hiring && campaign.staff.length >= staffLimit(campaign)) reason = 'full';
+  else if (!hiring && campaign.staff.length <= 1) reason = 'last';
+  else if (!hiring && campaign.trips.some(trip => trip.reporter === reporter.id)) reason = 'trip';
+  else if (cashOf(campaign) < cost) reason = 'cash';
+  return {hiring, cost, reason};
+}
+
 function changeStaff(campaign, id, hiring) {
   const reporter = reporterById(id);
-  if (!reporter || campaign.phase !== 'desk') return null;
-  const present = campaign.staff.includes(id);
-  if (hiring ? present || campaign.staff.length >= staffLimit(campaign) : !present || campaign.staff.length <= 1) return null;
-  if (!hiring && campaign.trips.some(trip => trip.reporter === id)) return null;
-  const cost = hiring ? reporter.hire : Math.ceil(reporterSalary(campaign, reporter) / 2);
-  if (cashOf(campaign) < cost) return null;
+  if (!reporter) return null;
+  const terms = staffChangeTerms(campaign, reporter);
+  if (terms.hiring !== Boolean(hiring) || terms.reason) return null;
   const staff = hiring ? [...campaign.staff, id] : campaign.staff.filter(other => other !== id);
-  return withEntries({...campaign, staff}, [{label:(hiring ? '招聘费 · ' : '解聘结算 · ') + reporter.name, cents:-cost}]);
+  return withEntries({...campaign, staff}, [{label:(hiring ? '招聘费 · ' : '解聘结算 · ') + reporter.name, cents:-terms.cost}]);
 }
 
 function changeChannel(campaign, id) {
@@ -743,7 +752,8 @@ function fixedEntries(campaign, deliver) {
 }
 
 function pressQuote(campaign, copies) {
-  const expenses = [{label:'印刷费', cents:-copies * campaignPrices(campaign).paper}, ...fixedEntries(campaign, true)];
+  const paperCents = campaignPrices(campaign).paper - (equipmentEffects(campaign).paperSaving ?? 0);
+  const expenses = [{label:'印刷费', cents:-copies * paperCents}, ...fixedEntries(campaign, true)];
   return {expenses, total:expenses.reduce((total, row) => total - row.cents, 0)};
 }
 
@@ -1342,6 +1352,15 @@ function annualCampaign(campaign, year) {
     pressure:{...campaign.pressure, events, credibility:last.feedback?.trust ?? campaign.pressure.credibility}};
 }
 
+function awardCertificate(campaign, year) {
+  const closing = campaign.editions.find(edition => Number(edition.date.slice(0, 4)) === year && isAnnualIssue(campaign, edition.issue));
+  if (!closing) return null;
+  const awards = closing.feedback?.awards ?? annualAwardResults(annualCampaign(campaign, year));
+  const winner = awards.winner;
+  const edition = winner && campaign.editions.find(entry => entry.issue === winner.issue && Number(entry.date.slice(0, 4)) === year);
+  return edition ? {year, date:closing.date, issue:edition.issue, title:winner.title, paperName:edition.paperName, editorName:edition.editorName} : null;
+}
+
 function annualSummary(campaign) {
   const offset = (campaign.annualRange?.first || 1) - 1;
   const count = campaign.annualRange ? campaign.annualRange.last - offset :
@@ -1356,7 +1375,8 @@ function annualSummary(campaign) {
     if (!best || edition.sold > best.sold) best = edition;
     rivalSold += edition.feedback?.rival?.sold ?? edition.rival.stands.reduce((sum, stand) => sum + stand.sold, 0);
   }
-  return {curve, weights, best, rivalSold, ...annualAwardResults(campaign)};
+  const awards = campaign.editions.at(-1)?.feedback?.awards ?? annualAwardResults(campaign);
+  return {curve, weights, best, rivalSold, ...awards};
 }
 
 function annualTitle({ending, cash, sold, trust, adRate, level = null}) {
@@ -1408,6 +1428,8 @@ function nextIssue(campaign) {
 }
 
 function validEditionSales(edition, pendingAllowed) {
+  if (edition.equipment != null && (!Number.isInteger(edition.equipment) || edition.equipment < 0 ||
+    edition.equipment > FEEDBACK_CONFIG.equipment.items.length)) return false;
   if (!validCopies(edition.printed, edition) || !Number.isInteger(edition.net) || !Array.isArray(edition.stands)) return false;
   let firstPrint = 0;
   let firstSold = 0;
