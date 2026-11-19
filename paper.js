@@ -122,6 +122,69 @@ function chinesePaperDate(date) {
     '月' + chinese(Number(day)) + '日　星期六';
 }
 
+function certificateText({year, date, issue, title, paperName, editorName}) {
+  return {
+    award:year + ' 年度省好新闻奖', recipient:'《' + paperName + '》编辑部', work:'《' + title + '》',
+    credit:'总第 ' + String(issue).padStart(3, '0') + ' 期' + (editorName ? ' · 总编辑 ' + editorName : ''),
+    issuer:'省好新闻奖评审委员会', date:chinesePaperDate(date).split('　')[0]
+  };
+}
+
+function renderAwardCertificate(canvas, certificate) {
+  const text = certificateText(certificate);
+  const center = PAPER_WIDTH / 2;
+  const metrics = canvas.getContext('2d', {alpha:false});
+  paperFont(metrics, 30, 750);
+  const recipient = wrapPaperText(metrics, text.recipient, PAPER_WIDTH - 134);
+  paperFont(metrics, 35, 750);
+  const textWidth = PAPER_WIDTH - 134;
+  let work = wrapPaperText(metrics, text.work, textWidth);
+  if (work.length > 1 && metrics.measureText(work.at(-1)).width < textWidth * .4) {
+    const balanced = wrapPaperText(metrics, text.work, metrics.measureText(text.work).width / work.length + 42);
+    if (balanced.length === work.length) work = balanced;
+  }
+  const introY = 203 + recipient.length * 38 + 12;
+  const workY = introY + 34;
+  const awardY = workY + work.length * 46 + 10;
+  const creditY = awardY + 39;
+  const height = Math.max(560, Math.ceil((creditY + 150) / 20) * 20);
+  const ctx = paperCanvas(canvas, height, 'wheat');
+  ctx.fillStyle = '#faf3e1';
+  ctx.fillRect(0, 0, PAPER_WIDTH, height);
+  ctx.strokeStyle = '#96744a';
+  ctx.lineWidth = 2.5;
+  ctx.strokeRect(23, 23, PAPER_WIDTH - 46, height - 46);
+  ctx.lineWidth = 1;
+  ctx.strokeRect(31, 31, PAPER_WIDTH - 62, height - 62);
+
+  const ink = '#382b1f';
+  const muted = '#6e5440';
+  ctx.textAlign = 'center';
+  paperText(ctx, text.award, center, 67, 23, 700, '#805e38', PAPER_SANS);
+  paperText(ctx, '获奖证书', center, 107, 66, 800, '#913329');
+  recipient.forEach((line, index) => paperText(ctx, line, center, 203 + index * 38, 30, 750, ink));
+  paperText(ctx, '贵报刊发的报道', center, introY, 21, 500, ink);
+  work.forEach((line, index) => paperText(ctx, line, center, workY + index * 46, 35, 750, ink));
+  paperText(ctx, '荣获省好新闻奖，特颁此证。', center, awardY, 22, 500, ink);
+  paperText(ctx, text.credit, center, creditY, 19, 500, muted);
+
+  ctx.textAlign = 'right';
+  paperText(ctx, text.issuer, PAPER_WIDTH - 155, height - 114, 22, 750, muted);
+  paperText(ctx, text.date, PAPER_WIDTH - 155, height - 85, 21, 500, muted);
+  ctx.save();
+  ctx.translate(PAPER_WIDTH - 103, height - 86);
+  ctx.rotate(-Math.PI / 30);
+  ctx.strokeStyle = '#9d3d32';
+  ctx.lineWidth = 3;
+  ctx.strokeRect(-35, -35, 70, 70);
+  ctx.lineWidth = 1;
+  ctx.strokeRect(-30, -30, 60, 60);
+  ctx.textAlign = 'center';
+  paperText(ctx, '省奖', 0, -24, 21, 750, '#9d3d32');
+  paperText(ctx, '评审', 0, 1, 21, 750, '#9d3d32');
+  ctx.restore();
+}
+
 function drawPaperPhoto(ctx, image, photo, x, y, width, height, equipment) {
   if (!image) {
     ctx.fillStyle = '#ddd6c8';

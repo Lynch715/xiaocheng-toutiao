@@ -1227,7 +1227,8 @@ progress { accent-color: var(--accent); }
 <dialog id="certificate-dialog" aria-labelledby="certificate-title">
   <header class="dialog-head">
     <h2 id="certificate-title">获奖证书</h2>
-    <button type="button" data-action="close-certificate" autofocus>关闭</button>
+    <div class="dialog-actions"><a class="soft accent export-link" data-certificate-download aria-disabled="true">下载奖状</a>
+      <button type="button" data-action="close-certificate" autofocus>关闭</button></div>
   </header>
   <div id="certificate-content" class="certificate-content"></div>
 </dialog>
@@ -9340,6 +9341,69 @@ function chinesePaperDate(date) {
     '月' + chinese(Number(day)) + '日　星期六';
 }
 
+function certificateText({year, date, issue, title, paperName, editorName}) {
+  return {
+    award:year + ' 年度省好新闻奖', recipient:'《' + paperName + '》编辑部', work:'《' + title + '》',
+    credit:'总第 ' + String(issue).padStart(3, '0') + ' 期' + (editorName ? ' · 总编辑 ' + editorName : ''),
+    issuer:'省好新闻奖评审委员会', date:chinesePaperDate(date).split('　')[0]
+  };
+}
+
+function renderAwardCertificate(canvas, certificate) {
+  const text = certificateText(certificate);
+  const center = PAPER_WIDTH / 2;
+  const metrics = canvas.getContext('2d', {alpha:false});
+  paperFont(metrics, 30, 750);
+  const recipient = wrapPaperText(metrics, text.recipient, PAPER_WIDTH - 134);
+  paperFont(metrics, 35, 750);
+  const textWidth = PAPER_WIDTH - 134;
+  let work = wrapPaperText(metrics, text.work, textWidth);
+  if (work.length > 1 && metrics.measureText(work.at(-1)).width < textWidth * .4) {
+    const balanced = wrapPaperText(metrics, text.work, metrics.measureText(text.work).width / work.length + 42);
+    if (balanced.length === work.length) work = balanced;
+  }
+  const introY = 203 + recipient.length * 38 + 12;
+  const workY = introY + 34;
+  const awardY = workY + work.length * 46 + 10;
+  const creditY = awardY + 39;
+  const height = Math.max(560, Math.ceil((creditY + 150) / 20) * 20);
+  const ctx = paperCanvas(canvas, height, 'wheat');
+  ctx.fillStyle = '#faf3e1';
+  ctx.fillRect(0, 0, PAPER_WIDTH, height);
+  ctx.strokeStyle = '#96744a';
+  ctx.lineWidth = 2.5;
+  ctx.strokeRect(23, 23, PAPER_WIDTH - 46, height - 46);
+  ctx.lineWidth = 1;
+  ctx.strokeRect(31, 31, PAPER_WIDTH - 62, height - 62);
+
+  const ink = '#382b1f';
+  const muted = '#6e5440';
+  ctx.textAlign = 'center';
+  paperText(ctx, text.award, center, 67, 23, 700, '#805e38', PAPER_SANS);
+  paperText(ctx, '获奖证书', center, 107, 66, 800, '#913329');
+  recipient.forEach((line, index) => paperText(ctx, line, center, 203 + index * 38, 30, 750, ink));
+  paperText(ctx, '贵报刊发的报道', center, introY, 21, 500, ink);
+  work.forEach((line, index) => paperText(ctx, line, center, workY + index * 46, 35, 750, ink));
+  paperText(ctx, '荣获省好新闻奖，特颁此证。', center, awardY, 22, 500, ink);
+  paperText(ctx, text.credit, center, creditY, 19, 500, muted);
+
+  ctx.textAlign = 'right';
+  paperText(ctx, text.issuer, PAPER_WIDTH - 155, height - 114, 22, 750, muted);
+  paperText(ctx, text.date, PAPER_WIDTH - 155, height - 85, 21, 500, muted);
+  ctx.save();
+  ctx.translate(PAPER_WIDTH - 103, height - 86);
+  ctx.rotate(-Math.PI / 30);
+  ctx.strokeStyle = '#9d3d32';
+  ctx.lineWidth = 3;
+  ctx.strokeRect(-35, -35, 70, 70);
+  ctx.lineWidth = 1;
+  ctx.strokeRect(-30, -30, 60, 60);
+  ctx.textAlign = 'center';
+  paperText(ctx, '省奖', 0, -24, 21, 750, '#9d3d32');
+  paperText(ctx, '评审', 0, 1, 21, 750, '#9d3d32');
+  ctx.restore();
+}
+
 function drawPaperPhoto(ctx, image, photo, x, y, width, height, equipment) {
   if (!image) {
     ctx.fillStyle = '#ddd6c8';
@@ -11106,12 +11170,13 @@ function certificateButton(year, label = '查看奖状') {
   return '<button type="button" class="soft accent" data-action="open-certificate" data-id="' + year + '" aria-haspopup="dialog">' + label + '</button>';
 }
 
-function certificateMarkup({year, date, issue, title, paperName, editorName}) {
-  return '<article class="award-certificate"><p class="certificate-year">' + year + ' 年度省好新闻奖</p>' +
-    '<h3>获奖证书</h3><p class="certificate-recipient">《' + h(paperName) + '》编辑部</p>' +
-    '<p>贵报刊发的报道</p><p class="certificate-work">《' + h(title) + '》</p><p>荣获省好新闻奖，特颁此证。</p>' +
-    '<p class="certificate-credit">总第 ' + ordinal(issue) + ' 期' + (editorName ? ' · 总编辑 ' + h(editorName) : '') + '</p>' +
-    '<footer><div><strong>省好新闻奖评审委员会</strong><br><time datetime="' + date + '">' + chinesePaperDate(date).split('　')[0] +
+function certificateMarkup(certificate) {
+  const text = certificateText(certificate);
+  return '<article class="award-certificate"><p class="certificate-year">' + text.award + '</p>' +
+    '<h3>获奖证书</h3><p class="certificate-recipient">' + h(text.recipient) + '</p>' +
+    '<p>贵报刊发的报道</p><p class="certificate-work">' + h(text.work) + '</p><p>荣获省好新闻奖，特颁此证。</p>' +
+    '<p class="certificate-credit">' + h(text.credit) + '</p>' +
+    '<footer><div><strong>' + text.issuer + '</strong><br><time datetime="' + certificate.date + '">' + text.date +
     '</time></div><span class="certificate-seal" aria-hidden="true">省奖<br>评审</span></footer></article>';
 }
 
@@ -11215,6 +11280,7 @@ const announcer = document.getElementById('announcer');
 const paperDialog = document.getElementById('paper-dialog');
 const achievementsDialog = document.getElementById('achievements-dialog');
 const certificateDialog = document.getElementById('certificate-dialog');
+const certificateLink = certificateDialog.querySelector('[data-certificate-download]');
 const pointsTotal = document.getElementById('points-total');
 const achievementContent = document.getElementById('achievement-content');
 const paperViewport = document.getElementById('paper-viewport');
@@ -12476,6 +12542,30 @@ async function prepareAnnualDownload(data, stock) {
   link.removeAttribute('aria-disabled');
 }
 
+let certificateDownloadVersion = 0;
+function clearCertificateDownload() {
+  certificateDownloadVersion++;
+  const url = certificateLink.getAttribute('href');
+  if (url?.startsWith('blob:')) URL.revokeObjectURL(url);
+  certificateLink.removeAttribute('href');
+  certificateLink.removeAttribute('download');
+  certificateLink.setAttribute('aria-disabled', 'true');
+}
+
+async function prepareCertificateDownload(certificate) {
+  const version = certificateDownloadVersion;
+  const canvas = document.createElement('canvas');
+  renderAwardCertificate(canvas, certificate);
+  const url = await paperBlobUrl(canvas);
+  if (version !== certificateDownloadVersion || !certificateDialog.open) {
+    if (url.startsWith('blob:')) URL.revokeObjectURL(url);
+    return;
+  }
+  certificateLink.href = url;
+  certificateLink.download = paperFileName(certificate) + '_' + certificate.year + '年度省好新闻奖_第' + ordinal(certificate.issue) + '期.png';
+  certificateLink.removeAttribute('aria-disabled');
+}
+
 function setProofZoom(zoomed) {
   paperViewport.classList.toggle('zoomed', zoomed);
   proofZoom.setAttribute('aria-pressed', String(zoomed));
@@ -12767,6 +12857,9 @@ app.addEventListener('toggle', event => {
 paperDialog.addEventListener('close', () => {
   if (view === 'desk' && deskStage === 'proof' && readyForProof()) openDeskStage('print');
 });
+certificateDialog.addEventListener('close', () => {
+  if (!certificateDialog.open) clearCertificateDownload();
+});
 
 cityDialog.addEventListener('cancel', event => {
   event.preventDefault();
@@ -12805,9 +12898,10 @@ restartDialog.addEventListener('close', () => {
 });
 
 document.addEventListener('click', event => {
-  const download = event.target.closest('a[data-download][href], a[data-annual-download][href]');
+  const download = event.target.closest('a[data-download][href], a[data-annual-download][href], a[data-certificate-download][href]');
   if (download) {
-    announce(download.hasAttribute('data-annual-download') ? '年终特刊正在下载。' : '头版正在下载。');
+    announce(download.hasAttribute('data-certificate-download') ? '奖状正在下载。' :
+      download.hasAttribute('data-annual-download') ? '年终特刊正在下载。' : '头版正在下载。');
     return;
   }
   const button = event.target.closest('button[data-action], button[data-view]');
@@ -12946,8 +13040,10 @@ document.addEventListener('click', event => {
     case 'open-certificate': {
       const certificate = awardCertificate(game, Number(id));
       if (certificate && !certificateDialog.open) {
+        clearCertificateDownload();
         document.getElementById('certificate-content').innerHTML = certificateMarkup(certificate);
         certificateDialog.showModal();
+        prepareCertificateDownload(certificate);
       }
       break;
     }

@@ -3,6 +3,7 @@ const announcer = document.getElementById('announcer');
 const paperDialog = document.getElementById('paper-dialog');
 const achievementsDialog = document.getElementById('achievements-dialog');
 const certificateDialog = document.getElementById('certificate-dialog');
+const certificateLink = certificateDialog.querySelector('[data-certificate-download]');
 const pointsTotal = document.getElementById('points-total');
 const achievementContent = document.getElementById('achievement-content');
 const paperViewport = document.getElementById('paper-viewport');
@@ -1264,6 +1265,30 @@ async function prepareAnnualDownload(data, stock) {
   link.removeAttribute('aria-disabled');
 }
 
+let certificateDownloadVersion = 0;
+function clearCertificateDownload() {
+  certificateDownloadVersion++;
+  const url = certificateLink.getAttribute('href');
+  if (url?.startsWith('blob:')) URL.revokeObjectURL(url);
+  certificateLink.removeAttribute('href');
+  certificateLink.removeAttribute('download');
+  certificateLink.setAttribute('aria-disabled', 'true');
+}
+
+async function prepareCertificateDownload(certificate) {
+  const version = certificateDownloadVersion;
+  const canvas = document.createElement('canvas');
+  renderAwardCertificate(canvas, certificate);
+  const url = await paperBlobUrl(canvas);
+  if (version !== certificateDownloadVersion || !certificateDialog.open) {
+    if (url.startsWith('blob:')) URL.revokeObjectURL(url);
+    return;
+  }
+  certificateLink.href = url;
+  certificateLink.download = paperFileName(certificate) + '_' + certificate.year + '年度省好新闻奖_第' + ordinal(certificate.issue) + '期.png';
+  certificateLink.removeAttribute('aria-disabled');
+}
+
 function setProofZoom(zoomed) {
   paperViewport.classList.toggle('zoomed', zoomed);
   proofZoom.setAttribute('aria-pressed', String(zoomed));
@@ -1555,6 +1580,9 @@ app.addEventListener('toggle', event => {
 paperDialog.addEventListener('close', () => {
   if (view === 'desk' && deskStage === 'proof' && readyForProof()) openDeskStage('print');
 });
+certificateDialog.addEventListener('close', () => {
+  if (!certificateDialog.open) clearCertificateDownload();
+});
 
 cityDialog.addEventListener('cancel', event => {
   event.preventDefault();
@@ -1593,9 +1621,10 @@ restartDialog.addEventListener('close', () => {
 });
 
 document.addEventListener('click', event => {
-  const download = event.target.closest('a[data-download][href], a[data-annual-download][href]');
+  const download = event.target.closest('a[data-download][href], a[data-annual-download][href], a[data-certificate-download][href]');
   if (download) {
-    announce(download.hasAttribute('data-annual-download') ? '年终特刊正在下载。' : '头版正在下载。');
+    announce(download.hasAttribute('data-certificate-download') ? '奖状正在下载。' :
+      download.hasAttribute('data-annual-download') ? '年终特刊正在下载。' : '头版正在下载。');
     return;
   }
   const button = event.target.closest('button[data-action], button[data-view]');
@@ -1734,8 +1763,10 @@ document.addEventListener('click', event => {
     case 'open-certificate': {
       const certificate = awardCertificate(game, Number(id));
       if (certificate && !certificateDialog.open) {
+        clearCertificateDownload();
         document.getElementById('certificate-content').innerHTML = certificateMarkup(certificate);
         certificateDialog.showModal();
+        prepareCertificateDownload(certificate);
       }
       break;
     }

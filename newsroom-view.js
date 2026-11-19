@@ -61,12 +61,13 @@ function certificateButton(year, label = '查看奖状') {
   return '<button type="button" class="soft accent" data-action="open-certificate" data-id="' + year + '" aria-haspopup="dialog">' + label + '</button>';
 }
 
-function certificateMarkup({year, date, issue, title, paperName, editorName}) {
-  return '<article class="award-certificate"><p class="certificate-year">' + year + ' 年度省好新闻奖</p>' +
-    '<h3>获奖证书</h3><p class="certificate-recipient">《' + h(paperName) + '》编辑部</p>' +
-    '<p>贵报刊发的报道</p><p class="certificate-work">《' + h(title) + '》</p><p>荣获省好新闻奖，特颁此证。</p>' +
-    '<p class="certificate-credit">总第 ' + ordinal(issue) + ' 期' + (editorName ? ' · 总编辑 ' + h(editorName) : '') + '</p>' +
-    '<footer><div><strong>省好新闻奖评审委员会</strong><br><time datetime="' + date + '">' + chinesePaperDate(date).split('　')[0] +
+function certificateMarkup(certificate) {
+  const text = certificateText(certificate);
+  return '<article class="award-certificate"><p class="certificate-year">' + text.award + '</p>' +
+    '<h3>获奖证书</h3><p class="certificate-recipient">' + h(text.recipient) + '</p>' +
+    '<p>贵报刊发的报道</p><p class="certificate-work">' + h(text.work) + '</p><p>荣获省好新闻奖，特颁此证。</p>' +
+    '<p class="certificate-credit">' + h(text.credit) + '</p>' +
+    '<footer><div><strong>' + text.issuer + '</strong><br><time datetime="' + certificate.date + '">' + text.date +
     '</time></div><span class="certificate-seal" aria-hidden="true">省奖<br>评审</span></footer></article>';
 }
 
